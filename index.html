@@ -3,63 +3,82 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>إثبات التحويل - المنصة الثانوية بلس</title>
+<title>📤 إثبات التحويل - المنصة الثانوية بلس</title>
 <style>
 body{
   font-family: "Cairo", sans-serif;
-  background:#0d0d0d;
-  color:white;
-  padding:20px;
+  background: radial-gradient(circle at top, #0e0e0e, #000);
+  color:#fff;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  padding:15px;
 }
 .container{
+  background:#141414;
+  padding:25px;
+  border-radius:16px;
+  box-shadow:0 0 20px rgba(0,0,0,0.6);
   max-width:420px;
-  margin:auto;
-  background:#1a1a1a;
-  padding:20px;
-  border-radius:10px;
-  box-shadow:0 0 10px #000;
+  width:100%;
+  text-align:center;
 }
 h2{
-  text-align:center;
   color:#00f5c4;
+  margin-bottom:20px;
 }
-label{display:block;margin-top:10px;font-weight:bold;}
-input,button{
-  width:100%;
-  padding:10px;
-  border:none;
-  border-radius:6px;
-  margin-top:6px;
+label{
+  display:block;
+  text-align:right;
+  margin-top:12px;
   font-size:15px;
-}
-input{
-  background:#222;
-  color:#fff;
-}
-button{
-  background:#00f5c4;
-  color:#111;
-  cursor:pointer;
-  margin-top:14px;
   font-weight:bold;
 }
+input{
+  width:100%;
+  padding:10px;
+  margin-top:6px;
+  border:none;
+  border-radius:8px;
+  background:#1e1e1e;
+  color:#fff;
+  font-size:15px;
+  outline:none;
+  transition:0.3s;
+}
+input:focus{box-shadow:0 0 5px #00f5c4;}
+button{
+  width:100%;
+  padding:12px;
+  background:#00f5c4;
+  color:#111;
+  font-weight:bold;
+  border:none;
+  border-radius:8px;
+  margin-top:18px;
+  cursor:pointer;
+  font-size:16px;
+  transition:0.3s;
+}
+button:hover{background:#00d1a5;}
 button:disabled{opacity:0.6;cursor:not-allowed;}
-#status{text-align:center;margin-top:10px;font-size:14px;}
-.preview{
-  text-align:center;
-  margin-top:10px;
+#status{
+  margin-top:15px;
+  font-size:14px;
+  line-height:1.6;
 }
 .preview img{
   max-width:200px;
   border-radius:8px;
+  margin-top:10px;
   border:1px solid #333;
 }
 </style>
 </head>
 <body>
-
 <div class="container">
-  <h2>📤 إثبات التحويل</h2>
+  <h2>📤 إرسال إثبات التحويل</h2>
 
   <label>الاسم المسجل في المنصة</label>
   <input type="text" id="name" placeholder="مثال: محمد علي">
@@ -73,67 +92,71 @@ button:disabled{opacity:0.6;cursor:not-allowed;}
   <label>صورة إيصال التحويل (سكرين)</label>
   <input type="file" id="image" accept="image/*">
 
-  <button id="sendBtn">إرسال إلى البوت</button>
+  <button id="sendBtn">إرسال الإثبات الآن</button>
 
   <div id="status"></div>
   <div class="preview" id="preview"></div>
 </div>
 
 <script>
-// ضع هنا بيانات بوتك:
+// ==== إعداد البوت ====
 const BOT_TOKEN = "7671449403:AAEi3OueRekWgJBNWivgR5gbuQT4b3drSP4";
-const CHAT_ID = "7498653159"; // مثال: -1001234567890 لمجموعة أو 123456789 لحسابك
+const RECEIVERS = [
+  "7498653159", // رقمك أنت
+  "8370564028"   // ضع هنا رقم صاحبك (Chat ID الخاص به)
+];
 
+// عناصر الصفحة
 const sendBtn = document.getElementById("sendBtn");
 const statusEl = document.getElementById("status");
 const preview = document.getElementById("preview");
 
-sendBtn.addEventListener("click", async ()=>{
+// عند الضغط على الإرسال
+sendBtn.addEventListener("click", async () => {
   const name = document.getElementById("name").value.trim();
   const studentNumber = document.getElementById("studentNumber").value.trim();
   const fromNumber = document.getElementById("fromNumber").value.trim();
   const file = document.getElementById("image").files[0];
 
-  if(!name || !studentNumber || !fromNumber || !file){
+  if (!name || !studentNumber || !fromNumber || !file) {
     statusEl.innerHTML = "❌ الرجاء ملء كل الحقول واختيار الصورة.";
     return;
   }
 
-  statusEl.innerHTML = "⏳ جاري الإرسال...";
-  sendBtn.disabled = true;
+  if (!confirm("هل أنت متأكد من إرسال إثبات التحويل الآن؟")) return;
 
-  try{
-    const caption = `
-📸 *إثبات تحويل جديد*  
+  sendBtn.disabled = true;
+  statusEl.innerHTML = "⏳ جاري الإرسال...";
+
+  const caption = `
+📸 *إثبات تحويل جديد*
 👤 الاسم: ${name}
 📱 رقم المنصة: ${studentNumber}
 💳 رقم المحول منه: ${fromNumber}
 🕒 الوقت: ${new Date().toLocaleString("ar-EG")}
 `.trim();
 
-    // نرسل الصورة باستخدام Telegram API مباشرة
-    const formData = new FormData();
-    formData.append("chat_id", CHAT_ID);
-    formData.append("caption", caption);
-    formData.append("parse_mode", "Markdown");
-    formData.append("photo", file);
+  try {
+    // إرسال لكل المستلمين
+    for (let chatId of RECEIVERS) {
+      const formData = new FormData();
+      formData.append("chat_id", chatId);
+      formData.append("caption", caption);
+      formData.append("parse_mode", "Markdown");
+      formData.append("photo", file);
 
-    const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
-      method: "POST",
-      body: formData
-    });
-
-    const data = await res.json();
-    if(data.ok){
-      statusEl.innerHTML = "✅ تم إرسال الإثبات بنجاح إلى البوت.";
-      preview.innerHTML = `<img src="${URL.createObjectURL(file)}">`;
-    }else{
-      statusEl.innerHTML = "❌ حدث خطأ أثناء الإرسال.<br>" + (data.description || "");
+      await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+        method: "POST",
+        body: formData
+      });
     }
-  }catch(err){
-    console.error(err);
-    statusEl.innerHTML = "❌ فشل الاتصال أو حدث خطأ.";
-  }finally{
+
+    statusEl.innerHTML = "✅ تم إرسال الإثبات بنجاح ✅";
+    preview.innerHTML = `<img src="${URL.createObjectURL(file)}">`;
+  } catch (error) {
+    console.error(error);
+    statusEl.innerHTML = "❌ حدث خطأ أثناء الإرسال، حاول لاحقًا.";
+  } finally {
     sendBtn.disabled = false;
   }
 });
