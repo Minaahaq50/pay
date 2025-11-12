@@ -3,137 +3,171 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>📤 إثبات التحويل - المنصة الثانوية بلس</title>
+<title>إثبات التحويل - المنصة الثانوية بلس</title>
+
+<!-- خط عصري -->
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700&display=swap" rel="stylesheet">
+
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@500;700&display=swap');
-
-body{
-  font-family:'Cairo',sans-serif;
-  background:linear-gradient(135deg,#000,#0d0d0d,#141414);
-  color:#fff;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  min-height:100vh;
-  padding:20px;
-  overflow:hidden;
+:root {
+  --main-color: #00e6b8;
+  --bg-dark: #0a0a0a;
+  --glass: rgba(255,255,255,0.05);
+}
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Tajawal', sans-serif;
+  background: radial-gradient(circle at top, #0f0f0f, #000);
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 
-.container{
-  background:rgba(25,25,25,0.95);
-  padding:30px 25px;
-  border-radius:20px;
-  box-shadow:0 0 25px rgba(0,0,0,0.8);
-  max-width:430px;
-  width:100%;
-  text-align:center;
-  backdrop-filter:blur(6px);
-  position:relative;
-  overflow:hidden;
-}
-.container::before{
-  content:"";
-  position:absolute;
-  top:0;
-  left:0;
-  width:100%;
-  height:4px;
-  background:linear-gradient(90deg,#00f5c4,#00bcd4,#00f5c4);
-  animation:moveBar 3s linear infinite;
-}
-@keyframes moveBar{
-  0%{background-position:0 0;}
-  100%{background-position:400px 0;}
-}
-h2{
-  color:#00f5c4;
-  margin-bottom:22px;
-  font-size:22px;
-  letter-spacing:1px;
+.container {
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  padding: 30px;
+  width: 95%;
+  max-width: 430px;
+  box-shadow: 0 0 40px rgba(0,0,0,0.6);
+  animation: fadeIn 0.8s ease;
 }
 
-label{
-  display:block;
-  text-align:right;
-  margin-top:12px;
-  font-size:15px;
-  font-weight:600;
-  color:#ddd;
+@keyframes fadeIn {
+  from {opacity:0; transform: translateY(20px);}
+  to {opacity:1; transform: translateY(0);}
 }
 
-input{
-  width:100%;
-  padding:12px;
-  margin-top:6px;
-  border:none;
-  border-radius:10px;
-  background:#1b1b1b;
-  color:#fff;
-  font-size:15px;
-  outline:none;
-  transition:0.3s;
+.logo {
+  text-align: center;
+  margin-bottom: 20px;
 }
-input:focus{
-  box-shadow:0 0 6px #00f5c4;
-  transform:scale(1.02);
+.logo img {
+  width: 80px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0,230,184,0.3);
 }
-
-button{
-  width:100%;
-  padding:12px;
-  background:linear-gradient(135deg,#00f5c4,#00bcd4);
-  color:#111;
-  font-weight:bold;
-  border:none;
-  border-radius:10px;
-  margin-top:20px;
-  cursor:pointer;
-  font-size:16px;
-  transition:0.3s;
-  box-shadow:0 0 10px rgba(0,245,196,0.3);
-}
-button:hover{
-  transform:scale(1.03);
-  box-shadow:0 0 15px rgba(0,245,196,0.6);
-}
-button:disabled{
-  opacity:0.6;
-  cursor:not-allowed;
+h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: var(--main-color);
+  letter-spacing: 1px;
 }
 
-#status{
-  margin-top:18px;
-  font-size:15px;
-  line-height:1.6;
-  color:#ccc;
+label {
+  display: block;
+  margin-top: 14px;
+  font-weight: bold;
+  font-size: 15px;
+  color: #e6e6e6;
 }
 
-.preview img{
-  max-width:200px;
-  border-radius:10px;
-  margin-top:15px;
-  border:1px solid #333;
-  box-shadow:0 0 10px rgba(0,0,0,0.5);
+input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.07);
+  border-radius: 10px;
+  color: #fff;
+  font-size: 15px;
+  margin-top: 6px;
+  outline: none;
+  transition: 0.3s;
+}
+input:focus {
+  border-color: var(--main-color);
+  box-shadow: 0 0 10px rgba(0,230,184,0.4);
 }
 
-/* تحميل متحرك */
-.loader{
-  width:40px;
-  height:40px;
-  border:4px solid #222;
-  border-top:4px solid #00f5c4;
-  border-radius:50%;
-  margin:10px auto;
-  animation:spin 1s linear infinite;
+button {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(90deg, var(--main-color), #00bcd4);
+  border: none;
+  border-radius: 10px;
+  color: #000;
+  font-weight: bold;
+  margin-top: 25px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+  position: relative;
+  overflow: hidden;
 }
-@keyframes spin{
-  100%{transform:rotate(360deg);}
+button:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 15px rgba(0,230,184,0.4);
+}
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+button::after {
+  content: "";
+  position: absolute;
+  left: -100%;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  background: rgba(255,255,255,0.3);
+  transform: skewX(-20deg);
+  transition: 0.5s;
+}
+button:hover::after {
+  left: 150%;
+}
+
+.status {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 14px;
+  color: #ccc;
+  min-height: 25px;
+}
+
+.preview {
+  text-align: center;
+  margin-top: 15px;
+}
+.preview img {
+  width: 210px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 0 15px rgba(0,0,0,0.6);
+  transition: 0.4s;
+}
+.preview img:hover {
+  transform: scale(1.05);
+}
+
+.loader {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255,255,255,0.1);
+  border-top: 3px solid var(--main-color);
+  border-radius: 50%;
+  margin: 15px auto;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  100% {transform: rotate(360deg);}
 }
 </style>
 </head>
+
 <body>
 <div class="container">
-  <h2>📤 إرسال إثبات التحويل</h2>
+  <div class="logo">
+    <img src="https://cdn-icons-png.flaticon.com/512/992/992700.png" alt="Logo">
+  </div>
+
+  <h2>إثبات التحويل - الثانوية بلس</h2>
 
   <label>الاسم المسجل في المنصة</label>
   <input type="text" id="name" placeholder="مثال: محمد علي">
@@ -147,19 +181,15 @@ button:disabled{
   <label>صورة إيصال التحويل (سكرين)</label>
   <input type="file" id="image" accept="image/*">
 
-  <button id="sendBtn">🚀 إرسال الإثبات الآن</button>
+  <button id="sendBtn">🚀 إرسال الإثبات</button>
 
-  <div id="status"></div>
+  <div class="status" id="status"></div>
   <div class="preview" id="preview"></div>
 </div>
 
 <script>
-// ==== إعداد البوت ====
 const BOT_TOKEN = "7671449403:AAEi3OueRekWgJBNWivgR5gbuQT4b3drSP4";
-const RECEIVERS = [
-  "7498653159", // رقمك
-  "8370564028"  // رقم صاحبك
-];
+const RECEIVERS = ["7498653159","8370564028"];
 
 const sendBtn = document.getElementById("sendBtn");
 const statusEl = document.getElementById("status");
@@ -172,48 +202,49 @@ sendBtn.addEventListener("click", async ()=>{
   const file = document.getElementById("image").files[0];
 
   if(!name || !studentNumber || !fromNumber || !file){
-    statusEl.innerHTML = "❌ الرجاء ملء جميع الحقول وإرفاق الصورة.";
+    statusEl.innerHTML = "⚠️ الرجاء تعبئة جميع الحقول وإرفاق الصورة.";
     return;
   }
 
-  if(!confirm("هل أنت متأكد من إرسال إثبات التحويل؟")) return;
+  if(!confirm("هل ترغب في إرسال الإثبات الآن؟")) return;
 
   sendBtn.disabled = true;
-  statusEl.innerHTML = `<div class="loader"></div> <p>⏳ جاري الإرسال للمنصة...</p>`;
+  statusEl.innerHTML = '<div class="loader"></div><p>جارٍ الإرسال للمنصة...</p>';
 
   const caption = `
-📢 *إثبات تحويل جديد للمنصة الثانوية بلس*
-━━━━━━━━━━━━━
+🏦 *إثبات تحويل جديد - المنصة الثانوية بلس*
+━━━━━━━━━━━━━━━
 👤 الاسم: ${name}
 📱 رقم المنصة: ${studentNumber}
-💳 رقم المحول منه: ${fromNumber}
+💳 المحول منه: ${fromNumber}
 🕒 الوقت: ${new Date().toLocaleString("ar-EG")}
-━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━
 `;
 
-  try{
-    for(let chatId of RECEIVERS){
+  try {
+    for (let chatId of RECEIVERS) {
       const formData = new FormData();
       formData.append("chat_id", chatId);
       formData.append("caption", caption);
       formData.append("parse_mode", "Markdown");
       formData.append("photo", file);
 
-      await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`,{
-        method:"POST",
-        body:formData
+      await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+        method: "POST",
+        body: formData
       });
     }
 
-    statusEl.innerHTML = "✅ تم إرسال الإثبات بنجاح، شكراً لتعاونك!";
-    preview.innerHTML = `<img src="${URL.createObjectURL(file)}" alt="إثبات التحويل">`;
-  }catch(err){
+    statusEl.innerHTML = "✅ تم إرسال الإثبات بنجاح، سيتم مراجعته قريبًا.";
+    preview.innerHTML = `<img src="${URL.createObjectURL(file)}">`;
+  } catch (err) {
     console.error(err);
-    statusEl.innerHTML = "❌ فشل الإرسال، تحقق من الاتصال أو حاول لاحقًا.";
-  }finally{
+    statusEl.innerHTML = "❌ حدث خطأ أثناء الإرسال، حاول مجددًا.";
+  } finally {
     sendBtn.disabled = false;
   }
 });
 </script>
 </body>
 </html>
+
