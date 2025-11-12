@@ -138,7 +138,7 @@ button:disabled {
   transform: scale(1.05);
 }
 
-/* Toast عادي */
+/* Toast */
 .toast {
   position: fixed;
   bottom: 25px;
@@ -163,7 +163,7 @@ button:disabled {
 .toast.error {border-left: 4px solid #ff5252;}
 .toast.info {border-left: 4px solid #2196f3;}
 
-/* ✅ Toast تأكيد */
+/* Confirm */
 .confirm-toast {
   position: fixed;
   top: 50%;
@@ -227,7 +227,7 @@ button:disabled {
   <div class="preview" id="preview"></div>
 </div>
 
-<!-- ✅ Toast + Confirm -->
+<!-- Toast + Confirm -->
 <div class="toast" id="toast"></div>
 <div class="confirm-toast" id="confirmBox">
   <p style="margin-bottom:10px;">هل ترغب في إرسال الإثبات الآن؟</p>
@@ -253,10 +253,8 @@ function showToast(msg, type="info") {
 function showConfirm(message, onYes, onNo) {
   confirmBox.querySelector("p").textContent = message;
   confirmBox.classList.add("show");
-
   const yesBtn = confirmBox.querySelector(".yes");
   const noBtn = confirmBox.querySelector(".no");
-
   yesBtn.onclick = () => {
     confirmBox.classList.remove("show");
     onYes();
@@ -309,6 +307,14 @@ sendBtn.addEventListener("click", async ()=>{
 
       showToast("✅ تم إرسال الإثبات بنجاح! سيتم مراجعته قريبًا.","success");
       preview.innerHTML = `<img src="${URL.createObjectURL(file)}">`;
+
+      // ✅ تفريغ الحقول بعد الإرسال
+      document.getElementById("name").value = "";
+      document.getElementById("studentNumber").value = "";
+      document.getElementById("fromNumber").value = "";
+      document.getElementById("image").value = "";
+      setTimeout(() => preview.innerHTML = "", 3000);
+
     } catch (err) {
       console.error(err);
       showToast("❌ حدث خطأ أثناء الإرسال، حاول مجددًا.","error");
