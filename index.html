@@ -24,7 +24,7 @@ body {
   min-height: 100vh;
 }
 
-/* الشريط العلوي */
+/* ✅ الشريط العلوي */
 .header {
   position: fixed;
   top: 0;
@@ -40,6 +40,48 @@ body {
   overflow: hidden;
 }
 
+/* ✅ قسم رقم التحويل */
+.transfer-info {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 12px;
+  border-radius: 12px;
+  text-align: center;
+  margin-bottom: 20px;
+  box-shadow: 0 0 15px rgba(0,230,184,0.15);
+}
+.transfer-info h3 {
+  color: var(--main-color);
+  margin-bottom: 8px;
+}
+.transfer-number {
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  background: rgba(0,0,0,0.5);
+  padding: 10px;
+  border-radius: 10px;
+  display: inline-block;
+  user-select: all;
+}
+.copy-btn {
+  display: inline-block;
+  background: linear-gradient(90deg, var(--main-color), #00bcd4);
+  color: #000;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 12px;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.copy-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(0,230,184,0.4);
+}
+
+/* ✅ باقي التصميم */
 .container {
   background: var(--glass);
   backdrop-filter: blur(12px);
@@ -138,7 +180,7 @@ button:disabled {
   transform: scale(1.05);
 }
 
-/* Toast */
+/* ✅ Toast */
 .toast {
   position: fixed;
   bottom: 25px;
@@ -163,7 +205,7 @@ button:disabled {
 .toast.error {border-left: 4px solid #ff5252;}
 .toast.info {border-left: 4px solid #2196f3;}
 
-/* Confirm */
+/* ✅ Confirm Box */
 .confirm-toast {
   position: fixed;
   top: 50%;
@@ -201,11 +243,17 @@ button:disabled {
 </head>
 
 <body>
-<div class="header">🌐 المنصة الثانوية بلس | Powered by gocker 💎</div>
+<div class="header">🌐 المنصة الثانوية بلس | Powered by THANOYAH+ 💎</div>
 
 <div class="container">
   <div class="logo">
     <img src="https://g.top4top.io/p_3603rlnje1.jpg" alt="Logo">
+  </div>
+
+  <div class="transfer-info">
+    <h3>📞 رقم التحويل الرسمي</h3>
+    <div class="transfer-number" id="transferNum">01225587394</div><br>
+    <button class="copy-btn" onclick="copyNumber()">📋 نسخ الرقم</button>
   </div>
 
   <h2>إثبات التحويل</h2>
@@ -253,8 +301,10 @@ function showToast(msg, type="info") {
 function showConfirm(message, onYes, onNo) {
   confirmBox.querySelector("p").textContent = message;
   confirmBox.classList.add("show");
+
   const yesBtn = confirmBox.querySelector(".yes");
   const noBtn = confirmBox.querySelector(".no");
+
   yesBtn.onclick = () => {
     confirmBox.classList.remove("show");
     onYes();
@@ -263,6 +313,12 @@ function showConfirm(message, onYes, onNo) {
     confirmBox.classList.remove("show");
     if(onNo) onNo();
   };
+}
+
+function copyNumber() {
+  const num = document.getElementById("transferNum").textContent;
+  navigator.clipboard.writeText(num);
+  showToast("✅ تم نسخ رقم التحويل بنجاح","success");
 }
 
 sendBtn.addEventListener("click", async ()=>{
@@ -308,13 +364,11 @@ sendBtn.addEventListener("click", async ()=>{
       showToast("✅ تم إرسال الإثبات بنجاح! سيتم مراجعته قريبًا.","success");
       preview.innerHTML = `<img src="${URL.createObjectURL(file)}">`;
 
-      // ✅ تفريغ الحقول بعد الإرسال
+      // 🧹 مسح البيانات بعد الإرسال
       document.getElementById("name").value = "";
       document.getElementById("studentNumber").value = "";
       document.getElementById("fromNumber").value = "";
       document.getElementById("image").value = "";
-      setTimeout(() => preview.innerHTML = "", 3000);
-
     } catch (err) {
       console.error(err);
       showToast("❌ حدث خطأ أثناء الإرسال، حاول مجددًا.","error");
