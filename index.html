@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>إثبات التحويل - المنصة الثانوية بلس</title>
 
-<!-- خط عصري -->
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700&display=swap" rel="stylesheet">
 
 <style>
@@ -26,6 +25,27 @@ body {
   min-height: 100vh;
 }
 
+/* 🎵 الشريط العلوي */
+.header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(8px);
+  text-align: center;
+  padding: 10px 0;
+  font-weight: bold;
+  font-size: 17px;
+  color: var(--main-color);
+  letter-spacing: 1px;
+  animation: slideText 10s linear infinite;
+  overflow: hidden;
+}
+@keyframes slideText {
+  0% {transform: translateX(100%);}
+  100% {transform: translateX(-100%);}
+}
+
 .container {
   background: var(--glass);
   backdrop-filter: blur(12px);
@@ -36,6 +56,7 @@ body {
   max-width: 430px;
   box-shadow: 0 0 40px rgba(0,0,0,0.6);
   animation: fadeIn 0.8s ease;
+  margin-top: 80px;
 }
 
 @keyframes fadeIn {
@@ -123,14 +144,6 @@ button:hover::after {
   left: 150%;
 }
 
-.status {
-  text-align: center;
-  margin-top: 15px;
-  font-size: 14px;
-  color: #ccc;
-  min-height: 25px;
-}
-
 .preview {
   text-align: center;
   margin-top: 15px;
@@ -158,16 +171,42 @@ button:hover::after {
 @keyframes spin {
   100% {transform: rotate(360deg);}
 }
+
+/* 🌟 Toast */
+.toast {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background: rgba(0,0,0,0.85);
+  color: #fff;
+  padding: 14px 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.5);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s, transform 0.4s;
+  transform: translateY(20px);
+}
+.toast.show {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+}
+.toast.success {border-left: 4px solid #00e676;}
+.toast.error {border-left: 4px solid #ff5252;}
+.toast.info {border-left: 4px solid #2196f3;}
 </style>
 </head>
 
 <body>
+<div class="header">🌐 المنصة الثانوية بلس | Powered by THANOYAH+ 💎</div>
+
 <div class="container">
   <div class="logo">
     <img src="https://g.top4top.io/p_3603rlnje1.jpg" alt="Logo">
   </div>
 
-  <h2>إثبات التحويل - الثانوية بلس</h2>
+  <h2>إثبات التحويل</h2>
 
   <label>الاسم المسجل في المنصة</label>
   <input type="text" id="name" placeholder="اسمك هنا">
@@ -183,17 +222,25 @@ button:hover::after {
 
   <button id="sendBtn">🚀 إرسال الإثبات</button>
 
-  <div class="status" id="status"></div>
   <div class="preview" id="preview"></div>
 </div>
+
+<!-- ✅ Toast -->
+<div class="toast" id="toast"></div>
 
 <script>
 const BOT_TOKEN = "7671449403:AAEi3OueRekWgJBNWivgR5gbuQT4b3drSP4";
 const RECEIVERS = ["7498653159","8370564028"];
 
 const sendBtn = document.getElementById("sendBtn");
-const statusEl = document.getElementById("status");
+const toast = document.getElementById("toast");
 const preview = document.getElementById("preview");
+
+function showToast(msg, type="info") {
+  toast.textContent = msg;
+  toast.className = "toast show " + type;
+  setTimeout(() => toast.className = "toast", 3500);
+}
 
 sendBtn.addEventListener("click", async ()=>{
   const name = document.getElementById("name").value.trim();
@@ -202,14 +249,14 @@ sendBtn.addEventListener("click", async ()=>{
   const file = document.getElementById("image").files[0];
 
   if(!name || !studentNumber || !fromNumber || !file){
-    statusEl.innerHTML = "⚠️ الرجاء تعبئة جميع الحقول وإرفاق الصورة.";
+    showToast("⚠️ يرجى تعبئة جميع الحقول وإرفاق الصورة","error");
     return;
   }
 
   if(!confirm("هل ترغب في إرسال الإثبات الآن؟")) return;
 
   sendBtn.disabled = true;
-  statusEl.innerHTML = '<div class="loader"></div><p>جارٍ الإرسال للمنصة...</p>';
+  showToast("📤 جارٍ إرسال الإثبات...","info");
 
   const caption = `
 🏦 *إثبات تحويل جديد - المنصة الثانوية بلس*
@@ -235,11 +282,11 @@ sendBtn.addEventListener("click", async ()=>{
       });
     }
 
-    statusEl.innerHTML = "✅ تم إرسال الإثبات بنجاح، سيتم مراجعته قريبًا.";
+    showToast("✅ تم إرسال الإثبات بنجاح! سيتم مراجعته قريبًا.","success");
     preview.innerHTML = `<img src="${URL.createObjectURL(file)}">`;
   } catch (err) {
     console.error(err);
-    statusEl.innerHTML = "❌ حدث خطأ أثناء الإرسال، حاول مجددًا.";
+    showToast("❌ حدث خطأ أثناء الإرسال، حاول مجددًا.","error");
   } finally {
     sendBtn.disabled = false;
   }
@@ -247,4 +294,3 @@ sendBtn.addEventListener("click", async ()=>{
 </script>
 </body>
 </html>
-
