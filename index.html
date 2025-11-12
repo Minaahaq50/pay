@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>إثبات التحويل - المنصة الثانوية بلس</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700&display=swap" rel="stylesheet">
 
 <style>
@@ -25,7 +24,7 @@ body {
   min-height: 100vh;
 }
 
-/* 🎵 الشريط العلوي */
+/* الشريط العلوي */
 .header {
   position: fixed;
   top: 0;
@@ -38,12 +37,7 @@ body {
   font-size: 17px;
   color: var(--main-color);
   letter-spacing: 1px;
-  animation: slideText 10s linear infinite;
   overflow: hidden;
-}
-@keyframes slideText {
-  0% {transform: translateX(100%);}
-  100% {transform: translateX(-100%);}
 }
 
 .container {
@@ -129,21 +123,6 @@ button:disabled {
   cursor: not-allowed;
 }
 
-button::after {
-  content: "";
-  position: absolute;
-  left: -100%;
-  top: 0;
-  width: 50%;
-  height: 100%;
-  background: rgba(255,255,255,0.3);
-  transform: skewX(-20deg);
-  transition: 0.5s;
-}
-button:hover::after {
-  left: 150%;
-}
-
 .preview {
   text-align: center;
   margin-top: 15px;
@@ -159,20 +138,7 @@ button:hover::after {
   transform: scale(1.05);
 }
 
-.loader {
-  width: 40px;
-  height: 40px;
-  border: 3px solid rgba(255,255,255,0.1);
-  border-top: 3px solid var(--main-color);
-  border-radius: 50%;
-  margin: 15px auto;
-  animation: spin 1s linear infinite;
-}
-@keyframes spin {
-  100% {transform: rotate(360deg);}
-}
-
-/* 🌟 Toast */
+/* Toast عادي */
 .toast {
   position: fixed;
   bottom: 25px;
@@ -186,6 +152,7 @@ button:hover::after {
   pointer-events: none;
   transition: opacity 0.4s, transform 0.4s;
   transform: translateY(20px);
+  z-index: 9999;
 }
 .toast.show {
   opacity: 1;
@@ -195,6 +162,41 @@ button:hover::after {
 .toast.success {border-left: 4px solid #00e676;}
 .toast.error {border-left: 4px solid #ff5252;}
 .toast.info {border-left: 4px solid #2196f3;}
+
+/* ✅ Toast تأكيد */
+.confirm-toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  background: rgba(0,0,0,0.9);
+  color: #fff;
+  padding: 25px 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 30px rgba(0,0,0,0.7);
+  text-align: center;
+  width: 300px;
+  opacity: 0;
+  transition: 0.3s ease;
+  z-index: 10000;
+}
+.confirm-toast.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+.confirm-toast button {
+  width: 45%;
+  margin: 10px 5px 0;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.confirm-toast .yes {background: #00e676; color: #000;}
+.confirm-toast .no {background: #ff5252; color: #fff;}
+.confirm-toast button:hover {transform: scale(1.05);}
 </style>
 </head>
 
@@ -225,8 +227,13 @@ button:hover::after {
   <div class="preview" id="preview"></div>
 </div>
 
-<!-- ✅ Toast -->
+<!-- ✅ Toast + Confirm -->
 <div class="toast" id="toast"></div>
+<div class="confirm-toast" id="confirmBox">
+  <p style="margin-bottom:10px;">هل ترغب في إرسال الإثبات الآن؟</p>
+  <button class="yes">نعم</button>
+  <button class="no">لا</button>
+</div>
 
 <script>
 const BOT_TOKEN = "7671449403:AAEi3OueRekWgJBNWivgR5gbuQT4b3drSP4";
@@ -234,12 +241,30 @@ const RECEIVERS = ["7498653159","8370564028"];
 
 const sendBtn = document.getElementById("sendBtn");
 const toast = document.getElementById("toast");
+const confirmBox = document.getElementById("confirmBox");
 const preview = document.getElementById("preview");
 
 function showToast(msg, type="info") {
   toast.textContent = msg;
   toast.className = "toast show " + type;
   setTimeout(() => toast.className = "toast", 3500);
+}
+
+function showConfirm(message, onYes, onNo) {
+  confirmBox.querySelector("p").textContent = message;
+  confirmBox.classList.add("show");
+
+  const yesBtn = confirmBox.querySelector(".yes");
+  const noBtn = confirmBox.querySelector(".no");
+
+  yesBtn.onclick = () => {
+    confirmBox.classList.remove("show");
+    onYes();
+  };
+  noBtn.onclick = () => {
+    confirmBox.classList.remove("show");
+    if(onNo) onNo();
+  };
 }
 
 sendBtn.addEventListener("click", async ()=>{
@@ -253,43 +278,44 @@ sendBtn.addEventListener("click", async ()=>{
     return;
   }
 
-  if(!confirm("هل ترغب في إرسال الإثبات الآن؟")) return;
+  showConfirm("هل ترغب في إرسال الإثبات الآن؟", async ()=>{
+    sendBtn.disabled = true;
+    showToast("📤 جارٍ إرسال الإثبات...","info");
 
-  sendBtn.disabled = true;
-  showToast("📤 جارٍ إرسال الإثبات...","info");
-
-  const caption = `
-🏦 *إثبات تحويل جديد - المنصة الثانوية بلس*
+    const caption = `
+💎 *إثبات تحويل جديد - المنصة الثانوية بلس* 💎
 ━━━━━━━━━━━━━━━
-👤 الاسم: ${name}
-📱 رقم المنصة: ${studentNumber}
-💳 المحول منه: ${fromNumber}
-🕒 الوقت: ${new Date().toLocaleString("ar-EG")}
+👤 *الاسم:* ${name}
+📲 *رقم المنصة:* ${studentNumber}
+🏦 *رقم المحول منه:* ${fromNumber}
+🕒 *الوقت:* ${new Date().toLocaleString("ar-EG")}
 ━━━━━━━━━━━━━━━
+🔍 *الحالة:* قيد المراجعة ✅
 `;
 
-  try {
-    for (let chatId of RECEIVERS) {
-      const formData = new FormData();
-      formData.append("chat_id", chatId);
-      formData.append("caption", caption);
-      formData.append("parse_mode", "Markdown");
-      formData.append("photo", file);
+    try {
+      for (let chatId of RECEIVERS) {
+        const formData = new FormData();
+        formData.append("chat_id", chatId);
+        formData.append("caption", caption);
+        formData.append("parse_mode", "Markdown");
+        formData.append("photo", file);
 
-      await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
-        method: "POST",
-        body: formData
-      });
+        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+          method: "POST",
+          body: formData
+        });
+      }
+
+      showToast("✅ تم إرسال الإثبات بنجاح! سيتم مراجعته قريبًا.","success");
+      preview.innerHTML = `<img src="${URL.createObjectURL(file)}">`;
+    } catch (err) {
+      console.error(err);
+      showToast("❌ حدث خطأ أثناء الإرسال، حاول مجددًا.","error");
+    } finally {
+      sendBtn.disabled = false;
     }
-
-    showToast("✅ تم إرسال الإثبات بنجاح! سيتم مراجعته قريبًا.","success");
-    preview.innerHTML = `<img src="${URL.createObjectURL(file)}">`;
-  } catch (err) {
-    console.error(err);
-    showToast("❌ حدث خطأ أثناء الإرسال، حاول مجددًا.","error");
-  } finally {
-    sendBtn.disabled = false;
-  }
+  });
 });
 </script>
 </body>
