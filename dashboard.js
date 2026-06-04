@@ -1,5 +1,3 @@
-
-// ---------- Subjects ----------
 const allSubjects = [
     { id: "arabic", name: "اللغة العربية", category: "free", icon: "fas fa-book-open", imgColor: "#2c3e66" },
     { id: "french", name: "الفرنساوي", category: "free", icon: "fas fa-language", imgColor: "#2c5f2d" },
@@ -16,14 +14,16 @@ let currentUserData = null;
 let currentFilter = "all";
 let searchQuery = "";
 
-// UI
+/* =======================
+   UI ELEMENTS
+======================= */
 const subjectsGrid = document.getElementById("subjectsGrid");
 const searchInput = document.getElementById("searchInput");
 const filterBtns = document.querySelectorAll(".filter-btn");
 
-// =======================
-// Toast
-// =======================
+/* =======================
+   TOAST
+======================= */
 function toast(msg, error = false) {
     const t = document.getElementById("customToast");
     t.textContent = msg;
@@ -32,9 +32,9 @@ function toast(msg, error = false) {
     setTimeout(() => t.classList.remove("show"), 2500);
 }
 
-// =======================
-// Firestore user subscription
-// =======================
+/* =======================
+   FIREBASE USER
+======================= */
 async function fetchUser(uid) {
     const doc = await db.collection("users").doc(uid).get();
 
@@ -42,6 +42,7 @@ async function fetchUser(uid) {
         await db.collection("users").doc(uid).set({
             isSubscribed: false
         });
+
         currentUserData = { isSubscribed: false };
         return;
     }
@@ -49,24 +50,30 @@ async function fetchUser(uid) {
     currentUserData = doc.data();
 }
 
-// =======================
-// Render subjects
-// =======================
+/* =======================
+   RENDER SUBJECTS
+======================= */
 function render() {
+
     let list = [...allSubjects];
 
+    // filter
     if (currentFilter !== "all") {
         list = list.filter(s => s.category === currentFilter);
     }
 
+    // search
     if (searchQuery.trim()) {
-        list = list.filter(s => s.name.includes(searchQuery));
+        list = list.filter(s =>
+            s.name.includes(searchQuery.trim())
+        );
     }
 
-    const isPremium = currentUserData?.isSubscribed;
+    const isPremiumUser = currentUserData?.isSubscribed === true;
 
     subjectsGrid.innerHTML = list.map(s => {
-        const locked = s.category === "premium" && !isPremium;
+
+        const locked = s.category === "premium" && !isPremiumUser;
 
         return `
         <div class="subject-card">
@@ -80,7 +87,7 @@ function render() {
                 <button class="enter-btn"
                     data-id="${s.id}"
                     data-name="${s.name}"
-                    data-price="${s.price || 0}"
+                    data-price="${s.price ?? 0}"
                     data-locked="${locked}">
                     
                     ${locked ? "اشترك الآن" : "دخول"}
@@ -90,7 +97,9 @@ function render() {
         `;
     }).join("");
 
-    // click handlers
+    /* =======================
+       CLICK HANDLER (FIXED)
+    ======================= */
     document.querySelectorAll(".enter-btn").forEach(btn => {
         btn.onclick = () => {
 
@@ -99,10 +108,17 @@ function render() {
             const price = btn.dataset.price;
             const locked = btn.dataset.locked === "true";
 
+            if (!id) return;
+
             if (locked) {
-                // 🔥 أهم جزء: تحويل لصفحة اشتراك واحدة فقط
-                window.location.href =
-`subscription.html?subject=${id}&name=${encodeURIComponent(name)}&price=${price}`;
+
+                const url =
+                    `subscription.html?subject=${id}` +
+                    `&name=${encodeURIComponent(name)}` +
+                    `&price=${price || 0}`;
+
+                window.location.href = url;
+
             } else {
                 window.location.href =
                     `exam.html?subject=${id}`;
@@ -111,10 +127,11 @@ function render() {
     });
 }
 
-// =======================
-// Auth
-// =======================
+/* =======================
+   AUTH
+======================= */
 auth.onAuthStateChanged(async user => {
+
     if (!user) {
         window.location.href = "index.html";
         return;
@@ -124,11 +141,12 @@ auth.onAuthStateChanged(async user => {
     render();
 });
 
-// =======================
-// Filters
-// =======================
+/* =======================
+   FILTERS
+======================= */
 filterBtns.forEach(btn => {
     btn.onclick = () => {
+
         filterBtns.forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
 
@@ -137,10 +155,10 @@ filterBtns.forEach(btn => {
     };
 });
 
-// =======================
-// Search
-// =======================
+/* =======================
+   SEARCH
+======================= */
 searchInput.addEventListener("input", e => {
-    searchQuery = e.target.value;
+    searchQuery = e.target.value || "";
     render();
 });
