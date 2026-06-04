@@ -370,283 +370,182 @@
 </div>
 <script src="firebase-config.js"></script>
 
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+<script src="firebase-config.js"></script>
+
 <script>
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// =======================
-// قراءة بيانات المادة من الرابط
-// =======================
+/* =======================
+   SUBJECTS DATABASE
+======================= */
+const subjects = {
+    physics: { name: "الفيزياء", price: 500, icon: "fas fa-atom" },
+    math: { name: "رياضيات", price: 400, icon: "fas fa-calculator" },
+    chemistry: { name: "كيمياء", price: 450, icon: "fas fa-flask" },
+    biology: { name: "أحياء", price: 450, icon: "fas fa-dna" }
+};
+
+/* =======================
+   GET SUBJECT FROM URL
+======================= */
 const params = new URLSearchParams(window.location.search);
+const subjectKey = params.get("subject");
 
-const subjectKey = params.get("subject") || "physics";
-const subjectName = params.get("name") || "الفيزياء";
-const subjectPrice = parseInt(params.get("price")) || 500;
+const subject = subjects[subjectKey] || subjects.physics;
 
-// =======================
-// تغيير بيانات الصفحة تلقائياً
-// =======================
-document.querySelector(".subject-title").textContent = subjectName;
+/* =======================
+   UPDATE UI
+======================= */
+document.querySelector(".subject-title").textContent = subject.name;
 document.querySelector(".price-tag").innerHTML =
-    `${subjectPrice} <span style="font-size:1rem;">جنيه</span>`;
+    `${subject.price} <span style="font-size:1rem;">جنيه</span>`;
 
-document.title = `الاشتراك المميز | ${subjectName} - ${subjectPrice} جنيه`;
+document.querySelector(".hero-image i").className = subject.icon;
 
-// =======================
-// العناصر
-// =======================
-const subscribeBtn = document.getElementById('subscribeNowBtn');
-const loadingOverlay = document.getElementById('loadingOverlay');
-const successModal = document.getElementById('successModal');
-const goDashboardBtn = document.getElementById('goDashboardBtn');
-const paymentToast = document.getElementById('paymentToast');
-const accessWarning = document.getElementById('accessWarning');
+document.title = `الاشتراك المميز | ${subject.name} - ${subject.price} جنيه`;
 
-// =======================
-// Toast
-// =======================
-function showToastMessage(message, isError = false) {
-    paymentToast.textContent = message;
-    paymentToast.style.borderRightColor =
-        isError ? '#ef4444' : '#10b981';
+/* =======================
+   ELEMENTS
+======================= */
+const subscribeBtn = document.getElementById("subscribeNowBtn");
+const loadingOverlay = document.getElementById("loadingOverlay");
+const successModal = document.getElementById("successModal");
+const goDashboardBtn = document.getElementById("goDashboardBtn");
+const accessWarning = document.getElementById("accessWarning");
+const toast = document.getElementById("paymentToast");
 
-    paymentToast.classList.add('show');
+/* =======================
+   TOAST
+======================= */
+function showToast(msg, error = false) {
+    toast.textContent = msg;
+    toast.style.borderRightColor = error ? "#ef4444" : "#10b981";
+    toast.classList.add("show");
 
-    setTimeout(() => {
-        paymentToast.classList.remove('show');
-    }, 3000);
+    setTimeout(() => toast.classList.remove("show"), 3000);
 }
 
-// =======================
-// Loading
-// =======================
-function setLoading(status) {
-    loadingOverlay.classList.toggle("active", status);
+/* =======================
+   LOADING
+======================= */
+function setLoading(state) {
+    loadingOverlay.classList.toggle("active", state);
 }
 
-// =======================
-// التحقق من الاشتراك
-// =======================
-async function checkSubscription(userId) {
-    try {
-        const subDoc = await db
-            .collection("subscriptions")
-            .doc(userId)
-            .get();
+/* =======================
+   CHECK SUBSCRIPTION
+======================= */
+async function checkSubscription(uid) {
+    const doc = await db.collection("subscriptions").doc(uid).get();
 
-        const isSubscribed =
-            subDoc.exists &&
-            subDoc.data()[subjectKey] === true;
+    const isSub = doc.exists && doc.data()[subjectKey] === true;
 
-        if (isSubscribed) {
-
-            subscribeBtn.disabled = true;
-            subscribeBtn.style.opacity = "0.6";
-
-            subscribeBtn.innerHTML =
-                `<i class="fas fa-check"></i> تم الاشتراك`;
-
-            accessWarning.style.display = "block";
-            accessWarning.style.background = "#10b98120";
-            accessWarning.style.color = "#34d399";
-
-            accessWarning.innerHTML =
-                `<i class="fas fa-check-circle"></i>
-                 أنت مشترك بالفعل في ${subjectName}`;
-
-            return true;
-        }
+    if (isSub) {
+        subscribeBtn.disabled = true;
+        subscribeBtn.innerHTML = "✔ تم الاشتراك";
 
         accessWarning.style.display = "block";
         accessWarning.innerHTML =
-            `<i class="fas fa-lock"></i>
-             غير مشترك في ${subjectName}`;
+            `✔ أنت مشترك في ${subject.name}`;
 
-        return false;
-
-    } catch (error) {
-        console.error(error);
-        return false;
+        return true;
     }
+
+    accessWarning.style.display = "block";
+    accessWarning.innerHTML =
+        `🔒 غير مشترك في ${subject.name}`;
+
+    return false;
 }
 
-// =======================
-// محاكاة الدفع
-// =======================
-async function processPayment() {
-
+/* =======================
+   FAKE PAYMENT (replace later)
+======================= */
+function processPayment() {
     return new Promise((resolve, reject) => {
-
         setTimeout(() => {
-
-            const success = Math.random() > 0.1;
-
-            if (success) {
-                resolve({
-                    success: true,
-                    transactionId: "TXN_" + Date.now()
-                });
-            } else {
-                reject({
-                    message: "فشل الدفع"
-                });
-            }
-
+            Math.random() > 0.1
+                ? resolve({ success: true })
+                : reject(new Error("فشل الدفع"));
         }, 2000);
     });
 }
 
-// =======================
-// تحديث Firestore
-// =======================
-async function updateSubscription(userId) {
-
-    await db.collection("subscriptions")
-        .doc(userId)
-        .set({
-
-            [subjectKey]: true,
-
-            [`${subjectKey}_price`]:
-                subjectPrice,
-
-            [`${subjectKey}_date`]:
-                firebase.firestore
-                .FieldValue
-                .serverTimestamp()
-
-        }, { merge: true });
-
+/* =======================
+   SAVE TO FIRESTORE
+======================= */
+async function saveSubscription(uid) {
+    await db.collection("subscriptions").doc(uid).set({
+        [subjectKey]: true,
+        [`${subjectKey}_price`]: subject.price,
+        [`${subjectKey}_date`]: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true });
 }
 
-// =======================
-// الاشتراك
-// =======================
+/* =======================
+   SUBSCRIBE
+======================= */
 async function handleSubscribe() {
-
     const user = auth.currentUser;
 
     if (!user) {
-
-        showToastMessage(
-            "سجل الدخول أولاً",
-            true
-        );
-
-        setTimeout(() => {
-            window.location.href =
-                "index.html";
-        }, 1500);
-
-        return;
-    }
-
-    const already =
-        await checkSubscription(user.uid);
-
-    if (already) {
-
-        showToastMessage(
-            "أنت مشترك بالفعل",
-            true
-        );
-
+        showToast("سجل الدخول أولاً", true);
+        setTimeout(() => location.href = "index.html", 1000);
         return;
     }
 
     setLoading(true);
 
     try {
-
-        const payment =
-            await processPayment();
-
-        if (payment.success) {
-
-            await updateSubscription(
-                user.uid
-            );
-
-            setLoading(false);
-
-            successModal
-                .classList
-                .add("active");
-
-            subscribeBtn.disabled = true;
-
-            subscribeBtn.innerHTML =
-                `<i class="fas fa-check"></i>
-                 تم الاشتراك`;
-
-            accessWarning.innerHTML =
-                `<i class="fas fa-check-circle"></i>
-                 تم تفعيل ${subjectName}`;
-
-            accessWarning.style.background =
-                "#10b98120";
-
-            accessWarning.style.color =
-                "#6ee7b7";
-
-            showToastMessage(
-                `تم الاشتراك في ${subjectName}`
-            );
-        }
-
-    } catch (error) {
+        await processPayment();
+        await saveSubscription(user.uid);
 
         setLoading(false);
 
-        showToastMessage(
-            error.message ||
-            "حدث خطأ",
-            true
-        );
+        successModal.classList.add("active");
+
+        subscribeBtn.disabled = true;
+        subscribeBtn.innerHTML = "✔ تم الاشتراك";
+
+        accessWarning.innerHTML =
+            `✔ تم تفعيل ${subject.name}`;
+        accessWarning.style.background = "#10b98120";
+        accessWarning.style.color = "#10b981";
+
+        showToast("تم الاشتراك بنجاح");
+    } catch (e) {
+        setLoading(false);
+        showToast(e.message, true);
     }
 }
 
-// =======================
-// تسجيل الدخول
-// =======================
+/* =======================
+   AUTH STATE
+======================= */
 auth.onAuthStateChanged(async (user) => {
-
     if (user) {
-
-        await checkSubscription(
-            user.uid
-        );
-
+        await checkSubscription(user.uid);
     } else {
-
         subscribeBtn.disabled = true;
-
-        subscribeBtn.innerHTML =
-            `<i class="fas fa-sign-in-alt"></i>
-             سجل الدخول أولاً`;
-
-        accessWarning.style.display =
-            "block";
-
-        accessWarning.innerHTML =
-            "يجب تسجيل الدخول";
+        subscribeBtn.innerHTML = "سجل الدخول أولاً";
+        accessWarning.style.display = "block";
+        accessWarning.innerHTML = "يجب تسجيل الدخول";
     }
 });
 
-// =======================
-subscribeBtn.addEventListener(
-    "click",
-    handleSubscribe
-);
+/* =======================
+   EVENTS
+======================= */
+subscribeBtn.addEventListener("click", handleSubscribe);
 
-goDashboardBtn.addEventListener(
-    "click",
-    () => {
-        window.location.href =
-            "dashboard.html";
-    }
-);
-            </script>
-            
+goDashboardBtn.addEventListener("click", () => {
+    location.href = "dashboard.html";
+});
+</script>            
 </body>
   </html>
