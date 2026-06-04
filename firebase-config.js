@@ -1,12 +1,14 @@
 // firebase-config.js - Firebase configuration (replace with your own)
 // IMPORTANT: Replace with your Firebase project credentials
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyDsJXNa6EYenn2f5mfoNQVEDxHhCH-XGAo",
+  authDomain: "alzahady-6e615.firebaseapp.com",
+  databaseURL: "https://alzahady-6e615-default-rtdb.firebaseio.com",
+  projectId: "alzahady-6e615",
+  storageBucket: "alzahady-6e615.firebasestorage.app",
+  messagingSenderId: "377804257010",
+  appId: "1:377804257010:web:9516e9ecbbc8b22ab0c26b",
+  measurementId: "G-4XPCD5L40F"
 };
 
 // Initialize Firebase (if not already)
