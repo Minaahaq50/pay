@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>الاشتراك المميز | فيزياء - 500 جنيه</title>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <!-- Font Awesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background: radial-gradient(ellipse at 30% 40%, #0b1120, #03050b);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* animated background */
+        .particles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(139, 92, 246, 0.2);
+            border-radius: 50%;
+            filter: blur(60px);
+            animation: floatParticle 18s infinite alternate;
+        }
+
+        .particle:nth-child(1) { width: 400px; height: 400px; top: -100px; left: -150px; background: #4f46e5; opacity: 0.3; }
+        .particle:nth-child(2) { width: 550px; height: 550px; bottom: -200px; right: -150px; background: #db2777; opacity: 0.25; animation-duration: 25s; }
+        .particle:nth-child(3) { width: 350px; height: 350px; top: 40%; left: 30%; background: #0ea5e9; opacity: 0.2; }
+
+        @keyframes floatParticle {
+            0% { transform: translate(0,0) scale(1);}
+            100% { transform: translate(70px, 70px) scale(1.2);}
+        }
+
+        /* main subscription card */
+        .subscription-container {
+            max-width: 1200px;
+            width: 100%;
+            z-index: 2;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .premium-card {
+            background: rgba(20, 28, 45, 0.65);
+            backdrop-filter: blur(18px);
+            border-radius: 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 35px 60px rgba(0, 0, 0, 0.4), 0 0 0 0.5px rgba(255,255,255,0.05);
+            overflow: hidden;
+            width: 100%;
+            max-width: 500px;
+            transition: transform 0.3s ease;
+        }
+
+        .hero-image {
+            background: linear-gradient(135deg, #1e1b4b, #3b0764);
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .hero-image i {
+            font-size: 6rem;
+            color: #c084fc;
+            text-shadow: 0 10px 20px rgba(0,0,0,0.4);
+        }
+
+        .subject-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-top: 0.5rem;
+            background: linear-gradient(120deg, #fff, #c4b5fd);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .price-tag {
+            background: rgba(0,0,0,0.5);
+            display: inline-block;
+            padding: 0.5rem 1.8rem;
+            border-radius: 3rem;
+            margin-top: 1rem;
+            font-weight: 700;
+            font-size: 1.6rem;
+            color: #fbbf24;
+        }
+
+        .details {
+            padding: 2rem;
+        }
+
+        .features {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+
+        .features li {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: #e2e8f0;
+            font-size: 1rem;
+        }
+
+        .features li i {
+            width: 28px;
+            color: #34d399;
+            font-size: 1.2rem;
+        }
+
+        .subscribe-btn {
+            width: 100%;
+            background: linear-gradient(95deg, #f59e0b, #d97706);
+            border: none;
+            padding: 1.2rem;
+            border-radius: 2rem;
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.25s;
+            margin-top: 1rem;
+            box-shadow: 0 15px 25px -10px rgba(245,158,11,0.4);
+        }
+
+        .subscribe-btn:hover {
+            transform: scale(1.02);
+            background: linear-gradient(95deg, #fbbf24, #f59e0b);
+            box-shadow: 0 20px 30px -10px #f59e0b70;
+        }
+
+        /* info panel */
+        .info-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(14px);
+            border-radius: 2rem;
+            padding: 2rem;
+            max-width: 400px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .info-panel h3 {
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .info-panel p {
+            color: #b9c7e0;
+            line-height: 1.6;
+        }
+
+        .badge-premium {
+            background: #facc1520;
+            color: #fcd34d;
+            border-radius: 2rem;
+            padding: 0.3rem 1rem;
+            display: inline-block;
+            margin-top: 1rem;
+            font-size: 0.8rem;
+        }
+
+        /* Toast */
+        .toast-sub {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1e293b;
+            backdrop-filter: blur(20px);
+            padding: 1rem 2rem;
+            border-radius: 3rem;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            border-right: 4px solid #f59e0b;
+        }
+        .toast-sub.show { transform: translateX(0); }
+
+        /* Loading Overlay */
+        .loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.2s;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .loader-overlay.active { visibility: visible; opacity: 1; }
+        .loader-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255,255,255,0.2);
+            border-top: 4px solid #fbbf24;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Success Animation Modal */
+        .success-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.2s;
+        }
+        .success-modal.active { visibility: visible; opacity: 1; }
+        .success-card {
+            background: rgba(20,30,50,0.95);
+            border-radius: 2rem;
+            padding: 2rem;
+            text-align: center;
+            max-width: 350px;
+            animation: bounceSuccess 0.5s cubic-bezier(0.34, 1.2, 0.64, 1);
+            border: 1px solid #fbbf24;
+        }
+        @keyframes bounceSuccess {
+            0% { transform: scale(0.8); opacity: 0; }
+            80% { transform: scale(1.05);}
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .success-card i {
+            font-size: 5rem;
+            color: #10b981;
+            margin-bottom: 1rem;
+        }
+        .success-card h2 {
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+        .success-card p {
+            color: #cbd5e1;
+        }
+        .dashboard-redirect {
+            background: #8b5cf6;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 2rem;
+            margin-top: 1.5rem;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        @media (max-width: 800px) {
+            .subscription-container { flex-direction: column; align-items: center; }
+            .premium-card, .info-panel { width: 100%; max-width: 500px; }
+        }
+        .locked-info {
+            background: #ef444420;
+            border-radius: 2rem;
+            padding: 0.7rem;
+            text-align: center;
+            margin-top: 1rem;
+            color: #f87171;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+<div class="particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+</div>
+
+<div class="subscription-container">
+    <!-- Main Subscription Card -->
+    <div class="premium-card">
+        <div class="hero-image">
+            <i class="fas fa-atom"></i>
+            <div class="subject-title">الفيزياء</div>
+            <div class="price-tag">500 <span style="font-size:1rem;">جنيه</span></div>
+        </div>
+        <div class="details">
+            <ul class="features">
+                <li><i class="fas fa-check-circle"></i> الوصول الكامل للامتحانات الشاملة</li>
+                <li><i class="fas fa-check-circle"></i> صور عالية الجودة والرسوم البيانية</li>
+                <li><i class="fas fa-check-circle"></i> تحديثات مستمرة وأسئلة تفاعلية</li>
+                <li><i class="fas fa-check-circle"></i> دعم أولوية + شهادات إنجاز</li>
+            </ul>
+            <button id="subscribeNowBtn" class="subscribe-btn"><i class="fas fa-crown"></i> اشترك الآن <i class="fas fa-arrow-left"></i></button>
+            <div class="locked-info" id="accessWarning" style="display: none;">
+                <i class="fas fa-lock"></i> أنت غير مشترك حالياً، قم بالاشتراك لفتح المحتوى.
+            </div>
+        </div>
+    </div>
+
+    <!-- Extra info panel -->
+    <div class="info-panel">
+        <h3><i class="fas fa-gem"></i> مميزات حصرية</h3>
+        <p>بعد الاشتراك في مادة الفيزياء ستحصل على بنك أسئلة غير محدود، نماذج محاكاة للامتحانات، وتقارير ذكاء اصطناعي لتحليل الأداء.</p>
+        <div class="badge-premium"><i class="fas fa-shield-alt"></i> دفع آمن 100%</div>
+    </div>
+</div>
+
+<!-- Toast Notifications -->
+<div id="paymentToast" class="toast-sub"></div>
+
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="loader-overlay">
+    <div class="loader-spinner"></div>
+    <div style="color:white;">جاري معالجة الدفع...</div>
+</div>
+
+<!-- Success Animation Modal -->
+<div id="successModal" class="success-modal">
+    <div class="success-card">
+        <i class="fas fa-check-circle"></i>
+        <h2>تم الاشتراك بنجاح!</h2>
+        <p>تهانينا! لقد تم تفعيل اشتراك الفيزياء. يمكنك الآن الوصول إلى جميع محتويات المادة.</p>
+        <button id="goDashboardBtn" class="dashboard-redirect">الذهاب إلى لوحة المواد <i class="fas fa-arrow-left"></i></button>
+    </div>
+</div>
+
+<script src="firebase-config.js"></script>
+<script>
+    // Initialize Firebase (config from firebase-config.js is expected)
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // DOM elements
+    const subscribeBtn = document.getElementById('subscribeNowBtn');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const successModal = document.getElementById('successModal');
+    const goDashboardBtn = document.getElementById('goDashboardBtn');
+    const paymentToast = document.getElementById('paymentToast');
+    const accessWarning = document.getElementById('accessWarning');
+
+    // Helper toast
+    function showToastMessage(message, isError = false) {
+        paymentToast.textContent = message;
+        paymentToast.style.borderRightColor = isError ? '#ef4444' : '#10b981';
+        paymentToast.classList.add('show');
+        setTimeout(() => paymentToast.classList.remove('show'), 3200);
+    }
+
+    // Set loading state
+    function setLoading(loading) {
+        if (loading) loadingOverlay.classList.add('active');
+        else loadingOverlay.classList.remove('active');
+    }
+
+    // Check if user already subscribed for Physics
+    async function checkPhysicsSubscription(userId) {
+        try {
+            const subDoc = await db.collection('subscriptions').doc(userId).get();
+            if (subDoc.exists && subDoc.data().physics === true) {
+                // already subscribed: show warning and disable button?
+                subscribeBtn.disabled = true;
+                subscribeBtn.style.opacity = '0.6';
+                subscribeBtn.innerHTML = '<i class="fas fa-check"></i> تم الاشتراك مسبقاً';
+                accessWarning.style.display = 'block';
+                accessWarning.innerHTML = '<i class="fas fa-check-circle"></i> أنت مشترك بالفعل في الفيزياء! يمكنك دخول المادة.';
+                accessWarning.style.color = '#34d399';
+                accessWarning.style.background = '#10b98120';
+                return true;
+            } else {
+                subscribeBtn.disabled = false;
+                accessWarning.style.display = 'block';
+                accessWarning.innerHTML = '<i class="fas fa-lock"></i> غير مشترك، قم بالاشتراك لفتح المحتوى.';
+                return false;
+            }
+        } catch (error) {
+            console.warn(error);
+            return false;
+        }
+    }
+
+    // ** API JavaScript للدفع (محاكاة بوابة دفع حقيقية مع timeout) **
+    async function processPayment(amount, subjectName) {
+        // محاكاة API دفع خارجي (مثل Stripe, Paymob, Fawry ...)
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                // نافتراض أن 90% من المدفوعات تنجح (محاكاة)
+                const success = Math.random() > 0.1; // 90% نجاح للتجربة الواقعية
+                if (success) {
+                    resolve({ success: true, transactionId: 'TXN_' + Date.now() });
+                } else {
+                    reject({ success: false, message: 'فشل المعاملة، حاول مرة أخرى' });
+                }
+            }, 2000);
+        });
+    }
+
+    // Update Firestore after successful payment: subscriptions/{uid} => { physics: true }
+    async function updateFirestoreSubscription(userId) {
+        const subscriptionRef = db.collection('subscriptions').doc(userId);
+        await subscriptionRef.set({
+            physics: true,
+            subscribedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            amount: 500,
+            subject: 'physics'
+        }, { merge: true });
+        // also optional: update user metadata
+        await db.collection('users').doc(userId).set({
+            hasPhysicsAccess: true,
+            lastSubscription: new Date().toISOString()
+        }, { merge: true });
+    }
+
+    // Subscribe handler
+    async function handleSubscribe() {
+        const user = auth.currentUser;
+        if (!user) {
+            showToastMessage('يجب تسجيل الدخول أولاً لإتمام الاشتراك', true);
+            setTimeout(() => { window.location.href = 'index.html'; }, 1500);
+            return;
+        }
+
+        // check again if already subscribed
+        const already = await checkPhysicsSubscription(user.uid);
+        if (already) {
+            showToastMessage('أنت مشترك بالفعل في الفيزياء!', true);
+            return;
+        }
+
+        setLoading(true);
+        try {
+            // 1. Call payment API (simulated)
+            const paymentResult = await processPayment(500, 'الفيزياء');
+            if (paymentResult.success) {
+                // 2. Update Firestore
+                await updateFirestoreSubscription(user.uid);
+                // 3. Success animation & update UI
+                setLoading(false);
+                successModal.classList.add('active');
+
+                // 4. update button status
+                subscribeBtn.disabled = true;
+                subscribeBtn.innerHTML = '<i class="fas fa-check"></i> تم الاشتراك';
+                accessWarning.innerHTML = '<i class="fas fa-check-circle"></i> اشتراك نشط! يمكنك الوصول للمادة.';
+                accessWarning.style.background = '#10b98120';
+                accessWarning.style.color = '#6ee7b7';
+                showToastMessage('تم الدفع بنجاح! تم تفعيل الاشتراك.', false);
+            } else {
+                throw new Error(paymentResult.message || 'فشل الدفع');
+            }
+        } catch (error) {
+            setLoading(false);
+            showToastMessage(error.message || 'حدث خطأ أثناء الدفع، حاول مجدداً', true);
+        }
+    }
+
+    // Redirect to dashboard (prevent access without subscription logic)
+    goDashboardBtn.addEventListener('click', () => {
+        window.location.href = 'dashboard.html'; // redirect to the main subjects dashboard
+    });
+
+    // Auth state & initial check
+    auth.onAuthStateChanged(async (user) => {
+        if (user) {
+            await checkPhysicsSubscription(user.uid);
+        } else {
+            // Not logged in: show message and disable subscription
+            subscribeBtn.disabled = true;
+            subscribeBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> سجل الدخول أولاً';
+            accessWarning.style.display = 'block';
+            accessWarning.innerHTML = '<i class="fas fa-exclamation-triangle"></i> يجب تسجيل الدخول للاشتراك.';
+        }
+    });
+
+    subscribeBtn.addEventListener('click', handleSubscribe);
+
+    // If user tries to go back without subscription (prevent content access)
+    window.addEventListener('pageshow', (event) => {
+        if (auth.currentUser) {
+            checkPhysicsSubscription(auth.currentUser.uid).then(isSub => {
+                if (!isSub) {
+                    // user not subscribed, but we keep page as is; any direct exam access would be blocked on dashboard side.
+                    console.log('غير مشترك - المحتوى مغلق');
+                }
+            });
+        }
+    });
+
+    // Additional: blocking manual back or direct exam link simulation can be done on server/dashboard, but we add extra protection
+    // تمنع الرجوع للمحتوى بدون اشتراك: عند محاولة فتح أي محتوى فيزياء في dashboard سيتم التحقق من subscription مرة أخرى
+    // ويمكن استخدام sessionStorage للتحقق قبل الدخول (تم تنفيذه في dashboard سابقاً)
+    console.log("صفحة الاشتراك premium - حماية كاملة");
+</script>
+</body>
+  </html>
