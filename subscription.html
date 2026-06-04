@@ -375,6 +375,15 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 
 /* =======================
+   GET URL PARAMS (FIXED)
+======================= */
+const params = new URLSearchParams(window.location.search);
+
+const subjectKey = params.get("subject");
+const subjectNameFromURL = params.get("name");
+const subjectPriceFromURL = params.get("price");
+
+/* =======================
    SUBJECTS DATABASE
 ======================= */
 const subjects = {
@@ -385,34 +394,39 @@ const subjects = {
 };
 
 /* =======================
-   GET URL PARAMS
+   RESOLVE SUBJECT (IMPORTANT FIX)
 ======================= */
-const params = new URLSearchParams(window.location.search);
+let subject = null;
 
-const subjectKey = params.get("subject");
-const subjectNameFromURL = params.get("name");
-const subjectPriceFromURL = params.get("price");
+if (subjectKey && subjects[subjectKey]) {
+    subject = subjects[subjectKey];
+} else if (subjectNameFromURL) {
+    subject = {
+        name: subjectNameFromURL,
+        price: subjectPriceFromURL || "—",
+        icon: "fas fa-book"
+    };
+} else {
+    subject = {
+        name: "مادة غير معروفة",
+        price: "—",
+        icon: "fas fa-exclamation-triangle"
+    };
+}
 
 /* =======================
-   FIX: تحديد المادة الصح
+   UPDATE UI SAFELY
 ======================= */
-const subject = subjects[subjectKey] || {
-    name: subjectNameFromURL || "المادة",
-    price: subjectPriceFromURL || 0,
-    icon: "fas fa-book"
-};
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelector(".subject-title").textContent = subject.name;
 
-/* =======================
-   UPDATE UI (FIXED)
-======================= */
-document.querySelector(".subject-title").textContent = subject.name;
+    document.querySelector(".price-tag").innerHTML =
+        `${subject.price} <span style="font-size:1rem;">جنيه</span>`;
 
-document.querySelector(".price-tag").innerHTML =
-    `${subject.price} <span style="font-size:1rem;">جنيه</span>`;
+    document.querySelector(".hero-image i").className = subject.icon;
 
-document.querySelector(".hero-image i").className = subject.icon;
-
-document.title = `الاشتراك المميز | ${subject.name} - ${subject.price} جنيه`;
+    document.title = `الاشتراك | ${subject.name}`;
+});
 
 /* =======================
    ELEMENTS
@@ -431,6 +445,7 @@ function showToast(msg, error = false) {
     toast.textContent = msg;
     toast.style.borderRightColor = error ? "#ef4444" : "#10b981";
     toast.classList.add("show");
+
     setTimeout(() => toast.classList.remove("show"), 3000);
 }
 
@@ -447,7 +462,7 @@ function setLoading(state) {
 async function checkSubscription(uid) {
     const doc = await db.collection("subscriptions").doc(uid).get();
 
-    const isSub = doc.exists && doc.data()[subjectKey] === true;
+    const isSub = doc.exists && doc.data()?.[subjectKey] === true;
 
     if (isSub) {
         subscribeBtn.disabled = true;
@@ -484,6 +499,8 @@ function processPayment() {
    SAVE TO FIRESTORE
 ======================= */
 async function saveSubscription(uid) {
+    if (!subjectKey) return;
+
     await db.collection("subscriptions").doc(uid).set({
         [subjectKey]: true,
         [`${subjectKey}_price`]: subject.price,
@@ -510,12 +527,15 @@ async function handleSubscribe() {
         await saveSubscription(user.uid);
 
         setLoading(false);
+
         successModal.classList.add("active");
 
         subscribeBtn.disabled = true;
         subscribeBtn.innerHTML = "✔ تم الاشتراك";
 
-        accessWarning.innerHTML = `✔ تم تفعيل ${subject.name}`;
+        accessWarning.innerHTML =
+            `✔ تم تفعيل ${subject.name}`;
+        accessWarning.style.display = "block";
         accessWarning.style.background = "#10b98120";
         accessWarning.style.color = "#10b981";
 
@@ -528,7 +548,7 @@ async function handleSubscribe() {
 }
 
 /* =======================
-   AUTH
+   AUTH STATE
 ======================= */
 auth.onAuthStateChanged(async (user) => {
     if (user) {
@@ -549,6 +569,6 @@ subscribeBtn.addEventListener("click", handleSubscribe);
 goDashboardBtn.addEventListener("click", () => {
     location.href = "dashboard.html";
 });
-</script> 
+  </script> 
 </body>
   </html>
