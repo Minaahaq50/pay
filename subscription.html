@@ -370,7 +370,6 @@
 </div>
 
 <script src="firebase-config.js"></script>
-
 <script>
 const auth = firebase.auth();
 const db = firebase.firestore();
@@ -380,26 +379,34 @@ const db = firebase.firestore();
 ======================= */
 const subjects = {
     physics: { name: "الفيزياء", price: 500, icon: "fas fa-atom" },
-    math: { name: "رياضيات", price: 400, icon: "fas fa-calculator" },
-    chemistry: { name: "كيمياء", price: 450, icon: "fas fa-flask" },
-    biology: { name: "أحياء", price: 450, icon: "fas fa-dna" }
+    math: { name: "رياضيات", price: 500, icon: "fas fa-calculator" },
+    chemistry: { name: "كيمياء", price: 500, icon: "fas fa-flask" },
+    biology: { name: "أحياء", price: 500, icon: "fas fa-dna" }
 };
 
 /* =======================
-   GET SUBJECT FROM URL
+   GET URL PARAMS
 ======================= */
 const params = new URLSearchParams(window.location.search);
 
 const subjectKey = params.get("subject");
-const subjectName = params.get("name");
-const subjectPrice = params.get("price");
-
-console.log(subjectKey, subjectName, subjectPrice);
+const subjectNameFromURL = params.get("name");
+const subjectPriceFromURL = params.get("price");
 
 /* =======================
-   UPDATE UI
+   FIX: تحديد المادة الصح
+======================= */
+const subject = subjects[subjectKey] || {
+    name: subjectNameFromURL || "المادة",
+    price: subjectPriceFromURL || 0,
+    icon: "fas fa-book"
+};
+
+/* =======================
+   UPDATE UI (FIXED)
 ======================= */
 document.querySelector(".subject-title").textContent = subject.name;
+
 document.querySelector(".price-tag").innerHTML =
     `${subject.price} <span style="font-size:1rem;">جنيه</span>`;
 
@@ -424,7 +431,6 @@ function showToast(msg, error = false) {
     toast.textContent = msg;
     toast.style.borderRightColor = error ? "#ef4444" : "#10b981";
     toast.classList.add("show");
-
     setTimeout(() => toast.classList.remove("show"), 3000);
 }
 
@@ -462,7 +468,7 @@ async function checkSubscription(uid) {
 }
 
 /* =======================
-   FAKE PAYMENT (replace later)
+   FAKE PAYMENT
 ======================= */
 function processPayment() {
     return new Promise((resolve, reject) => {
@@ -504,18 +510,17 @@ async function handleSubscribe() {
         await saveSubscription(user.uid);
 
         setLoading(false);
-
         successModal.classList.add("active");
 
         subscribeBtn.disabled = true;
         subscribeBtn.innerHTML = "✔ تم الاشتراك";
 
-        accessWarning.innerHTML =
-            `✔ تم تفعيل ${subject.name}`;
+        accessWarning.innerHTML = `✔ تم تفعيل ${subject.name}`;
         accessWarning.style.background = "#10b98120";
         accessWarning.style.color = "#10b981";
 
         showToast("تم الاشتراك بنجاح");
+
     } catch (e) {
         setLoading(false);
         showToast(e.message, true);
@@ -523,7 +528,7 @@ async function handleSubscribe() {
 }
 
 /* =======================
-   AUTH STATE
+   AUTH
 ======================= */
 auth.onAuthStateChanged(async (user) => {
     if (user) {
@@ -544,6 +549,6 @@ subscribeBtn.addEventListener("click", handleSubscribe);
 goDashboardBtn.addEventListener("click", () => {
     location.href = "dashboard.html";
 });
-</script>            
+</script> 
 </body>
   </html>
