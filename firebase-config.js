@@ -186,9 +186,8 @@ document.getElementById('login-btn').addEventListener('click', async () => {
         showToast(`تم تسجيل الدخول بنجاح! مرحباً ${user.displayName || user.email}`, 'success');
         // after success redirect to dashboard or exams page (simulate)
         setTimeout(() => {
-            alert("تم الدخول إلى لوحة الامتحانات (دمج وهمي للتوضيح)");
-            // In real scenario: window.location.href = "/dashboard.html";
-        }, 800);
+    window.location.href = "dashboard.html";
+}, 800);
     } catch (err) {
         let msg = err.message;
         if (err.code === 'auth/user-not-found') msg = 'لا يوجد حساب مرتبط بهذا البريد';
