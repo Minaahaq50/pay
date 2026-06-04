@@ -368,172 +368,285 @@
         <button id="goDashboardBtn" class="dashboard-redirect">الذهاب إلى لوحة المواد <i class="fas fa-arrow-left"></i></button>
     </div>
 </div>
-
 <script src="firebase-config.js"></script>
+
 <script>
-    // Initialize Firebase (config from firebase-config.js is expected)
-    const auth = firebase.auth();
-    const db = firebase.firestore();
+const auth = firebase.auth();
+const db = firebase.firestore();
 
-    // DOM elements
-    const subscribeBtn = document.getElementById('subscribeNowBtn');
-    const loadingOverlay = document.getElementById('loadingOverlay');
-    const successModal = document.getElementById('successModal');
-    const goDashboardBtn = document.getElementById('goDashboardBtn');
-    const paymentToast = document.getElementById('paymentToast');
-    const accessWarning = document.getElementById('accessWarning');
+// =======================
+// قراءة بيانات المادة من الرابط
+// =======================
+const params = new URLSearchParams(window.location.search);
 
-    // Helper toast
-    function showToastMessage(message, isError = false) {
-        paymentToast.textContent = message;
-        paymentToast.style.borderRightColor = isError ? '#ef4444' : '#10b981';
-        paymentToast.classList.add('show');
-        setTimeout(() => paymentToast.classList.remove('show'), 3200);
-    }
+const subjectKey = params.get("subject") || "physics";
+const subjectName = params.get("name") || "الفيزياء";
+const subjectPrice = parseInt(params.get("price")) || 500;
 
-    // Set loading state
-    function setLoading(loading) {
-        if (loading) loadingOverlay.classList.add('active');
-        else loadingOverlay.classList.remove('active');
-    }
+// =======================
+// تغيير بيانات الصفحة تلقائياً
+// =======================
+document.querySelector(".subject-title").textContent = subjectName;
+document.querySelector(".price-tag").innerHTML =
+    `${subjectPrice} <span style="font-size:1rem;">جنيه</span>`;
 
-    // Check if user already subscribed for Physics
-    async function checkPhysicsSubscription(userId) {
-        try {
-            const subDoc = await db.collection('subscriptions').doc(userId).get();
-            if (subDoc.exists && subDoc.data().physics === true) {
-                // already subscribed: show warning and disable button?
-                subscribeBtn.disabled = true;
-                subscribeBtn.style.opacity = '0.6';
-                subscribeBtn.innerHTML = '<i class="fas fa-check"></i> تم الاشتراك مسبقاً';
-                accessWarning.style.display = 'block';
-                accessWarning.innerHTML = '<i class="fas fa-check-circle"></i> أنت مشترك بالفعل في الفيزياء! يمكنك دخول المادة.';
-                accessWarning.style.color = '#34d399';
-                accessWarning.style.background = '#10b98120';
-                return true;
-            } else {
-                subscribeBtn.disabled = false;
-                accessWarning.style.display = 'block';
-                accessWarning.innerHTML = '<i class="fas fa-lock"></i> غير مشترك، قم بالاشتراك لفتح المحتوى.';
-                return false;
-            }
-        } catch (error) {
-            console.warn(error);
-            return false;
-        }
-    }
+document.title = `الاشتراك المميز | ${subjectName} - ${subjectPrice} جنيه`;
 
-    // ** API JavaScript للدفع (محاكاة بوابة دفع حقيقية مع timeout) **
-    async function processPayment(amount, subjectName) {
-        // محاكاة API دفع خارجي (مثل Stripe, Paymob, Fawry ...)
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                // نافتراض أن 90% من المدفوعات تنجح (محاكاة)
-                const success = Math.random() > 0.1; // 90% نجاح للتجربة الواقعية
-                if (success) {
-                    resolve({ success: true, transactionId: 'TXN_' + Date.now() });
-                } else {
-                    reject({ success: false, message: 'فشل المعاملة، حاول مرة أخرى' });
-                }
-            }, 2000);
-        });
-    }
+// =======================
+// العناصر
+// =======================
+const subscribeBtn = document.getElementById('subscribeNowBtn');
+const loadingOverlay = document.getElementById('loadingOverlay');
+const successModal = document.getElementById('successModal');
+const goDashboardBtn = document.getElementById('goDashboardBtn');
+const paymentToast = document.getElementById('paymentToast');
+const accessWarning = document.getElementById('accessWarning');
 
-    // Update Firestore after successful payment: subscriptions/{uid} => { physics: true }
-    async function updateFirestoreSubscription(userId) {
-        const subscriptionRef = db.collection('subscriptions').doc(userId);
-        await subscriptionRef.set({
-            physics: true,
-            subscribedAt: firebase.firestore.FieldValue.serverTimestamp(),
-            amount: 500,
-            subject: 'physics'
-        }, { merge: true });
-        // also optional: update user metadata
-        await db.collection('users').doc(userId).set({
-            hasPhysicsAccess: true,
-            lastSubscription: new Date().toISOString()
-        }, { merge: true });
-    }
+// =======================
+// Toast
+// =======================
+function showToastMessage(message, isError = false) {
+    paymentToast.textContent = message;
+    paymentToast.style.borderRightColor =
+        isError ? '#ef4444' : '#10b981';
 
-    // Subscribe handler
-    async function handleSubscribe() {
-        const user = auth.currentUser;
-        if (!user) {
-            showToastMessage('يجب تسجيل الدخول أولاً لإتمام الاشتراك', true);
-            setTimeout(() => { window.location.href = 'index.html'; }, 1500);
-            return;
-        }
+    paymentToast.classList.add('show');
 
-        // check again if already subscribed
-        const already = await checkPhysicsSubscription(user.uid);
-        if (already) {
-            showToastMessage('أنت مشترك بالفعل في الفيزياء!', true);
-            return;
-        }
+    setTimeout(() => {
+        paymentToast.classList.remove('show');
+    }, 3000);
+}
 
-        setLoading(true);
-        try {
-            // 1. Call payment API (simulated)
-            const paymentResult = await processPayment(500, 'الفيزياء');
-            if (paymentResult.success) {
-                // 2. Update Firestore
-                await updateFirestoreSubscription(user.uid);
-                // 3. Success animation & update UI
-                setLoading(false);
-                successModal.classList.add('active');
+// =======================
+// Loading
+// =======================
+function setLoading(status) {
+    loadingOverlay.classList.toggle("active", status);
+}
 
-                // 4. update button status
-                subscribeBtn.disabled = true;
-                subscribeBtn.innerHTML = '<i class="fas fa-check"></i> تم الاشتراك';
-                accessWarning.innerHTML = '<i class="fas fa-check-circle"></i> اشتراك نشط! يمكنك الوصول للمادة.';
-                accessWarning.style.background = '#10b98120';
-                accessWarning.style.color = '#6ee7b7';
-                showToastMessage('تم الدفع بنجاح! تم تفعيل الاشتراك.', false);
-            } else {
-                throw new Error(paymentResult.message || 'فشل الدفع');
-            }
-        } catch (error) {
-            setLoading(false);
-            showToastMessage(error.message || 'حدث خطأ أثناء الدفع، حاول مجدداً', true);
-        }
-    }
+// =======================
+// التحقق من الاشتراك
+// =======================
+async function checkSubscription(userId) {
+    try {
+        const subDoc = await db
+            .collection("subscriptions")
+            .doc(userId)
+            .get();
 
-    // Redirect to dashboard (prevent access without subscription logic)
-    goDashboardBtn.addEventListener('click', () => {
-        window.location.href = 'dashboard.html'; // redirect to the main subjects dashboard
-    });
+        const isSubscribed =
+            subDoc.exists &&
+            subDoc.data()[subjectKey] === true;
 
-    // Auth state & initial check
-    auth.onAuthStateChanged(async (user) => {
-        if (user) {
-            await checkPhysicsSubscription(user.uid);
-        } else {
-            // Not logged in: show message and disable subscription
+        if (isSubscribed) {
+
             subscribeBtn.disabled = true;
-            subscribeBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> سجل الدخول أولاً';
-            accessWarning.style.display = 'block';
-            accessWarning.innerHTML = '<i class="fas fa-exclamation-triangle"></i> يجب تسجيل الدخول للاشتراك.';
+            subscribeBtn.style.opacity = "0.6";
+
+            subscribeBtn.innerHTML =
+                `<i class="fas fa-check"></i> تم الاشتراك`;
+
+            accessWarning.style.display = "block";
+            accessWarning.style.background = "#10b98120";
+            accessWarning.style.color = "#34d399";
+
+            accessWarning.innerHTML =
+                `<i class="fas fa-check-circle"></i>
+                 أنت مشترك بالفعل في ${subjectName}`;
+
+            return true;
         }
+
+        accessWarning.style.display = "block";
+        accessWarning.innerHTML =
+            `<i class="fas fa-lock"></i>
+             غير مشترك في ${subjectName}`;
+
+        return false;
+
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+}
+
+// =======================
+// محاكاة الدفع
+// =======================
+async function processPayment() {
+
+    return new Promise((resolve, reject) => {
+
+        setTimeout(() => {
+
+            const success = Math.random() > 0.1;
+
+            if (success) {
+                resolve({
+                    success: true,
+                    transactionId: "TXN_" + Date.now()
+                });
+            } else {
+                reject({
+                    message: "فشل الدفع"
+                });
+            }
+
+        }, 2000);
     });
+}
 
-    subscribeBtn.addEventListener('click', handleSubscribe);
+// =======================
+// تحديث Firestore
+// =======================
+async function updateSubscription(userId) {
 
-    // If user tries to go back without subscription (prevent content access)
-    window.addEventListener('pageshow', (event) => {
-        if (auth.currentUser) {
-            checkPhysicsSubscription(auth.currentUser.uid).then(isSub => {
-                if (!isSub) {
-                    // user not subscribed, but we keep page as is; any direct exam access would be blocked on dashboard side.
-                    console.log('غير مشترك - المحتوى مغلق');
-                }
-            });
+    await db.collection("subscriptions")
+        .doc(userId)
+        .set({
+
+            [subjectKey]: true,
+
+            [`${subjectKey}_price`]:
+                subjectPrice,
+
+            [`${subjectKey}_date`]:
+                firebase.firestore
+                .FieldValue
+                .serverTimestamp()
+
+        }, { merge: true });
+
+}
+
+// =======================
+// الاشتراك
+// =======================
+async function handleSubscribe() {
+
+    const user = auth.currentUser;
+
+    if (!user) {
+
+        showToastMessage(
+            "سجل الدخول أولاً",
+            true
+        );
+
+        setTimeout(() => {
+            window.location.href =
+                "index.html";
+        }, 1500);
+
+        return;
+    }
+
+    const already =
+        await checkSubscription(user.uid);
+
+    if (already) {
+
+        showToastMessage(
+            "أنت مشترك بالفعل",
+            true
+        );
+
+        return;
+    }
+
+    setLoading(true);
+
+    try {
+
+        const payment =
+            await processPayment();
+
+        if (payment.success) {
+
+            await updateSubscription(
+                user.uid
+            );
+
+            setLoading(false);
+
+            successModal
+                .classList
+                .add("active");
+
+            subscribeBtn.disabled = true;
+
+            subscribeBtn.innerHTML =
+                `<i class="fas fa-check"></i>
+                 تم الاشتراك`;
+
+            accessWarning.innerHTML =
+                `<i class="fas fa-check-circle"></i>
+                 تم تفعيل ${subjectName}`;
+
+            accessWarning.style.background =
+                "#10b98120";
+
+            accessWarning.style.color =
+                "#6ee7b7";
+
+            showToastMessage(
+                `تم الاشتراك في ${subjectName}`
+            );
         }
-    });
 
-    // Additional: blocking manual back or direct exam link simulation can be done on server/dashboard, but we add extra protection
-    // تمنع الرجوع للمحتوى بدون اشتراك: عند محاولة فتح أي محتوى فيزياء في dashboard سيتم التحقق من subscription مرة أخرى
-    // ويمكن استخدام sessionStorage للتحقق قبل الدخول (تم تنفيذه في dashboard سابقاً)
-    console.log("صفحة الاشتراك premium - حماية كاملة");
-</script>
+    } catch (error) {
+
+        setLoading(false);
+
+        showToastMessage(
+            error.message ||
+            "حدث خطأ",
+            true
+        );
+    }
+}
+
+// =======================
+// تسجيل الدخول
+// =======================
+auth.onAuthStateChanged(async (user) => {
+
+    if (user) {
+
+        await checkSubscription(
+            user.uid
+        );
+
+    } else {
+
+        subscribeBtn.disabled = true;
+
+        subscribeBtn.innerHTML =
+            `<i class="fas fa-sign-in-alt"></i>
+             سجل الدخول أولاً`;
+
+        accessWarning.style.display =
+            "block";
+
+        accessWarning.innerHTML =
+            "يجب تسجيل الدخول";
+    }
+});
+
+// =======================
+subscribeBtn.addEventListener(
+    "click",
+    handleSubscribe
+);
+
+goDashboardBtn.addEventListener(
+    "click",
+    () => {
+        window.location.href =
+            "dashboard.html";
+    }
+);
+            </script>
+            
 </body>
   </html>
