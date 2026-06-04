@@ -102,7 +102,7 @@ function render() {
             if (locked) {
                 // 🔥 أهم جزء: تحويل لصفحة اشتراك واحدة فقط
                 window.location.href =
-                    `subscription.html?subject=${id}&name=${encodeURIComponent(name)}&price=${price}`;
+`subscription.html?subject=${id}&name=${encodeURIComponent(name)}&price=${price}`;
             } else {
                 window.location.href =
                     `exam.html?subject=${id}`;
