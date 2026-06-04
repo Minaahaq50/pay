@@ -1,388 +1,84 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>إثبات التحويل - المنصة الثانوية بلس</title>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700&display=swap" rel="stylesheet">
-
-<style>
-:root {
-  --main-color: #00e6b8;
-  --bg-dark: #0a0a0a;
-  --glass: rgba(255,255,255,0.05);
-}
-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Tajawal', sans-serif;
-  background: radial-gradient(circle at top, #0f0f0f, #000);
-  color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-}
-
-/* الشريط العلوي */
-.header {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  background: rgba(0,0,0,0.8);
-  backdrop-filter: blur(8px);
-  text-align: center;
-  padding: 10px 0;
-  font-weight: bold;
-  font-size: 17px;
-  color: var(--main-color);
-  letter-spacing: 1px;
-  overflow: hidden;
-  z-index: 100;
-}
-
-.container {
-  background: var(--glass);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 18px;
-  padding: 30px;
-  width: 95%;
-  max-width: 430px;
-  box-shadow: 0 0 40px rgba(0,0,0,0.6);
-  animation: fadeIn 0.8s ease;
-  margin-top: 80px;
-}
-
-@keyframes fadeIn {
-  from {opacity:0; transform: translateY(20px);}
-  to {opacity:1; transform: translateY(0);}
-}
-
-.logo {
-  text-align: center;
-  margin-bottom: 20px;
-}
-.logo img {
-  width: 80px;
-  border-radius: 12px;
-  box-shadow: 0 0 15px rgba(0,230,184,0.3);
-}
-h2 {
-  text-align: center;
-  margin-bottom: 25px;
-  color: var(--main-color);
-  letter-spacing: 1px;
-}
-
-/* ✅ مربع رقم التحويل */
-.transfer-box {
-  background: rgba(255,255,255,0.07);
-  border-radius: 12px;
-  padding: 15px;
-  margin-bottom: 25px;
-  text-align: center;
-  box-shadow: 0 0 10px rgba(0,230,184,0.3);
-}
-.transfer-box p {
-  margin: 5px 0 10px;
-  font-weight: bold;
-  color: #ccc;
-}
-.copy-field {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #111;
-  border: 1px solid rgba(255,255,255,0.2);
-  border-radius: 10px;
-  padding: 10px 14px;
-}
-.copy-field span {
-  font-size: 18px;
-  font-weight: bold;
-  color: var(--main-color);
-  user-select: text;
-}
-.copy-icon {
-  cursor: pointer;
-  font-size: 20px;
-  color: #fff;
-  transition: 0.3s;
-}
-.copy-icon:hover {
-  color: var(--main-color);
-  transform: scale(1.1);
-}
-
-/* عناصر الإدخال */
-label {
-  display: block;
-  margin-top: 14px;
-  font-weight: bold;
-  font-size: 15px;
-  color: #e6e6e6;
-}
-input {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid rgba(255,255,255,0.1);
-  background: rgba(255,255,255,0.07);
-  border-radius: 10px;
-  color: #fff;
-  font-size: 15px;
-  margin-top: 6px;
-  outline: none;
-  transition: 0.3s;
-}
-input:focus {
-  border-color: var(--main-color);
-  box-shadow: 0 0 10px rgba(0,230,184,0.4);
-}
-
-button {
-  width: 100%;
-  padding: 14px;
-  background: linear-gradient(90deg, var(--main-color), #00bcd4);
-  border: none;
-  border-radius: 10px;
-  color: #000;
-  font-weight: bold;
-  margin-top: 25px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-button:hover {
-  transform: scale(1.02);
-  box-shadow: 0 0 15px rgba(0,230,184,0.4);
-}
-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.preview {
-  text-align: center;
-  margin-top: 15px;
-}
-.preview img {
-  width: 210px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.08);
-  box-shadow: 0 0 15px rgba(0,0,0,0.6);
-  transition: 0.4s;
-}
-.preview img:hover {
-  transform: scale(1.05);
-}
-
-/* 🪄 Toast */
-.toast {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  background: rgba(0,0,0,0.85);
-  color: #fff;
-  padding: 14px 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.5);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.4s, transform 0.4s;
-  transform: translateY(20px);
-  z-index: 9999;
-}
-.toast.show {
-  opacity: 1;
-  pointer-events: all;
-  transform: translateY(0);
-}
-.toast.success {border-left: 4px solid #00e676;}
-.toast.error {border-left: 4px solid #ff5252;}
-.toast.info {border-left: 4px solid #2196f3;}
-
-/* ✅ Toast تأكيد */
-.confirm-toast {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.9);
-  background: rgba(0,0,0,0.9);
-  color: #fff;
-  padding: 25px 20px;
-  border-radius: 12px;
-  box-shadow: 0 0 30px rgba(0,0,0,0.7);
-  text-align: center;
-  width: 300px;
-  opacity: 0;
-  transition: 0.3s ease;
-  z-index: 10000;
-}
-.confirm-toast.show {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-}
-.confirm-toast button {
-  width: 45%;
-  margin: 10px 5px 0;
-  border: none;
-  padding: 10px;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
-}
-.confirm-toast .yes {background: #00e676; color: #000;}
-.confirm-toast .no {background: #ff5252; color: #fff;}
-.confirm-toast button:hover {transform: scale(1.05);}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>منصة امتحانات الثانوية العامة | تسجيل الدخول</title>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-
 <body>
-<div class="header">🌐 المنصة الثانوية بلس | Powered by THANOYAH+ 💎</div>
-
-<div class="container">
-  <div class="logo">
-    <img src="https://g.top4top.io/p_3603rlnje1.jpg" alt="Logo">
-  </div>
-
-  <h2>إثبات التحويل</h2>
-
-  <!-- ✅ مربع رقم التحويل الرسمي -->
-  <div class="transfer-box">
-    <p>📞 الرقم الرسمي للتحويل:</p>
-    <div class="copy-field">
-      <span id="transferNumber">01225587394</span>
-      <span class="copy-icon" id="copyIcon">📋</span>
+    <div class="bg-animation">
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
     </div>
-  </div>
+    <div class="glass-container">
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="login">تسجيل الدخول</button>
+            <button class="tab-btn" data-tab="register">إنشاء حساب</button>
+        </div>
 
-  <label>الاسم المسجل في المنصة</label>
-  <input type="text" id="name" placeholder="اسمك هنا">
+        <!-- Login Form -->
+        <div id="login-form" class="form-container active">
+            <h2>مرحباً بعودتك</h2>
+            <p class="sub">قم بتسجيل الدخول للوصول إلى الامتحانات</p>
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="login-email" placeholder="البريد الإلكتروني" autocomplete="email">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="login-password" placeholder="كلمة المرور">
+                <i class="fas fa-eye-slash toggle-pw" data-target="login-password"></i>
+            </div>
+            <div class="forgot-link">
+                <a href="#" id="forgot-password-link">نسيت كلمة المرور؟</a>
+            </div>
+            <button id="login-btn" class="action-btn">دخول <i class="fas fa-arrow-left"></i></button>
+        </div>
 
-  <label>الرقم المسجل في المنصة</label>
-  <input type="text" id="studentNumber" placeholder="رقمك هنا">
+        <!-- Register Form -->
+        <div id="register-form" class="form-container">
+            <h2>انضم إلينا</h2>
+            <p class="sub">أنشئ حسابك وابدأ رحلتك التعليمية</p>
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" id="reg-name" placeholder="الاسم الكامل">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="reg-email" placeholder="البريد الإلكتروني">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="reg-password" placeholder="كلمة المرور">
+                <i class="fas fa-eye-slash toggle-pw" data-target="reg-password"></i>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-check-circle"></i>
+                <input type="password" id="reg-confirm-pw" placeholder="تأكيد كلمة المرور">
+                <i class="fas fa-eye-slash toggle-pw" data-target="reg-confirm-pw"></i>
+            </div>
+            <button id="register-btn" class="action-btn">إنشاء حساب <i class="fas fa-user-plus"></i></button>
+        </div>
+    </div>
 
-  <label>الرقم الذي تم التحويل منه</label>
-  <input type="text" id="fromNumber" placeholder="رقم الكاش الي حولت منه هنا">
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
 
-  <label>صورة إيصال التحويل (سكرين)</label>
-  <input type="file" id="image" accept="image/*">
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p>جاري المعالجة...</p>
+    </div>
 
-  <button id="sendBtn">🚀 إرسال الإثبات</button>
-
-  <div class="preview" id="preview"></div>
-</div>
-
-<!-- ✅ Toast + Confirm -->
-<div class="toast" id="toast"></div>
-<div class="confirm-toast" id="confirmBox">
-  <p style="margin-bottom:10px;">هل ترغب في إرسال الإثبات الآن؟</p>
-  <button class="yes">نعم</button>
-  <button class="no">لا</button>
-</div>
-
-<script>
-const BOT_TOKEN = "7671449403:AAEi3OueRekWgJBNWivgR5gbuQT4b3drSP4";
-const RECEIVERS = ["7498653159","8370564028"];
-
-const sendBtn = document.getElementById("sendBtn");
-const toast = document.getElementById("toast");
-const confirmBox = document.getElementById("confirmBox");
-const preview = document.getElementById("preview");
-
-// ✅ نسخ رقم التحويل
-const copyIcon = document.getElementById("copyIcon");
-const transferNumber = document.getElementById("transferNumber");
-copyIcon.addEventListener("click", async () => {
-  try {
-    await navigator.clipboard.writeText(transferNumber.textContent);
-    showToast("✅ تم نسخ رقم التحويل بنجاح","success");
-  } catch {
-    showToast("❌ لم يتم النسخ، انسخ يدويًا","error");
-  }
-});
-
-function showToast(msg, type="info") {
-  toast.textContent = msg;
-  toast.className = "toast show " + type;
-  setTimeout(() => toast.className = "toast", 3500);
-}
-
-function showConfirm(message, onYes, onNo) {
-  confirmBox.querySelector("p").textContent = message;
-  confirmBox.classList.add("show");
-
-  const yesBtn = confirmBox.querySelector(".yes");
-  const noBtn = confirmBox.querySelector(".no");
-
-  yesBtn.onclick = () => {
-    confirmBox.classList.remove("show");
-    onYes();
-  };
-  noBtn.onclick = () => {
-    confirmBox.classList.remove("show");
-    if(onNo) onNo();
-  };
-}
-
-sendBtn.addEventListener("click", async ()=>{
-  const name = document.getElementById("name").value.trim();
-  const studentNumber = document.getElementById("studentNumber").value.trim();
-  const fromNumber = document.getElementById("fromNumber").value.trim();
-  const file = document.getElementById("image").files[0];
-
-  if(!name || !studentNumber || !fromNumber || !file){
-    showToast("⚠️ يرجى تعبئة جميع الحقول وإرفاق الصورة","error");
-    return;
-  }
-
-  showConfirm("هل ترغب في إرسال الإثبات الآن؟", async ()=>{
-    sendBtn.disabled = true;
-    showToast("📤 جارٍ إرسال الإثبات...","info");
-
-    const caption = `
-💎 *إثبات تحويل جديد - المنصة الثانوية بلس* 💎
-━━━━━━━━━━━━━━━
-👤 *الاسم:* ${name}
-📲 *رقم المنصة:* ${studentNumber}
-🏦 *رقم المحول منه:* ${fromNumber}
-🕒 *الوقت:* ${new Date().toLocaleString("ar-EG")}
-━━━━━━━━━━━━━━━
-🔍 *الحالة:* قيد المراجعة ✅
-`;
-
-    try {
-      for (let chatId of RECEIVERS) {
-        const formData = new FormData();
-        formData.append("chat_id", chatId);
-        formData.append("caption", caption);
-        formData.append("parse_mode", "Markdown");
-        formData.append("photo", file);
-
-        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
-          method: "POST",
-          body: formData
-        });
-      }
-
-      showToast("✅ تم إرسال الإثبات بنجاح! سيتم مراجعته قريبًا.","success");
-      preview.innerHTML = `<img src="${URL.createObjectURL(file)}">`;
-
-      // 🧹 مسح البيانات بعد الإرسال
-      document.getElementById("name").value = "";
-      document.getElementById("studentNumber").value = "";
-      document.getElementById("fromNumber").value = "";
-      document.getElementById("image").value = "";
-    } catch (err) {
-      console.error(err);
-      showToast("❌ حدث خطأ أثناء الإرسال، حاول مجددًا.","error");
-    } finally {
-      sendBtn.disabled = false;
-    }
-  });
-});
-</script>
+    <script src="firebase-config.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
