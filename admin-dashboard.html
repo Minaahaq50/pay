@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة الإدارة - منصة تعليمية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="logo">لوحة الإدارة</div>
+            <div class="nav-links">
+                <button class="btn btn-primary" onclick="showSection('dashboard')">لوحة التحكم</button>
+                <button class="btn btn-primary" onclick="showSection('students')">إدارة الطلاب</button>
+                <button class="btn btn-primary" onclick="showSection('groups')">إدارة المجموعات</button>
+                <button class="btn btn-primary" onclick="showSection('subscriptions')">الاشتراكات</button>
+                <button class="btn btn-primary" onclick="showSection('notifications')">إرسال إشعار</button>
+                <button class="btn btn-danger" onclick="logout()">تسجيل خروج</button>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <!-- Dashboard Section -->
+        <div id="dashboardSection" class="section active">
+            <div class="stats-grid" id="stats"></div>
+        </div>
+        
+        <!-- Students Management Section -->
+        <div id="studentsSection" class="section">
+            <div class="card">
+                <div class="search-bar">
+                    <input type="text" id="searchStudent" placeholder="بحث عن طالب..." onkeyup="searchStudents()">
+                </div>
+                <div id="studentsList"></div>
+            </div>
+        </div>
+        
+        <!-- Groups Management Section -->
+        <div id="groupsSection" class="section">
+            <div class="card">
+                <button class="btn btn-primary" onclick="showGroupModal()">إنشاء مجموعة جديدة</button>
+                <div id="groupsList" style="margin-top: 20px;"></div>
+            </div>
+        </div>
+        
+        <!-- Subscriptions Section -->
+        <div id="subscriptionsSection" class="section">
+            <div class="card">
+                <div id="subscriptionsList"></div>
+            </div>
+        </div>
+        
+        <!-- Notifications Section -->
+        <div id="notificationsSection" class="section">
+            <div class="card">
+                <h2>إرسال إشعار للطلاب</h2>
+                <form id="notificationForm">
+                    <div class="form-group">
+                        <label>عنوان الإشعار</label>
+                        <input type="text" id="notifTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label>محتوى الإشعار</label>
+                        <textarea id="notifContent" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>إلى</label>
+                        <select id="notifTarget">
+                            <option value="all">جميع الطلاب</option>
+                            <option value="active">الطلاب النشطين فقط</option>
+                            <option value="pending">الاشتراكات المعلقة</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">إرسال الإشعار</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Group Modal -->
+    <div id="groupModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">إنشاء مجموعة جديدة</h3>
+                <span class="close-modal" onclick="closeGroupModal()">&times;</span>
+            </div>
+            <form id="groupForm">
+                <input type="hidden" id="groupId">
+                <div class="form-group">
+                    <label>اسم المجموعة</label>
+                    <input type="text" id="groupName" required>
+                </div>
+                <div class="form-group">
+                    <label>اسم المدرس</label>
+                    <input type="text" id="teacherName" required>
+                </div>
+                <div class="form-group">
+                    <label>سعر الاشتراك (ج.م)</label>
+                    <input type="number" id="price" required>
+                </div>
+                <div class="form-group">
+                    <label>مدة الاشتراك (شهور)</label>
+                    <input type="number" id="duration" required>
+                </div>
+                <div class="form-group">
+                    <label>وصف المجموعة</label>
+                    <textarea id="description" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">حفظ</button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script>
+        let currentUser = null;
+        
+        auth.onAuthStateChanged(async (user) => {
+            if (!user) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            const userDoc = await db.collection('users').doc(user.uid).get();
+            if (userDoc.data().role !== 'admin') {
+                window.location.href = 'student-dashboard.html';
+                return;
+            }
+            
+            currentUser = user;
+            loadDashboard();
+            loadStudents();
+            loadGroups();
+            loadSubscriptions();
+        });
+        
+        function showSection(section) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(`${section}Section`).classList.add('active');
+            
+            if (section === 'dashboard') loadDashboard();
+            if (section === 'students') loadStudents();
+            if (section === 'groups') loadGroups();
+            if (section === 'subscriptions') loadSubscriptions();
+        }
+        
+        async function loadDashboard() {
+            const students = await db.collection('users').where('role', '==', 'student').get();
+            const subscriptions = await db.collection('subscriptions').get();
+            const groups = await db.collection('groups').get();
+            
+            const pendingSubs = subscriptions.docs.filter(s => s.data().status === 'pending').length;
+            const activeSubs = subscriptions.docs.filter(s => s.data().status === 'active').length;
+            
+            document.getElementById('stats').innerHTML = `
+                <div class="stat-card">
+                    <h3>عدد الطلاب</h3>
+                    <div class="stat-number">${students.size}</div>
+                </div>
+                <div class="stat-card">
+                    <h3>المشتركين النشطين</h3>
+                    <div class="stat-number">${activeSubs}</div>
+                </div>
+                <div class="stat-card">
+                    <h3>الاشتراكات المعلقة</h3>
+                    <div class="stat-number">${pendingSubs}</div>
+                </div>
+                <div class="stat-card">
+                    <h3>عدد المجموعات</h3>
+                    <div class="stat-number">${groups.size}</div>
+                </div>
+            `;
+        }
+        
+        async function loadStudents() {
+            const students = await db.collection('users').where('role', '==', 'student').get();
+            displayStudents(students.docs);
+        }
+        
+        function displayStudents(students) {
+            let html = '<div class="table-container"><table><thead><tr><th>كود الطالب</th><th>الاسم</th><th>البريد الإلكتروني</th><th>الهاتف</th><th>المدرسة</th><th>الصف</th><th>حالة الاشتراك</th><th>إجراءات</th></tr></thead><tbody>';
+            
+            students.forEach(doc => {
+                const student = doc.data();
+                const statusClass = student.subscriptionStatus === 'active' ? 'status-active' : 
+                                   student.subscriptionStatus === 'pending' ? 'status-pending' : 'status-expired';
+                const statusText = student.subscriptionStatus ===
