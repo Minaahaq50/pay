@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة الطالب - منصة تعليمية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="logo">منصة تعليمية</div>
+            <div class="nav-links">
+                <span id="userName"></span>
+                <button class="btn btn-danger" onclick="logout()">تسجيل خروج</button>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="stats-grid" id="studentInfo">
+            <!-- سيتم ملء بيانات الطالب هنا -->
+        </div>
+        
+        <div class="card">
+            <h2>المجموعات المشترك بها</h2>
+            <div id="groupsList"></div>
+        </div>
+        
+        <div class="card">
+            <h2>إشعارات الإدارة</h2>
+            <div id="notificationsList"></div>
+        </div>
+        
+        <div class="card">
+            <h2>المجموعات المتاحة للاشتراك</h2>
+            <div id="availableGroups"></div>
+        </div>
+    </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script>
+        let currentUser = null;
+        let currentUserData = null;
+        
+        auth.onAuthStateChanged(async (user) => {
+            if (!user) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            currentUser = user;
+            await loadUserData();
+            loadGroups();
+            loadNotifications();
+            loadAvailableGroups();
+        });
+        
+        async function loadUserData() {
+            const userDoc = await db.collection('users').doc(currentUser.uid).get();
+            currentUserData = userDoc.data();
+            
+            document.getElementById('userName').textContent = `مرحباً ${currentUserData.fullName}`;
+            
+            const subscriptionStatus = currentUserData.subscriptionStatus;
+            const statusText = subscriptionStatus === 'active' ? 'تم تفعيل الاشتراك' : 
+                              subscriptionStatus === 'pending' ? 'الاشتراك قيد المراجعة' : 'الاشتراك منتهي';
+            const statusClass = subscriptionStatus === 'active' ? 'status-active' : 
+                               subscriptionStatus === 'pending' ? 'status-pending' : 'status-expired';
+            
+            document.getElementById('studentInfo').innerHTML = `
+                <div class="stat-card">
+                    <h3>الاسم</h3>
+                    <div class="stat-number">${currentUserData.fullName}</div>
+                </div>
+                <div class="stat-card">
+                    <h3>كود الطالب</h3>
+                    <div class="stat-number">${currentUserData.studentCode}</div>
+                </div>
+                <div class="stat-card">
+                    <h3>الصف الدراسي</h3>
+                    <div class="stat-number">${currentUserData.grade}</div>
+                </div>
+                <div class="stat-card">
+                    <h3>حالة الاشتراك</h3>
+                    <div class="stat-number"><span class="status-badge ${statusClass}">${statusText}</span></div>
+                </div>
+                <div class="stat-card">
+                    <h3>تاريخ التسجيل</h3>
+                    <div class="stat-number">${new Date(currentUserData.registrationDate).toLocaleDateString('ar-EG')}</div>
+                </div>
+            `;
+        }
+        
+        async function loadGroups() {
+            const subscriptions = await db.collection('subscriptions')
+                .where('studentId', '==', currentUser.uid)
+                .where('status', '==', 'active')
+                .get();
+            
+            let groupsHtml = '<div class="table-container"><table><thead><tr><th>اسم المجموعة</th><th>المدرس</th><th>تاريخ الاشتراك</th><th>تاريخ الانتهاء</th></tr></thead><tbody>';
+            
+            for (const sub of subscriptions.docs) {
+                const subData = sub.data();
+                const groupDoc = await db.collection('groups').doc(subData.groupId).get();
+                const groupData = groupDoc.data();
+                
+                groupsHtml += `
+                    <tr>
+                        <td>${groupData.name}</td>
+                        <td>${groupData.teacher}</td>
+                        <td>${new Date(subData.startDate).toLocaleDateString('ar-EG')}</td>
+                        <td>${new Date(subData.endDate).toLocaleDateString('ar-EG')}</td>
+                    </tr>
+                `;
+            }
+            
+            groupsHtml += '</tbody></table></div>';
+            document.getElementById('groupsList').innerHTML = groupsHtml || '<p>لا توجد مجموعات مشترك بها</p>';
+        }
+        
+        async function loadNotifications() {
+            const notifications = await db.collection('notifications')
+                .where('studentId', '==', currentUser.uid)
+                .orderBy('createdAt', 'desc')
+                .limit(20)
+                .get();
+            
+            let notificationsHtml = '<div class="table-container"><table><thead><tr><th>العنوان</th><th>المحتوى</th><th>التاريخ</th></tr></thead><tbody>';
+            
+            notifications.forEach(doc => {
+                const data = doc.data();
+                notificationsHtml += `
+                    <tr>
+                        <td>${data.title}</td>
+                        <td>${data.content}</td>
+                        <td>${new Date(data.createdAt?.toDate()).toLocaleDateString('ar-EG')}</td>
+                    </tr>
+                `;
+            });
+            
+            notificationsHtml += '</tbody></table></div>';
+            document.getElementById('notificationsList').innerHTML = notificationsHtml || '<p>لا توجد إشعارات</p>';
+        }
+        
+        async function loadAvailableGroups() {
+            const groups = await db.collection('groups').get();
+            
+            let groupsHtml = '<div class="table-container"><table><thead><tr><th>اسم المجموعة</th><th>المدرس</th><th>السعر</th><th>المدة</th><th>الوصف</th><th>إجراء</th></tr></thead><tbody>';
+            
+            for (const group of groups.docs) {
+                const groupData = group.data();
+                
+                // التحقق من الاشتراك الحالي
+                const existingSub = await db.collection('subscriptions')
+                    .where('studentId', '==', currentUser.uid)
+                    .where('groupId', '==', group.id)
+                    .where('status', 'in', ['active', 'pending'])
+                    .get();
+                
+                const isSubscribed = !existingSub.empty;
+                
+                groupsHtml += `
+                    <tr>
+                        <td>${groupData.name}</td>
+                        <td>${groupData.teacher}</td>
+                        <td>${groupData.price} ج.م</td>
+                        <td>${groupData.duration} شهر</td>
+                        <td>${groupData.description || '-'}</td>
+                        <td>
+                            ${!isSubscribed ? `<button class="btn btn-primary" onclick="requestSubscription('${group.id}', ${groupData.price})">طلب اشتراك</button>` : '<span class="status-badge status-pending">تم الطلب مسبقاً</span>'}
+                        </td>
+                    </tr>
+                `;
+            }
+            
+            groupsHtml += '</tbody></table></div>';
+            document.getElementById('availableGroups').innerHTML = groupsHtml;
+        }
+        
+        async function requestSubscription(groupId, price) {
+            if (confirm(`هل تريد طلب الاشتراك في هذه المجموعة بقيمة ${price} ج.م؟`)) {
+                await db.collection('subscriptions').add({
+                    studentId: currentUser.uid,
+                    groupId: groupId,
+                    status: 'pending',
+                    price: price,
+                    requestDate: firebase.firestore.FieldValue.serverTimestamp(),
+                    startDate: null,
+                    endDate: null
+                });
+                
+                alert('تم إرسال طلب الاشتراك بنجاح، سيتم مراجعته من قبل الإدارة');
+                loadAvailableGroups();
+            }
+        }
+        
+        function logout() {
+            auth.signOut();
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
