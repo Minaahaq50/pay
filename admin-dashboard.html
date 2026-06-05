@@ -190,4 +190,288 @@
                 const student = doc.data();
                 const statusClass = student.subscriptionStatus === 'active' ? 'status-active' : 
                                    student.subscriptionStatus === 'pending' ? 'status-pending' : 'status-expired';
-                const statusText = student.subscriptionStatus ===
+                const statusText = student.subscriptionStatus === 'active' ? 'مفعل' : 
+                                  student.subscriptionStatus === 'pending' ? 'قيد المراجعة' : 'منتهي';
+                
+                html += `
+                    <tr id="student-${doc.id}">
+                        <td>${student.studentCode}</td>
+                        <td>${student.fullName}</td>
+                        <td>${student.email}</td>
+                        <td>${student.phone}</td>
+                        <td>${student.school}</td>
+                        <td>${student.grade}</td>
+                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                        <td>
+                            <button class="btn btn-success" onclick="toggleSubscription('${doc.id}', '${student.subscriptionStatus}')">
+                                ${student.subscriptionStatus === 'active' ? 'إيقاف' : 'تفعيل'}
+                            </button>
+                            <button class="btn btn-danger" onclick="deleteStudent('${doc.id}')">حذف</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            html += '</tbody></table></div>';
+            document.getElementById('studentsList').innerHTML = html;
+        }
+        
+        function searchStudents() {
+            const searchTerm = document.getElementById('searchStudent').value.toLowerCase();
+            const rows = document.querySelectorAll('#studentsList tbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+        
+        async function toggleSubscription(studentId, currentStatus) {
+            const newStatus = currentStatus === 'active' ? 'pending' : 'active';
+            await db.collection('users').doc(studentId).update({
+                subscriptionStatus: newStatus
+            });
+            loadStudents();
+        }
+        
+        async function deleteStudent(studentId) {
+            if (confirm('هل أنت متأكد من حذف هذا الطالب؟')) {
+                await db.collection('users').doc(studentId).delete();
+                loadStudents();
+            }
+        }
+        
+        async function loadGroups() {
+            const groups = await db.collection('groups').get();
+            let html = '<div class="table-container"><table><thead><tr><th>اسم المجموعة</th><th>المدرس</th><th>السعر</th><th>المدة</th><th>الوصف</th><th>إجراءات</th></tr></thead><tbody>';
+            
+            groups.forEach(doc => {
+                const group = doc.data();
+                html += `
+                    <tr>
+                        <td>${group.name}</td>
+                        <td>${group.teacher}</td>
+                        <td>${group.price} ج.م</td>
+                        <td>${group.duration} شهر</td>
+                        <td>${group.description || '-'}</td>
+                        <td>
+                            <button class="btn btn-warning" onclick="editGroup('${doc.id}')">تعديل</button>
+                            <button class="btn btn-danger" onclick="deleteGroup('${doc.id}')">حذف</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            html += '</tbody></table></div>';
+            document.getElementById('groupsList').innerHTML = html;
+        }
+        
+        function showGroupModal(groupId = null) {
+            const modal = document.getElementById('groupModal');
+            modal.style.display = 'flex';
+            
+            if (groupId) {
+                document.getElementById('modalTitle').textContent = 'تعديل مجموعة';
+                // Load group data
+                db.collection('groups').doc(groupId).get().then(doc => {
+                    const group = doc.data();
+                    document.getElementById('groupId').value = groupId;
+                    document.getElementById('groupName').value = group.name;
+                    document.getElementById('teacherName').value = group.teacher;
+                    document.getElementById('price').value = group.price;
+                    document.getElementById('duration').value = group.duration;
+                    document.getElementById('description').value = group.description || '';
+                });
+            } else {
+                document.getElementById('modalTitle').textContent = 'إنشاء مجموعة جديدة';
+                document.getElementById('groupForm').reset();
+                document.getElementById('groupId').value = '';
+            }
+        }
+        
+        function closeGroupModal() {
+            document.getElementById('groupModal').style.display = 'none';
+        }
+        
+        document.getElementById('groupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const groupId = document.getElementById('groupId').value;
+            const groupData = {
+                name: document.getElementById('groupName').value,
+                teacher: document.getElementById('teacherName').value,
+                price: parseInt(document.getElementById('price').value),
+                duration: parseInt(document.getElementById('duration').value),
+                description: document.getElementById('description').value,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+            
+            if (groupId) {
+                await db.collection('groups').doc(groupId).update(groupData);
+            } else {
+                await db.collection('groups').add(groupData);
+            }
+            
+            closeGroupModal();
+            loadGroups();
+        });
+        
+        async function editGroup(groupId) {
+            showGroupModal(groupId);
+        }
+        
+        async function deleteGroup(groupId) {
+            if (confirm('هل أنت متأكد من حذف هذه المجموعة؟')) {
+                await db.collection('groups').doc(groupId).delete();
+                loadGroups();
+            }
+        }
+        
+        async function loadSubscriptions() {
+            const subscriptions = await db.collection('subscriptions').get();
+            let html = '<div class="table-container"><table><thead><tr><th>الطالب</th><th>المجموعة</th><th>السعر</th><th>الحالة</th><th>تاريخ الطلب</th><th>إجراءات</th></tr></thead><tbody>';
+            
+            for (const sub of subscriptions.docs) {
+                const subData = sub.data();
+                const studentDoc = await db.collection('users').doc(subData.studentId).get();
+                const groupDoc = await db.collection('groups').doc(subData.groupId).get();
+                
+                const studentData = studentDoc.data();
+                const groupData = groupDoc.data();
+                const statusClass = subData.status === 'active' ? 'status-active' : 
+                                   subData.status === 'pending' ? 'status-pending' : 'status-expired';
+                const statusText = subData.status === 'active' ? 'مفعل' : 
+                                  subData.status === 'pending' ? 'قيد المراجعة' : 'منتهي';
+                
+                html += `
+                    <tr>
+                        <td>${studentData?.fullName || 'غير معروف'}</td>
+                        <td>${groupData?.name || 'غير معروف'}</td>
+                        <td>${subData.price} ج.م</td>
+                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                        <td>${subData.requestDate ? new Date(subData.requestDate.toDate()).toLocaleDateString('ar-EG') : '-'}</td>
+                        <td>
+                            ${subData.status === 'pending' ? `
+                                <button class="btn btn-success" onclick="approveSubscription('${sub.id}')">قبول</button>
+                                <button class="btn btn-danger" onclick="rejectSubscription('${sub.id}')">رفض</button>
+                            ` : ''}
+                            ${subData.status === 'active' ? `
+                                <button class="btn btn-warning" onclick="extendSubscription('${sub.id}')">تمديد</button>
+                            ` : ''}
+                        </td>
+                    </tr>
+                `;
+            }
+            
+            html += '</tbody></table></div>';
+            document.getElementById('subscriptionsList').innerHTML = html;
+        }
+        
+        async function approveSubscription(subId) {
+            const subscriptionRef = db.collection('subscriptions').doc(subId);
+            const sub = await subscriptionRef.get();
+            const subData = sub.data();
+            const groupDoc = await db.collection('groups').doc(subData.groupId).get();
+            const groupData = groupDoc.data();
+            
+            const startDate = new Date();
+            const endDate = new Date();
+            endDate.setMonth(endDate.getMonth() + groupData.duration);
+            
+            await subscriptionRef.update({
+                status: 'active',
+                startDate: startDate,
+                endDate: endDate
+            });
+            
+            // تحديث حالة الاشتراك للطالب
+            await db.collection('users').doc(subData.studentId).update({
+                subscriptionStatus: 'active'
+            });
+            
+            loadSubscriptions();
+        }
+        
+        async function rejectSubscription(subId) {
+            await db.collection('subscriptions').doc(subId).update({
+                status: 'expired'
+            });
+            loadSubscriptions();
+        }
+        
+        async function extendSubscription(subId) {
+            const months = prompt('كم شهراً تريد تمديد الاشتراك؟', '1');
+            if (months) {
+                const subscriptionRef = db.collection('subscriptions').doc(subId);
+                const sub = await subscriptionRef.get();
+                const subData = sub.data();
+                const newEndDate = new Date(subData.endDate);
+                newEndDate.setMonth(newEndDate.getMonth() + parseInt(months));
+                
+                await subscriptionRef.update({
+                    endDate: newEndDate
+                });
+                loadSubscriptions();
+            }
+        }
+        
+        document.getElementById('notificationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const title = document.getElementById('notifTitle').value;
+            const content = document.getElementById('notifContent').value;
+            const target = document.getElementById('notifTarget').value;
+            
+            let query = db.collection('users').where('role', '==', 'student');
+            
+            if (target === 'active') {
+                query = query.where('subscriptionStatus', '==', 'active');
+            } else if (target === 'pending') {
+                query = query.where('subscriptionStatus', '==', 'pending');
+            }
+            
+            const students = await query.get();
+            
+            const batch = db.batch();
+            students.forEach(doc => {
+                const notifRef = db.collection('notifications').doc();
+                batch.set(notifRef, {
+                    studentId: doc.id,
+                    title: title,
+                    content: content,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    read: false
+                });
+            });
+            
+            await batch.commit();
+            alert(`تم إرسال الإشعار إلى ${students.size} طالب`);
+            
+            document.getElementById('notificationForm').reset();
+        });
+        
+        function logout() {
+            auth.signOut();
+            window.location.href = 'index.html';
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('groupModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+    
+    <style>
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+    </style>
+</body>
+</html>
