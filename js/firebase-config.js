@@ -1,6 +1,9 @@
+// Firebase Configuration
+// استبدل هذه البيانات ببيانات مشروعك من Firebase Console
 const firebaseConfig = {
   apiKey: "AIzaSyDsJXNa6EYenn2f5mfoNQVEDxHhCH-XGAo",
   authDomain: "alzahady-6e615.firebaseapp.com",
+  databaseURL: "https://alzahady-6e615-default-rtdb.firebaseio.com",
   projectId: "alzahady-6e615",
   storageBucket: "alzahady-6e615.firebasestorage.app",
   messagingSenderId: "377804257010",
@@ -8,9 +11,11 @@ const firebaseConfig = {
   measurementId: "G-4XPCD5L40F"
 };
 
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-}
-
+// تهيئة Firebase
+firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
+const storage = firebase.storage();
+
+// إعدادات Firestore
+db.settings({ timestampsInSnapshots: true });
