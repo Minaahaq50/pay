@@ -2,83 +2,249 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>منصة امتحانات الثانوية العامة | تسجيل الدخول</title>
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <link rel="stylesheet" href="style.css">
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة تعليمية - تسجيل الدخول</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .auth-card {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+        }
+        
+        .auth-tabs {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+            border-bottom: 2px solid var(--gray-200);
+        }
+        
+        .auth-tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--gray-600);
+            transition: all 0.3s ease;
+        }
+        
+        .auth-tab.active {
+            color: var(--primary-blue);
+            border-bottom: 2px solid var(--primary-blue);
+            margin-bottom: -2px;
+        }
+        
+        .auth-form {
+            display: none;
+        }
+        
+        .auth-form.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .logo-center {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .logo-center h1 {
+            color: var(--primary-blue);
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+    </style>
 </head>
 <body>
-    <div class="bg-animation">
-        <div class="circle"></div>
-        <div class="circle"></div>
-        <div class="circle"></div>
-    </div>
-    <div class="glass-container">
-        <div class="tabs">
-            <button class="tab-btn active" data-tab="login">تسجيل الدخول</button>
-            <button class="tab-btn" data-tab="register">إنشاء حساب</button>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="logo-center">
+                <h1>منصة تعليمية</h1>
+                <p>نحو مستقبل أفضل</p>
+            </div>
+            
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="switchTab('login')">تسجيل الدخول</button>
+                <button class="auth-tab" onclick="switchTab('register')">إنشاء حساب</button>
+            </div>
+            
+            <!-- Login Form -->
+            <div id="loginForm" class="auth-form active">
+                <form id="login">
+                    <div class="form-group">
+                        <label>البريد الإلكتروني</label>
+                        <input type="email" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label>كلمة المرور</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">تسجيل الدخول</button>
+                </form>
+            </div>
+            
+            <!-- Register Form -->
+            <div id="registerForm" class="auth-form">
+                <form id="register">
+                    <div class="form-group">
+                        <label>الاسم بالكامل</label>
+                        <input type="text" id="fullName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>رقم الهاتف</label>
+                        <input type="tel" id="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label>رقم ولي الأمر</label>
+                        <input type="tel" id="parentPhone" required>
+                    </div>
+                    <div class="form-group">
+                        <label>اسم المستخدم على تليجرام</label>
+                        <input type="text" id="telegram">
+                    </div>
+                    <div class="form-group">
+                        <label>المدرسة</label>
+                        <input type="text" id="school" required>
+                    </div>
+                    <div class="form-group">
+                        <label>الصف الدراسي</label>
+                        <select id="grade" required>
+                            <option value="">اختر الصف</option>
+                            <option>الصف الأول</option>
+                            <option>الصف الثاني</option>
+                            <option>الصف الثالث</option>
+                            <option>الصف الرابع</option>
+                            <option>الصف الخامس</option>
+                            <option>الصف السادس</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>المحافظة</label>
+                        <input type="text" id="city" required>
+                    </div>
+                    <div class="form-group">
+                        <label>البريد الإلكتروني</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>كلمة المرور</label>
+                        <input type="password" id="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">إنشاء حساب</button>
+                </form>
+            </div>
         </div>
-
-        <!-- Login Form -->
-        <div id="login-form" class="form-container active">
-            <h2>مرحباً بعودتك</h2>
-            <p class="sub">قم بتسجيل الدخول للوصول إلى الامتحانات</p>
-            <div class="input-group">
-                <i class="fas fa-envelope"></i>
-                <input type="email" id="login-email" placeholder="البريد الإلكتروني" autocomplete="email">
-            </div>
-            <div class="input-group">
-                <i class="fas fa-lock"></i>
-                <input type="password" id="login-password" placeholder="كلمة المرور">
-                <i class="fas fa-eye-slash toggle-pw" data-target="login-password"></i>
-            </div>
-            <div class="forgot-link">
-                <a href="#" id="forgot-password-link">نسيت كلمة المرور؟</a>
-            </div>
-            <button id="login-btn" class="action-btn">دخول <i class="fas fa-arrow-left"></i></button>
-        </div>
-
-        <!-- Register Form -->
-        <div id="register-form" class="form-container">
-            <h2>انضم إلينا</h2>
-            <p class="sub">أنشئ حسابك وابدأ رحلتك التعليمية</p>
-            <div class="input-group">
-                <i class="fas fa-user"></i>
-                <input type="text" id="reg-name" placeholder="الاسم الكامل">
-            </div>
-            <div class="input-group">
-                <i class="fas fa-envelope"></i>
-                <input type="email" id="reg-email" placeholder="البريد الإلكتروني">
-            </div>
-            <div class="input-group">
-                <i class="fas fa-lock"></i>
-                <input type="password" id="reg-password" placeholder="كلمة المرور">
-                <i class="fas fa-eye-slash toggle-pw" data-target="reg-password"></i>
-            </div>
-            <div class="input-group">
-                <i class="fas fa-check-circle"></i>
-                <input type="password" id="reg-confirm-pw" placeholder="تأكيد كلمة المرور">
-                <i class="fas fa-eye-slash toggle-pw" data-target="reg-confirm-pw"></i>
-            </div>
-            <button id="register-btn" class="action-btn">إنشاء حساب <i class="fas fa-user-plus"></i></button>
-        </div>
     </div>
-
-    <!-- Toast Notification -->
-    <div id="toast" class="toast"></div>
-
-    <!-- Loading Overlay -->
-    <div id="loading-overlay" class="loading-overlay">
-        <div class="spinner"></div>
-        <p>جاري المعالجة...</p>
-    </div>
-
-    <script src="firebase-config.js"></script>
-    <script src="app.js"></script>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script>
+        function switchTab(tab) {
+            const tabs = document.querySelectorAll('.auth-tab');
+            const forms = document.querySelectorAll('.auth-form');
+            
+            tabs.forEach(t => t.classList.remove('active'));
+            forms.forEach(f => f.classList.remove('active'));
+            
+            if (tab === 'login') {
+                tabs[0].classList.add('active');
+                document.getElementById('loginForm').classList.add('active');
+            } else {
+                tabs[1].classList.add('active');
+                document.getElementById('registerForm').classList.add('active');
+            }
+        }
+        
+        // تسجيل الدخول
+        document.getElementById('login').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            try {
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+                
+                // جلب بيانات المستخدم
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                const userData = userDoc.data();
+                
+                if (userData.role === 'admin') {
+                    window.location.href = 'admin-dashboard.html';
+                } else {
+                    window.location.href = 'student-dashboard.html';
+                }
+            } catch (error) {
+                alert('خطأ في تسجيل الدخول: ' + error.message);
+            }
+        });
+        
+        // إنشاء حساب جديد
+        document.getElementById('register').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const fullName = document.getElementById('fullName').value;
+            const phone = document.getElementById('phone').value;
+            const parentPhone = document.getElementById('parentPhone').value;
+            const telegram = document.getElementById('telegram').value;
+            const school = document.getElementById('school').value;
+            const grade = document.getElementById('grade').value;
+            const city = document.getElementById('city').value;
+            
+            try {
+                // إنشاء المستخدم في Authentication
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+                
+                // إنشاء كود الطالب
+                const studentsRef = db.collection('users').where('role', '==', 'student');
+                const snapshot = await studentsRef.get();
+                const studentCount = snapshot.size;
+                const studentCode = `ST${String(studentCount + 1).padStart(4, '0')}`;
+                
+                // حفظ بيانات الطالب في Firestore
+                await db.collection('users').doc(user.uid).set({
+                    uid: user.uid,
+                    fullName,
+                    email,
+                    phone,
+                    parentPhone,
+                    telegram,
+                    school,
+                    grade,
+                    city,
+                    studentCode,
+                    role: 'student',
+                    subscriptionStatus: 'pending',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    registrationDate: new Date().toISOString()
+                });
+                
+                alert('تم إنشاء الحساب بنجاح! برجاء تسجيل الدخول');
+                switchTab('login');
+                
+            } catch (error) {
+                alert('خطأ في إنشاء الحساب: ' + error.message);
+            }
+        });
+    </script>
 </body>
 </html>
