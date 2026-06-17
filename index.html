@@ -1,250 +1,439 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة تعليمية - تسجيل الدخول</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <title>ختم احترافي 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗</title>
     <style>
-        .auth-container {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #0a0a0a;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
         }
-        
-        .auth-card {
-            background: white;
-            border-radius: 24px;
-            padding: 40px;
-            max-width: 450px;
+        .container {
+            background: #141414;
+            padding: 25px;
+            border-radius: 30px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.9), 0 0 0 1px #2a2a2a;
+            max-width: 800px;
             width: 100%;
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
         }
-        
-        .auth-tabs {
-            display: flex;
-            gap: 16px;
-            margin-bottom: 32px;
-            border-bottom: 2px solid var(--gray-200);
+        h1 {
+            color: #d4af37;
+            text-align: center;
+            font-weight: 300;
+            letter-spacing: 4px;
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px #b8860b55;
         }
-        
-        .auth-tab {
-            padding: 12px 24px;
+        .upload-zone {
+            background: #1a1a1a;
+            border: 2px dashed #444;
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
             cursor: pointer;
-            border: none;
-            background: none;
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--gray-600);
-            transition: all 0.3s ease;
+            transition: 0.3s;
+            margin-bottom: 20px;
         }
-        
-        .auth-tab.active {
-            color: var(--primary-blue);
-            border-bottom: 2px solid var(--primary-blue);
-            margin-bottom: -2px;
+        .upload-zone:hover {
+            border-color: #d4af37;
+            background: #202020;
         }
-        
-        .auth-form {
+        .upload-zone p {
+            color: #aaa;
+            font-size: 1rem;
+        }
+        .upload-zone span {
+            color: #d4af37;
+            font-weight: bold;
+        }
+        #fileInput {
             display: none;
         }
-        
-        .auth-form.active {
+        .canvas-wrapper {
+            background: #0d0d0d;
+            border-radius: 16px;
+            padding: 12px;
+            border: 1px solid #2a2a2a;
+            margin: 15px 0;
+            position: relative;
+        }
+        #canvas {
+            width: 100%;
+            height: auto;
             display: block;
-            animation: fadeIn 0.5s ease;
+            border-radius: 10px;
+            background: #111;
+            box-shadow: inset 0 0 30px #00000099;
         }
-        
-        .logo-center {
+        .stamp-preview {
+            background: #1e1e1e;
+            border-radius: 40px;
+            padding: 10px 20px;
+            margin: 12px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px 25px;
+            border-left: 4px solid #d4af37;
+            color: #ccc;
+            font-size: 0.95rem;
+        }
+        .stamp-preview strong {
+            color: #f5d742;
+        }
+        .btn-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin: 18px 0 8px;
+        }
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 5px 0 #0a0a0a;
+            flex: 1 1 auto;
+            min-width: 130px;
+            letter-spacing: 0.5px;
+            color: #eee;
+            background: #2a2a2a;
+        }
+        .btn-gold {
+            background: #b8860b;
+            color: #000;
+            box-shadow: 0 5px 0 #6b4f0a;
+        }
+        .btn-gold:hover {
+            background: #d4a017;
+            transform: scale(1.02);
+        }
+        .btn-green {
+            background: #1f7a2a;
+            box-shadow: 0 5px 0 #0f4a17;
+        }
+        .btn-green:hover {
+            background: #2d9e3b;
+        }
+        .btn-red {
+            background: #6e2222;
+            box-shadow: 0 5px 0 #3f1212;
+        }
+        .btn-red:hover {
+            background: #9a3030;
+        }
+        .footer {
+            margin-top: 18px;
             text-align: center;
-            margin-bottom: 32px;
+            color: #444;
+            font-size: 0.8rem;
+            border-top: 1px solid #222;
+            padding-top: 14px;
         }
-        
-        .logo-center h1 {
-            color: var(--primary-blue);
-            font-size: 28px;
-            margin-bottom: 8px;
+        .footer span {
+            color: #b8963a;
         }
     </style>
 </head>
 <body>
-    <div class="auth-container">
-        <div class="auth-card">
-            <div class="logo-center">
-                <h1>منصة تعليمية</h1>
-                <p>نحو مستقبل أفضل</p>
-            </div>
-            
-            <div class="auth-tabs">
-                <button class="auth-tab active" onclick="switchTab('login')">تسجيل الدخول</button>
-                <button class="auth-tab" onclick="switchTab('register')">إنشاء حساب</button>
-            </div>
-            
-            <!-- Login Form -->
-            <div id="loginForm" class="auth-form active">
-                <form id="login">
-                    <div class="form-group">
-                        <label>البريد الإلكتروني</label>
-                        <input type="email" id="loginEmail" required>
-                    </div>
-                    <div class="form-group">
-                        <label>كلمة المرور</label>
-                        <input type="password" id="loginPassword" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">تسجيل الدخول</button>
-                </form>
-            </div>
-            
-            <!-- Register Form -->
-            <div id="registerForm" class="auth-form">
-                <form id="register">
-                    <div class="form-group">
-                        <label>الاسم بالكامل</label>
-                        <input type="text" id="fullName" required>
-                    </div>
-                    <div class="form-group">
-                        <label>رقم الهاتف</label>
-                        <input type="tel" id="phone" required>
-                    </div>
-                    <div class="form-group">
-                        <label>رقم ولي الأمر</label>
-                        <input type="tel" id="parentPhone" required>
-                    </div>
-                    <div class="form-group">
-                        <label>اسم المستخدم على تليجرام</label>
-                        <input type="text" id="telegram">
-                    </div>
-                    <div class="form-group">
-                        <label>المدرسة</label>
-                        <input type="text" id="school" required>
-                    </div>
-                    <div class="form-group">
-                        <label>الصف الدراسي</label>
-                        <select id="grade" required>
-                            <option value="">اختر الصف</option>
-                            <option>الصف الأول</option>
-                            <option>الصف الثاني</option>
-                            <option>الصف الثالث</option>
-                            <option>الصف الرابع</option>
-                            <option>الصف الخامس</option>
-                            <option>الصف السادس</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>المحافظة</label>
-                        <input type="text" id="city" required>
-                    </div>
-                    <div class="form-group">
-                        <label>البريد الإلكتروني</label>
-                        <input type="email" id="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label>كلمة المرور</label>
-                        <input type="password" id="password" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">إنشاء حساب</button>
-                </form>
-            </div>
-        </div>
+<div class="container">
+    <h1>⛓️ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ⛓️</h1>
+
+    <div class="upload-zone" id="uploadZone">
+        <p>📂 <span>اضغط</span> لرفع صورة أو <span>اسحب</span> الملف هنا</p>
+        <input type="file" id="fileInput" accept="image/*">
     </div>
-    
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <script src="js/firebase-config.js"></script>
-    <script>
-        function switchTab(tab) {
-            const tabs = document.querySelectorAll('.auth-tab');
-            const forms = document.querySelectorAll('.auth-form');
-            
-            tabs.forEach(t => t.classList.remove('active'));
-            forms.forEach(f => f.classList.remove('active'));
-            
-            if (tab === 'login') {
-                tabs[0].classList.add('active');
-                document.getElementById('loginForm').classList.add('active');
-            } else {
-                tabs[1].classList.add('active');
-                document.getElementById('registerForm').classList.add('active');
+
+    <div class="canvas-wrapper">
+        <canvas id="canvas" width="700" height="500"></canvas>
+    </div>
+
+    <div class="stamp-preview">
+        <span>🖋️ <strong>𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗</strong></span>
+        <span>👤 <strong>t.me/goo_cker</strong></span>
+        <span>🔰 <strong>@SGCodexs</strong></span>
+    </div>
+
+    <div class="btn-row">
+        <button class="btn btn-gold" id="applyStamp">🔮 تطبيق الختم</button>
+        <button class="btn btn-green" id="downloadBtn">⬇️ تحميل PNG</button>
+        <button class="btn btn-red" id="resetBtn">🔄 إعادة تعيين</button>
+    </div>
+    <div class="footer">
+        <span>⚡ DWR_Subscriber • DEVILS WILL RISE • @SGCodexs ⚡</span>
+    </div>
+</div>
+
+<script>
+    (function() {
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const fileInput = document.getElementById('fileInput');
+        const uploadZone = document.getElementById('uploadZone');
+
+        let currentImage = null;
+        let imageLoaded = false;
+
+        // ثوابت الختم الاحترافي
+        const NAME = '𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗';
+        const USER = 't.me/goo_cker';
+        const TAG = '@SGCodexs';
+
+        // ======== رسم الخلفية الافتراضية ========
+        function drawDefaultBackground() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // تدرج ورقي قديم
+            const grad = ctx.createRadialGradient(350, 250, 50, 350, 250, 400);
+            grad.addColorStop(0, '#2c241a');
+            grad.addColorStop(0.7, '#1a150f');
+            grad.addColorStop(1, '#0d0a06');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // نسيج ورق خفيف (خطوط أفقية)
+            ctx.strokeStyle = '#3a3024';
+            ctx.lineWidth = 0.6;
+            for (let y = 0; y < canvas.height; y += 18) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
             }
+            // خطوط عمودية خفيفة
+            ctx.strokeStyle = '#2f2a1f';
+            for (let x = 0; x < canvas.width; x += 25) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+
+            ctx.fillStyle = '#b8963a55';
+            ctx.font = 'italic 28px "Times New Roman", serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('✧ رفع الصورة ✧', canvas.width/2, canvas.height/2 - 20);
+            ctx.fillStyle = '#887a5a55';
+            ctx.font = '18px "Segoe UI", sans-serif';
+            ctx.fillText('ثم اضغط "تطبيق الختم"', canvas.width/2, canvas.height/2 + 35);
         }
-        
-        // تسجيل الدخول
-        document.getElementById('login').addEventListener('submit', async (e) => {
+
+        // ======== الختم الاحترافي (داخل الورقة) ========
+        function drawProfessionalStamp() {
+            const cw = canvas.width, ch = canvas.height;
+
+            // ---- ختم دائري كبير في منتصف الجانب الأيمن ----
+            const cx = cw - 130;
+            const cy = ch - 120;
+            const r = 82;
+
+            // ظل الختم (يحاكي الضغط على الورق)
+            ctx.shadowColor = 'rgba(0,0,0,0.8)';
+            ctx.shadowBlur = 25;
+            ctx.shadowOffsetX = 5;
+            ctx.shadowOffsetY = 5;
+
+            // الدائرة الخارجية (حد ذهبي عريض)
+            ctx.beginPath();
+            ctx.arc(cx, cy, r, 0, Math.PI*2);
+            ctx.fillStyle = 'rgba(30, 26, 18, 0.92)';
+            ctx.fill();
+            ctx.strokeStyle = '#d4af37';
+            ctx.lineWidth = 6;
+            ctx.stroke();
+
+            // دائرة داخلية مزدوجة (تأثير نقش)
+            ctx.beginPath();
+            ctx.arc(cx, cy, r-14, 0, Math.PI*2);
+            ctx.strokeStyle = '#b8963a';
+            ctx.lineWidth = 2.5;
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(cx, cy, r-22, 0, Math.PI*2);
+            ctx.strokeStyle = '#8a7a4a';
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+
+            // إزالة الظل للنص
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+
+            // ---- نصوص الختم ----
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            // السطر الأول (الاسم)
+            ctx.fillStyle = '#f5d742';
+            ctx.font = 'bold 22px "Segoe UI", "Arial Unicode MS", "Times New Roman", serif';
+            ctx.fillText(NAME, cx, cy - 18);
+
+            // السطر الثاني (اليوزر)
+            ctx.fillStyle = '#e6c87a';
+            ctx.font = '15px "Segoe UI", "Arial Unicode MS", sans-serif';
+            ctx.fillText(USER, cx, cy + 22);
+
+            // السطر الثالث (تاغ صغير)
+            ctx.fillStyle = '#b8963a';
+            ctx.font = '12px "Segoe UI", sans-serif';
+            ctx.fillText(TAG, cx, cy + 50);
+
+            // زخرفة علوية (نجمة)
+            ctx.fillStyle = '#d4af37';
+            ctx.font = '22px sans-serif';
+            ctx.fillText('★', cx, cy - 52);
+
+            // نقاط صغيرة حول الختم (تأثير حدودي)
+            for (let i = 0; i < 12; i++) {
+                const angle = (i / 12) * Math.PI * 2;
+                const px = cx + (r - 8) * Math.cos(angle);
+                const py = cy + (r - 8) * Math.sin(angle);
+                ctx.beginPath();
+                ctx.arc(px, py, 3, 0, Math.PI*2);
+                ctx.fillStyle = '#d4af37';
+                ctx.fill();
+            }
+
+            // ---- ختم جانبي مائي (شفاف) في الزاوية السفلية اليسرى ----
+            ctx.globalAlpha = 0.25;
+            ctx.font = 'bold 28px "Times New Roman", serif';
+            ctx.fillStyle = '#d4af37';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText('⛓️ El Joker', 25, ch - 30);
+
+            ctx.font = '18px "Segoe UI", sans-serif';
+            ctx.fillStyle = '#b8963a';
+            ctx.textBaseline = 'top';
+            ctx.fillText('@SGCodexs', 30, 25);
+            ctx.globalAlpha = 1.0;
+
+            // ---- ختم خطي (شريط) في الأعلى ----
+            ctx.shadowBlur = 12;
+            ctx.shadowColor = 'rgba(0,0,0,0.5)';
+            ctx.fillStyle = 'rgba(212, 175, 55, 0.08)';
+            ctx.fillRect(20, 12, 180, 28);
+            ctx.strokeStyle = 'rgba(212, 175, 55, 0.15)';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(20, 12, 180, 28);
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = 'rgba(212, 175, 55, 0.25)';
+            ctx.font = '14px "Segoe UI", sans-serif';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('✦ DEVILS WILL RISE ✦', 32, 26);
+        }
+
+        // ======== رسم كل شيء (صورة + ختم) ========
+        function renderFull() {
+            if (!imageLoaded || !currentImage) {
+                drawDefaultBackground();
+                drawProfessionalStamp();
+                return;
+            }
+
+            // رسم الصورة
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const img = currentImage;
+            const iw = img.width, ih = img.height;
+            const cw = canvas.width, ch = canvas.height;
+            const ratio = Math.min(cw / iw, ch / ih);
+            const dw = iw * ratio, dh = ih * ratio;
+            const dx = (cw - dw) / 2, dy = (ch - dh) / 2;
+            ctx.drawImage(img, dx, dy, dw, dh);
+
+            // إضافة طبقة شفافة فوق الصورة (تأثير الورق القديم)
+            ctx.fillStyle = 'rgba(20, 16, 10, 0.08)';
+            ctx.fillRect(0, 0, cw, ch);
+
+            // ختم احترافي
+            drawProfessionalStamp();
+        }
+
+        // ======== تحميل الصورة ========
+        function loadImage(file) {
+            if (!file || !file.type.startsWith('image/')) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    currentImage = img;
+                    imageLoaded = true;
+                    renderFull();
+                };
+                img.onerror = function() {
+                    imageLoaded = false;
+                    currentImage = null;
+                    renderFull();
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // ======== أحداث الرفع ========
+        uploadZone.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files.length) {
+                loadImage(this.files[0]);
+            }
+            this.value = '';
+        });
+
+        uploadZone.addEventListener('dragover', (e) => {
             e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            
-            try {
-                const userCredential = await auth.signInWithEmailAndPassword(email, password);
-                const user = userCredential.user;
-                
-                // جلب بيانات المستخدم
-                const userDoc = await db.collection('users').doc(user.uid).get();
-                const userData = userDoc.data();
-                
-                if (userData.role === 'admin') {
-                    window.location.href = 'admin-dashboard.html';
-                } else {
-                    window.location.href = 'student-dashboard.html';
-                }
-            } catch (error) {
-                alert('خطأ في تسجيل الدخول: ' + error.message);
+            uploadZone.style.borderColor = '#d4af37';
+            uploadZone.style.background = '#282018';
+        });
+        uploadZone.addEventListener('dragleave', () => {
+            uploadZone.style.borderColor = '#444';
+            uploadZone.style.background = '#1a1a1a';
+        });
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.style.borderColor = '#444';
+            uploadZone.style.background = '#1a1a1a';
+            if (e.dataTransfer.files.length) {
+                loadImage(e.dataTransfer.files[0]);
             }
         });
-        
-        // إنشاء حساب جديد
-        document.getElementById('register').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const fullName = document.getElementById('fullName').value;
-            const phone = document.getElementById('phone').value;
-            const parentPhone = document.getElementById('parentPhone').value;
-            const telegram = document.getElementById('telegram').value;
-            const school = document.getElementById('school').value;
-            const grade = document.getElementById('grade').value;
-            const city = document.getElementById('city').value;
-            
-            try {
-                // إنشاء المستخدم في Authentication
-                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-                const user = userCredential.user;
-                
-                // إنشاء كود الطالب
-                const studentsRef = db.collection('users').where('role', '==', 'student');
-                const snapshot = await studentsRef.get();
-                const studentCount = snapshot.size;
-                const studentCode = `ST${String(studentCount + 1).padStart(4, '0')}`;
-                
-                // حفظ بيانات الطالب في Firestore
-                await db.collection('users').doc(user.uid).set({
-                    uid: user.uid,
-                    fullName,
-                    email,
-                    phone,
-                    parentPhone,
-                    telegram,
-                    school,
-                    grade,
-                    city,
-                    studentCode,
-                    role: 'student',
-                    subscriptionStatus: 'pending',
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    registrationDate: new Date().toISOString()
-                });
-                
-                alert('تم إنشاء الحساب بنجاح! برجاء تسجيل الدخول');
-                switchTab('login');
-                
-            } catch (error) {
-                alert('خطأ في إنشاء الحساب: ' + error.message);
-            }
+
+        // ======== أزرار ========
+        document.getElementById('applyStamp').addEventListener('click', renderFull);
+        document.getElementById('resetBtn').addEventListener('click', function() {
+            currentImage = null;
+            imageLoaded = false;
+            fileInput.value = '';
+            renderFull();
         });
-    </script>
+        document.getElementById('downloadBtn').addEventListener('click', function() {
+            const link = document.createElement('a');
+            link.download = 'ElJoker_Stamp.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+
+        // ======== البدء ========
+        renderFull();
+        console.log('💀 DWR_Subscriber | ختم احترافي داخل الورقة | @SGCodexs');
+    })();
+</script>
 </body>
 </html>
