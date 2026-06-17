@@ -3,13 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ختم احترافي 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗</title>
+    <title>ختم شفاف داخل الورقة - 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: #0a0a0a;
             min-height: 100vh;
@@ -17,166 +13,136 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
         }
         .container {
-            background: #141414;
+            background: #111;
             padding: 25px;
             border-radius: 30px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.9), 0 0 0 1px #2a2a2a;
-            max-width: 800px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.9);
+            max-width: 820px;
             width: 100%;
+            border: 1px solid #2a2a2a;
         }
         h1 {
             color: #d4af37;
             text-align: center;
             font-weight: 300;
-            letter-spacing: 4px;
-            font-size: 1.6rem;
-            margin-bottom: 20px;
-            text-shadow: 0 0 15px #b8860b55;
+            letter-spacing: 3px;
+            font-size: 1.7rem;
+            margin-bottom: 18px;
+            text-shadow: 0 0 12px #b8860b33;
         }
-        .upload-zone {
+        .upload-area {
             background: #1a1a1a;
-            border: 2px dashed #444;
-            border-radius: 20px;
-            padding: 25px;
+            border: 2px dashed #3a3a3a;
+            border-radius: 18px;
+            padding: 22px;
             text-align: center;
             cursor: pointer;
             transition: 0.3s;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
-        .upload-zone:hover {
-            border-color: #d4af37;
-            background: #202020;
+        .upload-area:hover {
+            border-color: #b8963a;
+            background: #222;
         }
-        .upload-zone p {
-            color: #aaa;
-            font-size: 1rem;
-        }
-        .upload-zone span {
-            color: #d4af37;
-            font-weight: bold;
-        }
-        #fileInput {
-            display: none;
-        }
-        .canvas-wrapper {
+        .upload-area p { color: #888; font-size: 1rem; }
+        .upload-area span { color: #d4af37; font-weight: bold; }
+        #fileInput { display: none; }
+        .canvas-wrap {
             background: #0d0d0d;
-            border-radius: 16px;
-            padding: 12px;
-            border: 1px solid #2a2a2a;
-            margin: 15px 0;
-            position: relative;
+            border-radius: 14px;
+            padding: 10px;
+            border: 1px solid #222;
+            margin: 12px 0;
         }
         #canvas {
             width: 100%;
             height: auto;
             display: block;
-            border-radius: 10px;
-            background: #111;
-            box-shadow: inset 0 0 30px #00000099;
+            border-radius: 8px;
+            background: #12100c;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.7);
         }
-        .stamp-preview {
-            background: #1e1e1e;
+        .info-bar {
+            background: #1a1712;
             border-radius: 40px;
             padding: 10px 20px;
             margin: 12px 0;
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 10px 25px;
-            border-left: 4px solid #d4af37;
-            color: #ccc;
-            font-size: 0.95rem;
+            gap: 12px 30px;
+            border-left: 3px solid #d4af37;
+            color: #bbb;
+            font-size: 0.9rem;
         }
-        .stamp-preview strong {
-            color: #f5d742;
-        }
-        .btn-row {
+        .info-bar strong { color: #e6c87a; }
+        .btn-group {
             display: flex;
             flex-wrap: wrap;
             gap: 12px;
             justify-content: center;
-            margin: 18px 0 8px;
+            margin: 15px 0 5px;
         }
         .btn {
-            padding: 12px 30px;
+            padding: 11px 28px;
             border: none;
             border-radius: 50px;
             font-weight: 600;
             font-size: 0.95rem;
             cursor: pointer;
             transition: 0.2s;
-            box-shadow: 0 5px 0 #0a0a0a;
+            box-shadow: 0 4px 0 #0a0a0a;
             flex: 1 1 auto;
-            min-width: 130px;
-            letter-spacing: 0.5px;
+            min-width: 120px;
             color: #eee;
             background: #2a2a2a;
         }
-        .btn-gold {
-            background: #b8860b;
-            color: #000;
-            box-shadow: 0 5px 0 #6b4f0a;
-        }
-        .btn-gold:hover {
-            background: #d4a017;
-            transform: scale(1.02);
-        }
-        .btn-green {
-            background: #1f7a2a;
-            box-shadow: 0 5px 0 #0f4a17;
-        }
-        .btn-green:hover {
-            background: #2d9e3b;
-        }
-        .btn-red {
-            background: #6e2222;
-            box-shadow: 0 5px 0 #3f1212;
-        }
-        .btn-red:hover {
-            background: #9a3030;
-        }
+        .btn-gold { background: #b8860b; color: #000; box-shadow: 0 4px 0 #6b4f0a; }
+        .btn-gold:hover { background: #d4a017; transform: scale(1.02); }
+        .btn-green { background: #1f7a2a; box-shadow: 0 4px 0 #0f4a17; }
+        .btn-green:hover { background: #2d9e3b; }
+        .btn-red { background: #6e2222; box-shadow: 0 4px 0 #3f1212; }
+        .btn-red:hover { background: #9a3030; }
         .footer {
-            margin-top: 18px;
+            margin-top: 16px;
             text-align: center;
             color: #444;
-            font-size: 0.8rem;
-            border-top: 1px solid #222;
-            padding-top: 14px;
+            font-size: 0.75rem;
+            border-top: 1px solid #1f1f1f;
+            padding-top: 12px;
         }
-        .footer span {
-            color: #b8963a;
-        }
+        .footer span { color: #b8963a; }
     </style>
 </head>
 <body>
 <div class="container">
     <h1>⛓️ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ⛓️</h1>
 
-    <div class="upload-zone" id="uploadZone">
-        <p>📂 <span>اضغط</span> لرفع صورة أو <span>اسحب</span> الملف هنا</p>
+    <div class="upload-area" id="uploadZone">
+        <p>📄 <span>اضغط</span> لرفع صورة أو <span>اسحب</span> الملف</p>
         <input type="file" id="fileInput" accept="image/*">
     </div>
 
-    <div class="canvas-wrapper">
-        <canvas id="canvas" width="700" height="500"></canvas>
+    <div class="canvas-wrap">
+        <canvas id="canvas" width="750" height="520"></canvas>
     </div>
 
-    <div class="stamp-preview">
-        <span>🖋️ <strong>𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗</strong></span>
-        <span>👤 <strong>t.me/goo_cker</strong></span>
-        <span>🔰 <strong>@SGCodexs</strong></span>
+    <div class="info-bar">
+        <span>🖋 <strong>𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗</strong></span>
+        <span>🔗 <strong>t.me/goo_cker</strong></span>
+        <span>⚡ <strong>@SGCodexs</strong></span>
     </div>
 
-    <div class="btn-row">
-        <button class="btn btn-gold" id="applyStamp">🔮 تطبيق الختم</button>
+    <div class="btn-group">
+        <button class="btn btn-gold" id="applyBtn">🔮 تطبيق الختم الشفاف</button>
         <button class="btn btn-green" id="downloadBtn">⬇️ تحميل PNG</button>
         <button class="btn btn-red" id="resetBtn">🔄 إعادة تعيين</button>
     </div>
     <div class="footer">
-        <span>⚡ DWR_Subscriber • DEVILS WILL RISE • @SGCodexs ⚡</span>
+        <span>💀 DWR_Subscriber • DEVILS WILL RISE • @SGCodexs 💀</span>
     </div>
 </div>
 
@@ -190,85 +156,86 @@
         let currentImage = null;
         let imageLoaded = false;
 
-        // ثوابت الختم الاحترافي
         const NAME = '𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗';
         const USER = 't.me/goo_cker';
         const TAG = '@SGCodexs';
 
-        // ======== رسم الخلفية الافتراضية ========
-        function drawDefaultBackground() {
+        // ======== خلفية افتراضية (ورق قديم) ========
+        function drawPaperBackground() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            // تدرج ورقي قديم
-            const grad = ctx.createRadialGradient(350, 250, 50, 350, 250, 400);
-            grad.addColorStop(0, '#2c241a');
-            grad.addColorStop(0.7, '#1a150f');
-            grad.addColorStop(1, '#0d0a06');
+            // تدرج ورق عتيق
+            const grad = ctx.createRadialGradient(380, 260, 60, 380, 260, 450);
+            grad.addColorStop(0, '#2f281c');
+            grad.addColorStop(0.6, '#1d1811');
+            grad.addColorStop(1, '#0f0c08');
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // نسيج ورق خفيف (خطوط أفقية)
-            ctx.strokeStyle = '#3a3024';
-            ctx.lineWidth = 0.6;
-            for (let y = 0; y < canvas.height; y += 18) {
+            // نسيج ورق (خطوط خفيفة)
+            ctx.strokeStyle = '#3d3426';
+            ctx.lineWidth = 0.5;
+            for (let y = 0; y < canvas.height; y += 16) {
                 ctx.beginPath();
                 ctx.moveTo(0, y);
                 ctx.lineTo(canvas.width, y);
                 ctx.stroke();
             }
-            // خطوط عمودية خفيفة
-            ctx.strokeStyle = '#2f2a1f';
-            for (let x = 0; x < canvas.width; x += 25) {
+            ctx.strokeStyle = '#322b1e';
+            for (let x = 0; x < canvas.width; x += 22) {
                 ctx.beginPath();
                 ctx.moveTo(x, 0);
                 ctx.lineTo(x, canvas.height);
                 ctx.stroke();
             }
 
-            ctx.fillStyle = '#b8963a55';
-            ctx.font = 'italic 28px "Times New Roman", serif';
+            ctx.fillStyle = '#b8963a44';
+            ctx.font = 'italic 30px "Times New Roman", serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText('✧ رفع الصورة ✧', canvas.width/2, canvas.height/2 - 20);
-            ctx.fillStyle = '#887a5a55';
-            ctx.font = '18px "Segoe UI", sans-serif';
-            ctx.fillText('ثم اضغط "تطبيق الختم"', canvas.width/2, canvas.height/2 + 35);
+            ctx.fillText('✧ ارفع صورتك ✧', canvas.width/2, canvas.height/2 - 25);
+            ctx.fillStyle = '#7a6a4a55';
+            ctx.font = '20px "Segoe UI", sans-serif';
+            ctx.fillText('الختم سينطبع بشفافية عالية', canvas.width/2, canvas.height/2 + 40);
         }
 
-        // ======== الختم الاحترافي (داخل الورقة) ========
-        function drawProfessionalStamp() {
+        // ======== الختم الشفاف (مائي، داخل الورقة) ========
+        function drawTransparentStamp() {
             const cw = canvas.width, ch = canvas.height;
 
-            // ---- ختم دائري كبير في منتصف الجانب الأيمن ----
-            const cx = cw - 130;
-            const cy = ch - 120;
-            const r = 82;
+            // ===== ختم دائري كبير شفاف (في المنتصف مائل للأسفل) =====
+            const cx = cw - 150;
+            const cy = ch - 130;
+            const radius = 95;
 
-            // ظل الختم (يحاكي الضغط على الورق)
-            ctx.shadowColor = 'rgba(0,0,0,0.8)';
-            ctx.shadowBlur = 25;
-            ctx.shadowOffsetX = 5;
-            ctx.shadowOffsetY = 5;
+            // شفافية عالية جداً (تأثير الحبر المخفف)
+            ctx.globalAlpha = 0.18;
 
-            // الدائرة الخارجية (حد ذهبي عريض)
+            // ظل خفيف جداً
+            ctx.shadowColor = 'rgba(0,0,0,0.2)';
+            ctx.shadowBlur = 12;
+            ctx.shadowOffsetX = 2;
+            ctx.shadowOffsetY = 3;
+
+            // الدائرة الخارجية (ذهبية شفافة)
             ctx.beginPath();
-            ctx.arc(cx, cy, r, 0, Math.PI*2);
-            ctx.fillStyle = 'rgba(30, 26, 18, 0.92)';
+            ctx.arc(cx, cy, radius, 0, Math.PI*2);
+            ctx.fillStyle = 'rgba(212, 175, 55, 0.08)';
             ctx.fill();
-            ctx.strokeStyle = '#d4af37';
-            ctx.lineWidth = 6;
+            ctx.strokeStyle = 'rgba(212, 175, 55, 0.25)';
+            ctx.lineWidth = 3.5;
             ctx.stroke();
 
-            // دائرة داخلية مزدوجة (تأثير نقش)
+            // دائرة داخلية مزدوجة (أكثر شفافية)
             ctx.beginPath();
-            ctx.arc(cx, cy, r-14, 0, Math.PI*2);
-            ctx.strokeStyle = '#b8963a';
-            ctx.lineWidth = 2.5;
+            ctx.arc(cx, cy, radius-18, 0, Math.PI*2);
+            ctx.strokeStyle = 'rgba(184, 150, 58, 0.15)';
+            ctx.lineWidth = 1.8;
             ctx.stroke();
 
             ctx.beginPath();
-            ctx.arc(cx, cy, r-22, 0, Math.PI*2);
-            ctx.strokeStyle = '#8a7a4a';
-            ctx.lineWidth = 1.2;
+            ctx.arc(cx, cy, radius-30, 0, Math.PI*2);
+            ctx.strokeStyle = 'rgba(160, 130, 70, 0.1)';
+            ctx.lineWidth = 1;
             ctx.stroke();
 
             // إزالة الظل للنص
@@ -276,76 +243,76 @@
             ctx.shadowOffsetX = 0;
             ctx.shadowOffsetY = 0;
 
-            // ---- نصوص الختم ----
+            // نصوص الختم (شفافة)
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
 
-            // السطر الأول (الاسم)
-            ctx.fillStyle = '#f5d742';
-            ctx.font = 'bold 22px "Segoe UI", "Arial Unicode MS", "Times New Roman", serif';
-            ctx.fillText(NAME, cx, cy - 18);
+            // الاسم (شفاف)
+            ctx.fillStyle = 'rgba(212, 175, 55, 0.3)';
+            ctx.font = 'bold 28px "Segoe UI", "Arial Unicode MS", "Times New Roman", serif';
+            ctx.fillText(NAME, cx, cy - 22);
 
-            // السطر الثاني (اليوزر)
-            ctx.fillStyle = '#e6c87a';
-            ctx.font = '15px "Segoe UI", "Arial Unicode MS", sans-serif';
-            ctx.fillText(USER, cx, cy + 22);
+            // اليوزر (أكثر شفافية)
+            ctx.fillStyle = 'rgba(200, 180, 120, 0.25)';
+            ctx.font = '20px "Segoe UI", "Arial Unicode MS", sans-serif';
+            ctx.fillText(USER, cx, cy + 28);
 
-            // السطر الثالث (تاغ صغير)
-            ctx.fillStyle = '#b8963a';
-            ctx.font = '12px "Segoe UI", sans-serif';
-            ctx.fillText(TAG, cx, cy + 50);
+            // التاغ (شفاف جداً)
+            ctx.fillStyle = 'rgba(180, 160, 100, 0.2)';
+            ctx.font = '16px "Segoe UI", sans-serif';
+            ctx.fillText(TAG, cx, cy + 60);
 
-            // زخرفة علوية (نجمة)
-            ctx.fillStyle = '#d4af37';
-            ctx.font = '22px sans-serif';
-            ctx.fillText('★', cx, cy - 52);
+            // زخرفة (نجمة شفافة)
+            ctx.fillStyle = 'rgba(212, 175, 55, 0.2)';
+            ctx.font = '26px sans-serif';
+            ctx.fillText('✦', cx, cy - 62);
 
-            // نقاط صغيرة حول الختم (تأثير حدودي)
-            for (let i = 0; i < 12; i++) {
-                const angle = (i / 12) * Math.PI * 2;
-                const px = cx + (r - 8) * Math.cos(angle);
-                const py = cy + (r - 8) * Math.sin(angle);
+            // نقاط حول الحافة (شفافة)
+            ctx.fillStyle = 'rgba(212, 175, 55, 0.15)';
+            for (let i = 0; i < 16; i++) {
+                const angle = (i / 16) * Math.PI * 2;
+                const px = cx + (radius - 6) * Math.cos(angle);
+                const py = cy + (radius - 6) * Math.sin(angle);
                 ctx.beginPath();
-                ctx.arc(px, py, 3, 0, Math.PI*2);
-                ctx.fillStyle = '#d4af37';
+                ctx.arc(px, py, 4, 0, Math.PI*2);
                 ctx.fill();
             }
 
-            // ---- ختم جانبي مائي (شفاف) في الزاوية السفلية اليسرى ----
-            ctx.globalAlpha = 0.25;
-            ctx.font = 'bold 28px "Times New Roman", serif';
+            // ===== ختم جانبي شفاف (اسم + تاغ) =====
+            ctx.globalAlpha = 0.12;
+            ctx.font = 'bold 34px "Times New Roman", serif';
             ctx.fillStyle = '#d4af37';
             ctx.textAlign = 'left';
             ctx.textBaseline = 'bottom';
-            ctx.fillText('⛓️ El Joker', 25, ch - 30);
+            ctx.fillText('⛓️ El Joker', 30, ch - 35);
 
-            ctx.font = '18px "Segoe UI", sans-serif';
+            ctx.font = '22px "Segoe UI", sans-serif';
             ctx.fillStyle = '#b8963a';
             ctx.textBaseline = 'top';
-            ctx.fillText('@SGCodexs', 30, 25);
+            ctx.fillText('@SGCodexs', 35, 28);
             ctx.globalAlpha = 1.0;
 
-            // ---- ختم خطي (شريط) في الأعلى ----
-            ctx.shadowBlur = 12;
-            ctx.shadowColor = 'rgba(0,0,0,0.5)';
-            ctx.fillStyle = 'rgba(212, 175, 55, 0.08)';
-            ctx.fillRect(20, 12, 180, 28);
-            ctx.strokeStyle = 'rgba(212, 175, 55, 0.15)';
+            // ===== شريط علوي شفاف =====
+            ctx.globalAlpha = 0.06;
+            ctx.fillStyle = '#d4af37';
+            ctx.fillRect(20, 10, 200, 30);
+            ctx.strokeStyle = 'rgba(212, 175, 55, 0.1)';
             ctx.lineWidth = 1;
-            ctx.strokeRect(20, 12, 180, 28);
-            ctx.shadowBlur = 0;
-            ctx.fillStyle = 'rgba(212, 175, 55, 0.25)';
-            ctx.font = '14px "Segoe UI", sans-serif';
+            ctx.strokeRect(20, 10, 200, 30);
+            ctx.globalAlpha = 0.15;
+            ctx.fillStyle = '#d4af37';
+            ctx.font = '16px "Segoe UI", sans-serif';
             ctx.textAlign = 'left';
             ctx.textBaseline = 'middle';
-            ctx.fillText('✦ DEVILS WILL RISE ✦', 32, 26);
+            ctx.fillText('✦ DEVILS WILL RISE ✦', 32, 25);
+            ctx.globalAlpha = 1.0;
         }
 
-        // ======== رسم كل شيء (صورة + ختم) ========
-        function renderFull() {
+        // ======== تجميع الصورة + الختم الشفاف ========
+        function renderAll() {
             if (!imageLoaded || !currentImage) {
-                drawDefaultBackground();
-                drawProfessionalStamp();
+                drawPaperBackground();
+                drawTransparentStamp();
                 return;
             }
 
@@ -359,16 +326,16 @@
             const dx = (cw - dw) / 2, dy = (ch - dh) / 2;
             ctx.drawImage(img, dx, dy, dw, dh);
 
-            // إضافة طبقة شفافة فوق الصورة (تأثير الورق القديم)
-            ctx.fillStyle = 'rgba(20, 16, 10, 0.08)';
+            // طبقة رقيقة جداً فوق الصورة (تأثير ورق)
+            ctx.fillStyle = 'rgba(25, 20, 12, 0.05)';
             ctx.fillRect(0, 0, cw, ch);
 
-            // ختم احترافي
-            drawProfessionalStamp();
+            // ختم شفاف
+            drawTransparentStamp();
         }
 
         // ======== تحميل الصورة ========
-        function loadImage(file) {
+        function loadImageFile(file) {
             if (!file || !file.type.startsWith('image/')) return;
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -376,63 +343,59 @@
                 img.onload = function() {
                     currentImage = img;
                     imageLoaded = true;
-                    renderFull();
+                    renderAll();
                 };
                 img.onerror = function() {
                     imageLoaded = false;
                     currentImage = null;
-                    renderFull();
+                    renderAll();
                 };
                 img.src = e.target.result;
             };
             reader.readAsDataURL(file);
         }
 
-        // ======== أحداث الرفع ========
+        // ======== أحداث ========
         uploadZone.addEventListener('click', () => fileInput.click());
         fileInput.addEventListener('change', function() {
-            if (this.files && this.files.length) {
-                loadImage(this.files[0]);
-            }
+            if (this.files && this.files.length) loadImageFile(this.files[0]);
             this.value = '';
         });
 
         uploadZone.addEventListener('dragover', (e) => {
             e.preventDefault();
             uploadZone.style.borderColor = '#d4af37';
-            uploadZone.style.background = '#282018';
+            uploadZone.style.background = '#222';
         });
         uploadZone.addEventListener('dragleave', () => {
-            uploadZone.style.borderColor = '#444';
+            uploadZone.style.borderColor = '#3a3a3a';
             uploadZone.style.background = '#1a1a1a';
         });
         uploadZone.addEventListener('drop', (e) => {
             e.preventDefault();
-            uploadZone.style.borderColor = '#444';
+            uploadZone.style.borderColor = '#3a3a3a';
             uploadZone.style.background = '#1a1a1a';
-            if (e.dataTransfer.files.length) {
-                loadImage(e.dataTransfer.files[0]);
-            }
+            if (e.dataTransfer.files.length) loadImageFile(e.dataTransfer.files[0]);
         });
 
         // ======== أزرار ========
-        document.getElementById('applyStamp').addEventListener('click', renderFull);
+        document.getElementById('applyBtn').addEventListener('click', renderAll);
         document.getElementById('resetBtn').addEventListener('click', function() {
             currentImage = null;
             imageLoaded = false;
             fileInput.value = '';
-            renderFull();
+            renderAll();
         });
         document.getElementById('downloadBtn').addEventListener('click', function() {
             const link = document.createElement('a');
-            link.download = 'ElJoker_Stamp.png';
+            link.download = 'ElJoker_Transparent_Stamp.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
         });
 
-        // ======== البدء ========
-        renderFull();
-        console.log('💀 DWR_Subscriber | ختم احترافي داخل الورقة | @SGCodexs');
+        // ======== بداية ========
+        renderAll();
+        console.log('💀 DWR_Subscriber | ختم شفاف مائي داخل الورقة | @SGCodexs');
     })();
 </script>
 </body>
