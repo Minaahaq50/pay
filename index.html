@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ورقة امتحان + علامة مائية</title>
+  <title>ورقة امتحان + علامة مائية فوق الصورة</title>
   <style>
     * {
       margin: 0;
@@ -21,7 +21,7 @@
       padding: 20px;
     }
 
-    /* الورقة الرسمية - خلفية الصورة التي سترفع */
+    /* الورقة الرسمية */
     .paper {
       position: relative;
       width: 820px;
@@ -51,35 +51,8 @@
       align-items: center;
     }
 
-    /* العلامة المائية الشفافة - فوق الخلفية وتحت الصورة والنص */
-    .watermark {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      overflow: hidden;
-      border-radius: inherit;
-      z-index: 5;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0.13;
-      font-size: 6rem;
-      font-weight: 900;
-      color: #3a2c1e;
-      letter-spacing: 10px;
-      text-transform: uppercase;
-      font-family: 'Times New Roman', serif;
-      transform: rotate(-10deg) scale(1.3);
-      text-shadow: 2px 2px 6px rgba(0,0,0,0.15);
-      white-space: nowrap;
-      user-select: none;
-    }
-
-    /* صورة الامتحان (التي يرفعها المستخدم) تظهر كخلفية داخل الورقة */
-    .exam-image-container {
+    /* حاوية الصورة - relative لتثبيت العلامة المائية داخلها */
+    .exam-image-wrapper {
       position: relative;
       z-index: 10;
       width: 100%;
@@ -96,22 +69,50 @@
       flex-shrink: 0;
     }
 
-    .exam-image-container img {
+    /* العلامة المائية - فوق الصورة تماماً (z-index أعلى) */
+    .watermark-on-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none; /* تسمح بالتفاعل مع ما تحتها */
+      z-index: 30; /* أعلى من الصورة */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.18; /* شفافية عالية */
+      font-size: 5.5rem;
+      font-weight: 900;
+      color: #1a120a;
+      letter-spacing: 12px;
+      text-transform: uppercase;
+      font-family: 'Times New Roman', serif;
+      transform: rotate(-12deg) scale(1.2);
+      text-shadow: 3px 3px 8px rgba(255, 255, 255, 0.3), 0 0 20px rgba(0,0,0,0.1);
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    /* صورة الامتحان */
+    .exam-image-wrapper img {
       width: 100%;
       height: auto;
       max-height: 550px;
       object-fit: contain;
       display: block;
       background: #fcf8f0;
+      position: relative;
+      z-index: 5; /* تحت العلامة المائية */
     }
 
-    /* النص يظهر فوق الصورة والعلامة المائية */
+    /* النص يظهر فوق العلامة المائية أيضاً */
     .content {
       position: relative;
-      z-index: 20;
+      z-index: 35; /* أعلى من العلامة المائية */
       width: 100%;
       text-align: center;
-      background: rgba(252, 248, 240, 0.7);
+      background: rgba(252, 248, 240, 0.75);
       backdrop-filter: blur(2px);
       padding: 14px 20px;
       border-radius: 50px;
@@ -136,7 +137,7 @@
     /* أدوات رفع الصورة */
     .upload-area {
       position: relative;
-      z-index: 25;
+      z-index: 40;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
@@ -201,8 +202,8 @@
       white-space: nowrap;
     }
 
-    /* تنسيق الصورة الافتراضية (بدون بروفايل) */
-    .exam-image-container .default-placeholder {
+    /* العنصر الافتراضي (placeholder) */
+    .default-placeholder {
       width: 100%;
       min-height: 280px;
       display: flex;
@@ -215,6 +216,8 @@
       padding: 40px 20px;
       text-align: center;
       gap: 10px;
+      z-index: 5;
+      position: relative;
     }
 
     .default-placeholder span {
@@ -222,15 +225,19 @@
       opacity: 0.4;
     }
 
-    /* تحسين للشاشات الصغيرة */
+    /* العلامة المائية تظهر حتى في حالة عدم وجود صورة */
+    .exam-image-wrapper .watermark-on-image {
+      z-index: 20;
+    }
+
     @media (max-width: 650px) {
       .paper {
         padding: 1.5rem 1rem 2rem;
       }
-      .watermark {
-        font-size: 3.8rem;
-        transform: rotate(-6deg) scale(1.1);
-        opacity: 0.1;
+      .watermark-on-image {
+        font-size: 3.5rem;
+        transform: rotate(-8deg) scale(1.1);
+        opacity: 0.15;
         letter-spacing: 6px;
       }
       .content h1 {
@@ -250,25 +257,26 @@
 
 <div class="paper">
 
-  <!-- العلامة المائية الشفافة (جزء من الورقة) -->
-  <div class="watermark">◆ امتحان ◆</div>
-
-  <!-- حاوية الصورة التي سترفع (بدون بروفايل) -->
-  <div class="exam-image-container" id="examContainer">
-    <!-- العنصر الافتراضي قبل رفع الصورة -->
+  <!-- حاوية الصورة مع العلامة المائية فوقها -->
+  <div class="exam-image-wrapper" id="examWrapper">
+    <!-- العنصر الافتراضي -->
     <div class="default-placeholder" id="defaultPlaceholder">
       <span>📄</span>
       <p>ارفع صورة الامتحان هنا</p>
       <small style="font-size:0.9rem; opacity:0.7;">jpg, png, gif, svg</small>
     </div>
-    <!-- عنصر الصورة (مخفي افتراضيًا) -->
+
+    <!-- صورة الامتحان (مخفية افتراضياً) -->
     <img id="examImage" src="" alt="صورة الامتحان" style="display: none;">
+
+    <!-- العلامة المائية - فوق الصورة دائماً (حتى فوق البليس هولدر) -->
+    <div class="watermark-on-image">◆ امتحان ◆</div>
   </div>
 
   <!-- النص يظهر فوق العلامة المائية وفوق الصورة -->
   <div class="content">
     <h1>📝 ورقة الامتحان الرسمية</h1>
-    <p>الصورة التي ترفعها تظهر مباشرة كخلفية داخل الورقة</p>
+    <p>العلامة المائية فوق الصورة ولا تعيق النص</p>
   </div>
 
   <!-- أدوات الرفع -->
@@ -292,7 +300,6 @@
     const defaultPlaceholder = document.getElementById('defaultPlaceholder');
     const fileNameSpan = document.getElementById('fileName');
 
-    // الصورة الافتراضية (فارغة)
     function resetToDefault() {
       examImage.style.display = 'none';
       defaultPlaceholder.style.display = 'flex';
@@ -302,7 +309,6 @@
       } catch (_) {}
     }
 
-    // استعادة من localStorage
     function loadStoredImage() {
       try {
         const stored = localStorage.getItem('examImageData');
@@ -319,14 +325,12 @@
       }
     }
 
-    // حفظ في localStorage
     function storeImage(dataUrl) {
       try {
         localStorage.setItem('examImageData', dataUrl);
       } catch (_) { /* تجاهل */ }
     }
 
-    // معالجة الملف المرفوع
     function handleFile(file) {
       if (!file) return;
       if (!file.type.startsWith('image/')) {
@@ -338,7 +342,6 @@
       reader.onload = function(e) {
         const result = e.target.result;
         if (typeof result === 'string') {
-          // إظهار الصورة وإخفاء البليس هولدر
           examImage.src = result;
           examImage.style.display = 'block';
           defaultPlaceholder.style.display = 'none';
@@ -352,13 +355,11 @@
       reader.readAsDataURL(file);
     }
 
-    // رفع بالضغط على الزر
     uploadBtn.addEventListener('click', function(e) {
       e.preventDefault();
       fileInput.click();
     });
 
-    // تغيير الملف
     fileInput.addEventListener('change', function(e) {
       if (this.files && this.files.length > 0) {
         handleFile(this.files[0]);
@@ -366,17 +367,15 @@
       this.value = '';
     });
 
-    // زر إعادة تعيين (حذف الصورة)
     resetBtn.addEventListener('click', function(e) {
       e.preventDefault();
       resetToDefault();
-      examImage.src = ''; // تفريغ المصدر
+      examImage.src = '';
     });
 
-    // تحميل الصورة المخزنة
     loadStoredImage();
 
-    // سحب وإفلات على الورقة
+    // سحب وإفلات
     const paper = document.querySelector('.paper');
     paper.addEventListener('dragover', function(e) {
       e.preventDefault();
