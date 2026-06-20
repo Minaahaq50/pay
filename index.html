@@ -687,77 +687,71 @@
     }
 
     // --- زر التحميل: دمج الصورة مع العلامة المائية ---
-    function downloadImageWithWatermark() {
-      if (!currentImageData) {
-        alert('لا توجد صورة للتحميل.');
-        return;
-      }
+   function downloadImageWithWatermark() {
+  if (!currentImageData) {
+    alert('لا توجد صورة للتحميل.');
+    return;
+  }
 
-      // نعرض رسالة تحميل
-      downloadBtn.disabled = true;
-      downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحضير...';
+  downloadBtn.disabled = true;
+  downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحضير...';
 
-      // نستخدم canvas لدمج الصورة مع العلامة المائية
-      const img = new Image();
-      img.onload = function() {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
+  const img = new Image();
 
-        // نضبط أبعاد canvas بحجم الصورة الأصلية
-        const width = img.naturalWidth || img.width;
-        const height = img.naturalHeight || img.height;
-        canvas.width = width;
-        canvas.height = height;
+  img.onload = function () {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
 
-        // رسم الصورة
-        ctx.drawImage(img, 0, 0, width, height);
+    const width = img.naturalWidth || img.width;
+    const height = img.naturalHeight || img.height;
 
-      const line1 = "EL JOKER";
-      const line2 = "الثانوية العامة";
-      const line3 = "2027";
+    canvas.width = width;
+    canvas.height = height;
 
-      ctx.fillText(line1, 0, -fontSize);
-      ctx.fillText(line2, 0, 0);
-      ctx.fillText(line3, 0, fontSize);
+    // رسم الصورة الأصلية
+    ctx.drawImage(img, 0, 0, width, height);
 
-        // تدوير النص
-        ctx.save();
-        ctx.translate(width / 2, height / 2);
-        ctx.rotate(-12 * Math.PI / 180);
-        ctx.scale(1.1, 1.1);
+    // ===== العلامة المائية =====
+    const fontSize = Math.min(width, height) * 0.10;
 
-        // إضافة الشفافية والتأثيرات
-        ctx.shadowColor = 'rgba(255,255,255,0.4)';
-        ctx.shadowBlur = fontSize * 0.15;
-        ctx.fillStyle = 'rgba(26, 15, 7, 0.2)';
-        ctx.fillText(watermarkText, 0, 0);
+    ctx.save();
 
-        // نعيد الرسم بدون تأثير الظل للحصول على وضوح أفضل
-        ctx.shadowColor = 'transparent';
-        ctx.fillStyle = 'rgba(26, 15, 7, 0.2)';
-        ctx.fillText(watermarkText, 0, 0);
+    ctx.translate(width / 2, height / 2);
+    ctx.rotate(-12 * Math.PI / 180);
 
-        ctx.restore();
+    ctx.font = `900 ${fontSize}px Arial`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
 
-        // تحويل canvas إلى صورة
-        const link = document.createElement('a');
-        link.download = `exam_watermarked_${Date.now()}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
+    ctx.fillStyle = "rgba(26,15,7,0.18)";
+    ctx.shadowColor = "rgba(255,255,255,0.4)";
+    ctx.shadowBlur = fontSize * 0.15;
 
-        // إعادة زر التحميل
-        downloadBtn.disabled = false;
-        downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل';
-      };
+    ctx.fillText("◆ EL JOKER ◆", 0, -fontSize);
+    ctx.fillText("الثانوية العامة", 0, 0);
+    ctx.fillText("دفعة 2027", 0, fontSize);
 
-      img.onerror = function() {
-        alert('حدث خطأ أثناء تحميل الصورة. حاول مرة أخرى.');
-        downloadBtn.disabled = false;
-        downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل';
-      };
+    ctx.restore();
 
-      img.src = currentImageData;
-    }
+    // تحميل الصورة
+    const link = document.createElement('a');
+    link.download = `exam_watermarked_${Date.now()}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+
+    downloadBtn.disabled = false;
+    downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل';
+  };
+
+  img.onerror = function () {
+    alert('حدث خطأ أثناء تحميل الصورة');
+    downloadBtn.disabled = false;
+    downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل';
+  };
+
+  img.src = currentImageData;
+}
+
 
     // --- الأحداث ---
     uploadBtn.addEventListener('click', function(e) {
