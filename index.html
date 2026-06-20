@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>الورقة الرسمية + بروفايل</title>
+  <title>ورقة امتحان + علامة مائية</title>
   <style>
     * {
       margin: 0;
@@ -18,153 +18,151 @@
       align-items: center;
       background: #2b2b2b;
       font-family: 'Segoe UI', Tahoma, sans-serif;
+      padding: 20px;
     }
 
-    /* الحاوية الرئيسية - الورقة الرسمية */
+    /* الورقة الرسمية - خلفية الصورة التي سترفع */
     .paper {
       position: relative;
-      width: 780px;
-      max-width: 94%;
-      padding: 2.8rem 2.8rem 3.2rem;
-      background: #fcf8f0; /* لون ورق عتيق */
+      width: 820px;
+      max-width: 100%;
+      padding: 2.5rem 2.5rem 3rem;
+      background: #fcf8f0;
       background-image: 
-        /* خطوط رأسية خفيفة كخلفية ورقية */
         repeating-linear-gradient(90deg, 
           rgba(180, 160, 130, 0.08) 0px, 
           rgba(180, 160, 130, 0.08) 1px, 
           transparent 1px, 
-          transparent 12px
+          transparent 14px
         ),
-        /* خطوط أفقية */
         repeating-linear-gradient(180deg, 
           rgba(180, 160, 130, 0.06) 0px, 
           rgba(180, 160, 130, 0.06) 1px, 
           transparent 1px, 
-          transparent 18px
+          transparent 20px
         );
       box-shadow: 0 12px 40px rgba(0,0,0,0.6), 0 0 0 1px #d4c5a0 inset;
       border-radius: 12px 12px 20px 20px;
       transition: 0.2s;
       z-index: 1;
+      min-height: 500px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
-    /* الماء الشفاف (علامة مائية) – خلف النص وفوق الخلفية */
+    /* العلامة المائية الشفافة - فوق الخلفية وتحت الصورة والنص */
     .watermark {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      pointer-events: none; /* تسمح بالتفاعل مع العناصر التي تحتها */
+      pointer-events: none;
       overflow: hidden;
       border-radius: inherit;
       z-index: 5;
       display: flex;
       align-items: center;
       justify-content: center;
-      opacity: 0.15; /* شفافية عالية جداً */
-      font-size: 5.5rem;
+      opacity: 0.13;
+      font-size: 6rem;
       font-weight: 900;
       color: #3a2c1e;
-      letter-spacing: 8px;
+      letter-spacing: 10px;
       text-transform: uppercase;
       font-family: 'Times New Roman', serif;
-      transform: rotate(-8deg) scale(1.2);
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+      transform: rotate(-10deg) scale(1.3);
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.15);
       white-space: nowrap;
       user-select: none;
     }
 
-    /* صورة البروفايل كجزء من التصميم (موضوعة داخل الورقة) */
-    .profile-wrapper {
+    /* صورة الامتحان (التي يرفعها المستخدم) تظهر كخلفية داخل الورقة */
+    .exam-image-container {
       position: relative;
       z-index: 10;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .profile-frame {
-      position: relative;
-      width: 160px;
-      height: 160px;
-      border-radius: 50%;
-      border: 5px solid #b8a07c;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.25), 0 0 0 2px #ece3d0 inset;
-      background: #e5dccc;
+      width: 100%;
+      max-height: 550px;
+      border-radius: 10px;
       overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      border: 3px solid #b8a07c;
+      background: #e5dccc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       margin-bottom: 28px;
-      transition: 0.2s;
       flex-shrink: 0;
     }
 
-    .profile-frame img {
+    .exam-image-container img {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      height: auto;
+      max-height: 550px;
+      object-fit: contain;
       display: block;
+      background: #fcf8f0;
     }
 
-    /* النص الأساسي يظهر فوق كل شيء */
+    /* النص يظهر فوق الصورة والعلامة المائية */
     .content {
       position: relative;
-      z-index: 15;
+      z-index: 20;
       width: 100%;
       text-align: center;
+      background: rgba(252, 248, 240, 0.7);
+      backdrop-filter: blur(2px);
+      padding: 14px 20px;
+      border-radius: 50px;
+      margin-bottom: 20px;
+      border: 1px solid #d4c5a0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
 
     .content h1 {
       font-size: 2.2rem;
       color: #2d241a;
-      border-bottom: 2px solid #c9b694;
-      padding-bottom: 12px;
-      margin-bottom: 20px;
       letter-spacing: 1px;
-      text-shadow: 1px 1px 0 rgba(255, 245, 225, 0.5);
+      text-shadow: 1px 1px 0 rgba(255, 245, 225, 0.7);
     }
 
     .content p {
-      font-size: 1.2rem;
-      line-height: 1.9;
-      color: #2f251b;
-      background: rgba(252, 248, 240, 0.5);
-      padding: 8px 16px;
-      border-radius: 30px;
-      backdrop-filter: blur(1px);
-      display: inline-block;
-      margin-bottom: 24px;
-      box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+      font-size: 1.1rem;
+      color: #3d3227;
+      margin-top: 6px;
     }
 
-    /* رفع الصورة */
+    /* أدوات رفع الصورة */
     .upload-area {
       position: relative;
-      z-index: 20;
-      margin-top: 12px;
+      z-index: 25;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: center;
       gap: 16px;
+      margin-top: 8px;
+      width: 100%;
     }
 
     .upload-btn {
       background: #3d3327;
       color: #f5ede1;
       border: none;
-      padding: 12px 28px;
+      padding: 14px 34px;
       border-radius: 40px;
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       font-weight: 600;
       cursor: pointer;
-      box-shadow: 0 4px 0 #1f1811;
-      transition: 0.08s linear;
-      letter-spacing: 0.5px;
+      box-shadow: 0 5px 0 #1f1811;
+      transition: 0.06s linear;
       border: 1px solid #b8a07c;
+      letter-spacing: 0.5px;
     }
 
     .upload-btn:active {
-      transform: translateY(4px);
+      transform: translateY(5px);
       box-shadow: 0 0 0 #1f1811;
     }
 
@@ -176,56 +174,74 @@
       background: #7a6852;
       color: white;
       border: none;
-      padding: 10px 22px;
+      padding: 12px 26px;
       border-radius: 40px;
       font-weight: 600;
       cursor: pointer;
-      box-shadow: 0 3px 0 #4d3f31;
-      transition: 0.08s linear;
+      box-shadow: 0 4px 0 #4d3f31;
+      transition: 0.06s linear;
       border: 1px solid #b8a07c;
     }
 
     .reset-btn:active {
-      transform: translateY(3px);
+      transform: translateY(4px);
       box-shadow: 0 0 0 #4d3f31;
     }
 
-    /* اسم الملف (اختياري) */
     .file-name {
       font-size: 0.95rem;
       color: #3d3227;
       background: #e8ddcc;
-      padding: 4px 18px;
+      padding: 6px 22px;
       border-radius: 30px;
       border: 1px dashed #a48f74;
-      max-width: 200px;
+      max-width: 220px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
 
-    /* ضمان النص فوق العلامة المائية */
-    .content, .profile-frame, .upload-area, .file-name {
-      position: relative;
-      z-index: 15;
+    /* تنسيق الصورة الافتراضية (بدون بروفايل) */
+    .exam-image-container .default-placeholder {
+      width: 100%;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #5f4e38;
+      font-size: 1.4rem;
+      background: #e8ddcc;
+      padding: 40px 20px;
+      text-align: center;
+      gap: 10px;
+    }
+
+    .default-placeholder span {
+      font-size: 4rem;
+      opacity: 0.4;
     }
 
     /* تحسين للشاشات الصغيرة */
-    @media (max-width: 600px) {
+    @media (max-width: 650px) {
       .paper {
-        padding: 1.8rem 1.2rem 2.2rem;
+        padding: 1.5rem 1rem 2rem;
       }
       .watermark {
         font-size: 3.8rem;
-        transform: rotate(-5deg) scale(1.1);
-        opacity: 0.12;
-      }
-      .profile-frame {
-        width: 120px;
-        height: 120px;
+        transform: rotate(-6deg) scale(1.1);
+        opacity: 0.1;
+        letter-spacing: 6px;
       }
       .content h1 {
         font-size: 1.6rem;
+      }
+      .upload-area {
+        gap: 12px;
+      }
+      .upload-btn, .reset-btn {
+        padding: 10px 20px;
+        font-size: 1rem;
       }
     }
   </style>
@@ -234,72 +250,83 @@
 
 <div class="paper">
 
-  <!-- علامة مائية شفافة (جزء من الورقة) -->
-  <div class="watermark">◆ سري ◆</div>
+  <!-- العلامة المائية الشفافة (جزء من الورقة) -->
+  <div class="watermark">◆ امتحان ◆</div>
 
-  <!-- محتوى الورقة (فوق العلامة) -->
-  <div class="profile-wrapper">
-
-    <!-- إطار البروفايل -->
-    <div class="profile-frame" id="profileFrame">
-      <img id="profileImage" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='%23d4c5aa'/%3E%3Ccircle cx='100' cy='80' r='45' fill='%23b8a07c'/%3E%3Ccircle cx='100' cy='190' r='70' fill='%23b8a07c'/%3E%3C/svg%3E" alt="profile">
+  <!-- حاوية الصورة التي سترفع (بدون بروفايل) -->
+  <div class="exam-image-container" id="examContainer">
+    <!-- العنصر الافتراضي قبل رفع الصورة -->
+    <div class="default-placeholder" id="defaultPlaceholder">
+      <span>📄</span>
+      <p>ارفع صورة الامتحان هنا</p>
+      <small style="font-size:0.9rem; opacity:0.7;">jpg, png, gif, svg</small>
     </div>
-
-    <div class="content">
-      <h1>الهوية الرسمية</h1>
-      <p>📜 صورة البروفايل جزء من التصميم</p>
-    </div>
-
-    <!-- رفع الصورة -->
-    <div class="upload-area">
-      <button class="upload-btn" id="uploadBtn">📤 رفع صورة</button>
-      <input type="file" id="fileInput" accept="image/*">
-      <span class="file-name" id="fileName">لا توجد صورة</span>
-      <button class="reset-btn" id="resetBtn">↺ إعادة</button>
-    </div>
-
+    <!-- عنصر الصورة (مخفي افتراضيًا) -->
+    <img id="examImage" src="" alt="صورة الامتحان" style="display: none;">
   </div>
+
+  <!-- النص يظهر فوق العلامة المائية وفوق الصورة -->
+  <div class="content">
+    <h1>📝 ورقة الامتحان الرسمية</h1>
+    <p>الصورة التي ترفعها تظهر مباشرة كخلفية داخل الورقة</p>
+  </div>
+
+  <!-- أدوات الرفع -->
+  <div class="upload-area">
+    <button class="upload-btn" id="uploadBtn">📤 رفع صورة الامتحان</button>
+    <input type="file" id="fileInput" accept="image/*">
+    <span class="file-name" id="fileName">لا توجد صورة</span>
+    <button class="reset-btn" id="resetBtn">↺ إعادة</button>
+  </div>
+
 </div>
 
 <script>
   (function() {
     "use strict";
 
-    // عناصر DOM
     const fileInput = document.getElementById('fileInput');
     const uploadBtn = document.getElementById('uploadBtn');
     const resetBtn = document.getElementById('resetBtn');
-    const profileImage = document.getElementById('profileImage');
+    const examImage = document.getElementById('examImage');
+    const defaultPlaceholder = document.getElementById('defaultPlaceholder');
     const fileNameSpan = document.getElementById('fileName');
 
-    // الصورة الافتراضية (رمز شخصي بسيط)
-    const DEFAULT_SVG = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='%23d4c5aa'/%3E%3Ccircle cx='100' cy='80' r='45' fill='%23b8a07c'/%3E%3Ccircle cx='100' cy='190' r='70' fill='%23b8a07c'/%3E%3C/svg%3E`;
+    // الصورة الافتراضية (فارغة)
+    function resetToDefault() {
+      examImage.style.display = 'none';
+      defaultPlaceholder.style.display = 'flex';
+      fileNameSpan.textContent = 'لا توجد صورة';
+      try {
+        localStorage.removeItem('examImageData');
+      } catch (_) {}
+    }
 
-    // استعادة الصورة من localStorage (إذا وجدت)
+    // استعادة من localStorage
     function loadStoredImage() {
       try {
-        const stored = localStorage.getItem('profileImageData');
+        const stored = localStorage.getItem('examImageData');
         if (stored) {
-          profileImage.src = stored;
+          examImage.src = stored;
+          examImage.style.display = 'block';
+          defaultPlaceholder.style.display = 'none';
           fileNameSpan.textContent = '🖼 صورة محفوظة';
         } else {
-          profileImage.src = DEFAULT_SVG;
-          fileNameSpan.textContent = 'لا توجد صورة';
+          resetToDefault();
         }
       } catch (_) {
-        profileImage.src = DEFAULT_SVG;
-        fileNameSpan.textContent = 'لا توجد صورة';
+        resetToDefault();
       }
     }
 
-    // حفظ الصورة في localStorage
+    // حفظ في localStorage
     function storeImage(dataUrl) {
       try {
-        localStorage.setItem('profileImageData', dataUrl);
+        localStorage.setItem('examImageData', dataUrl);
       } catch (_) { /* تجاهل */ }
     }
 
-    // معالجة رفع الصورة
+    // معالجة الملف المرفوع
     function handleFile(file) {
       if (!file) return;
       if (!file.type.startsWith('image/')) {
@@ -311,9 +338,12 @@
       reader.onload = function(e) {
         const result = e.target.result;
         if (typeof result === 'string') {
-          profileImage.src = result;
+          // إظهار الصورة وإخفاء البليس هولدر
+          examImage.src = result;
+          examImage.style.display = 'block';
+          defaultPlaceholder.style.display = 'none';
           storeImage(result);
-          fileNameSpan.textContent = file.name.length > 18 ? file.name.slice(0, 16) + '…' : file.name;
+          fileNameSpan.textContent = file.name.length > 20 ? file.name.slice(0, 18) + '…' : file.name;
         }
       };
       reader.onerror = function() {
@@ -333,23 +363,20 @@
       if (this.files && this.files.length > 0) {
         handleFile(this.files[0]);
       }
-      this.value = ''; // لإعادة الاختيار
+      this.value = '';
     });
 
-    // زر إعادة تعيين (الصورة الافتراضية)
+    // زر إعادة تعيين (حذف الصورة)
     resetBtn.addEventListener('click', function(e) {
       e.preventDefault();
-      profileImage.src = DEFAULT_SVG;
-      fileNameSpan.textContent = 'لا توجد صورة';
-      try {
-        localStorage.removeItem('profileImageData');
-      } catch (_) {}
+      resetToDefault();
+      examImage.src = ''; // تفريغ المصدر
     });
 
-    // تحميل الصورة المخزنة عند بدء التشغيل
+    // تحميل الصورة المخزنة
     loadStoredImage();
 
-    // دعم السحب والإفلات (اختياري تحسين)
+    // سحب وإفلات على الورقة
     const paper = document.querySelector('.paper');
     paper.addEventListener('dragover', function(e) {
       e.preventDefault();
