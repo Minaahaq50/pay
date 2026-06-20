@@ -712,14 +712,13 @@
         // رسم الصورة
         ctx.drawImage(img, 0, 0, width, height);
 
-        // رسم العلامة المائية
-        const watermarkText = 'EL JOKER
+      const line1 = "EL JOKER";
+      const line2 = "الثانوية العامة";
+      const line3 = "2027";
 
-دفعة 2027';
-        const fontSize = Math.min(width, height) * 0.12; // 12% من الحجم الأصغر
-        ctx.font = `900 ${fontSize}px 'Times New Roman', serif`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
+      ctx.fillText(line1, 0, -fontSize);
+      ctx.fillText(line2, 0, 0);
+      ctx.fillText(line3, 0, fontSize);
 
         // تدوير النص
         ctx.save();
