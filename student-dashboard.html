@@ -1,208 +1,906 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة الطالب - منصة تعليمية</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ورقة امتحان - علامة مائية متكاملة + تحميل</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #2b2b2b;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      padding: 20px;
+    }
+
+    .paper {
+      position: relative;
+      width: 820px;
+      max-width: 100%;
+      padding: 2.5rem 2.5rem 2rem;
+      background: #fcf8f0;
+      background-image: 
+        repeating-linear-gradient(90deg, 
+          rgba(180, 160, 130, 0.08) 0px, 
+          rgba(180, 160, 130, 0.08) 1px, 
+          transparent 1px, 
+          transparent 14px
+        ),
+        repeating-linear-gradient(180deg, 
+          rgba(180, 160, 130, 0.06) 0px, 
+          rgba(180, 160, 130, 0.06) 1px, 
+          transparent 1px, 
+          transparent 20px
+        );
+      box-shadow: 0 12px 40px rgba(0,0,0,0.6), 0 0 0 1px #d4c5a0 inset;
+      border-radius: 12px 12px 20px 20px;
+      min-height: 500px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    /* علامة مائية خلفية متكررة حول الورقة */
+    .paper::before {
+      content: "◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆ ◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆ ◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆ ◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆ ◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆ ◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆ ◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆ ◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆ ◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆ ◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆ ◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆ ◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: rgba(26, 15, 7, 0.04);
+      font-family: 'Times New Roman', serif;
+      letter-spacing: 8px;
+      white-space: normal;
+      word-wrap: break-word;
+      line-height: 3.5;
+      text-align: center;
+      padding: 20px;
+      pointer-events: none;
+      z-index: 0;
+      transform: rotate(0deg);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 20px 40px;
+      content: "";
+    }
+
+    /* إضافة علامات مائية إضافية باستخدام pseudo-element آخر */
+    .paper::after {
+      content: "◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-12deg) scale(1.5);
+      font-size: 8rem;
+      font-weight: 900;
+      color: rgba(26, 15, 7, 0.04);
+      font-family: 'Times New Roman', serif;
+      letter-spacing: 12px;
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* حاوية الصورة */
+    .exam-image-wrapper {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      border: 3px solid #b8a07c;
+      background: #e5dccc;
+      display: inline-block;
+      margin-bottom: 20px;
+      line-height: 0;
+      transition: all 0.2s ease;
+    }
+
+    .exam-image-wrapper.drag-over {
+      border-color: #f5b342;
+      box-shadow: 0 0 0 4px #f5b34288;
+    }
+
+    .exam-image-wrapper img {
+      width: 100%;
+      height: auto;
+      display: block;
+      background: #fcf8f0;
+      position: relative;
+      z-index: 5;
+    }
+
+    /* العلامة المائية المركزية */
+    .watermark-on-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.2;
+      font-size: clamp(2.5rem, 12vw, 7rem);
+      font-weight: 900;
+      color: #1a0f07;
+      letter-spacing: clamp(6px, 2vw, 16px);
+      text-transform: uppercase;
+      font-family: 'Times New Roman', serif;
+      transform: rotate(-12deg) scale(1.1);
+      text-shadow: 
+        3px 3px 10px rgba(255, 255, 255, 0.4),
+        0 0 30px rgba(0,0,0,0.08);
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    /* placeholder */
+    .default-placeholder {
+      width: 100%;
+      min-height: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #5f4e38;
+      font-size: 1.4rem;
+      background: #e8ddcc;
+      padding: 50px 20px;
+      text-align: center;
+      gap: 10px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .default-placeholder span {
+      font-size: 4.5rem;
+      opacity: 0.4;
+    }
+
+    .default-placeholder .drop-hint {
+      font-size: 0.95rem;
+      opacity: 0.7;
+      background: rgba(0,0,0,0.04);
+      padding: 6px 18px;
+      border-radius: 30px;
+      border: 1px dashed #a48f74;
+    }
+
+    .content {
+      position: relative;
+      z-index: 40;
+      width: 100%;
+      text-align: center;
+      background: rgba(252, 248, 240, 0.8);
+      backdrop-filter: blur(2px);
+      padding: 14px 20px;
+      border-radius: 50px;
+      margin-bottom: 16px;
+      border: 1px solid #d4c5a0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .content h1 {
+      font-size: 2.2rem;
+      color: #2d241a;
+      letter-spacing: 1px;
+      text-shadow: 1px 1px 0 rgba(255, 245, 225, 0.7);
+    }
+
+    .content p {
+      font-size: 1.1rem;
+      color: #3d3227;
+      margin-top: 6px;
+    }
+
+    /* أدوات الرفع والتحميل */
+    .upload-area {
+      position: relative;
+      z-index: 45;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 8px;
+      width: 100%;
+    }
+
+    .upload-btn {
+      background: #3d3327;
+      color: #f5ede1;
+      border: none;
+      padding: 14px 34px;
+      border-radius: 40px;
+      font-size: 1.15rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #1f1811;
+      transition: 0.06s linear;
+      border: 1px solid #b8a07c;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .upload-btn i {
+      font-size: 1.2rem;
+    }
+
+    .upload-btn:active {
+      transform: translateY(5px);
+      box-shadow: 0 0 0 #1f1811;
+    }
+
+    #fileInput {
+      display: none;
+    }
+
+    .reset-btn {
+      background: #7a6852;
+      color: white;
+      border: none;
+      padding: 12px 26px;
+      border-radius: 40px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #4d3f31;
+      transition: 0.06s linear;
+      border: 1px solid #b8a07c;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .reset-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 0 0 #4d3f31;
+    }
+
+    .download-btn {
+      background: #2c6e49;
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 40px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #1a3d2a;
+      transition: 0.06s linear;
+      border: 1px solid #4c8b6a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .download-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 0 0 #1a3d2a;
+    }
+
+    .download-btn i {
+      font-size: 1.1rem;
+    }
+
+    .download-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: 0 4px 0 #1a3d2a;
+    }
+
+    .file-name {
+      font-size: 0.95rem;
+      color: #3d3227;
+      background: #e8ddcc;
+      padding: 6px 22px;
+      border-radius: 30px;
+      border: 1px dashed #a48f74;
+      max-width: 220px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .file-name i {
+      color: #5f4e38;
+    }
+
+    /* شريط التقدم */
+    .progress-container {
+      width: 100%;
+      margin-top: 16px;
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .progress-container.active {
+      display: flex;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #d4c5a0;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #3d3327, #b8a07c);
+      border-radius: 10px;
+      transition: width 0.1s ease;
+    }
+
+    .progress-text {
+      font-size: 0.8rem;
+      color: #3d3227;
+      text-align: center;
+      opacity: 0.8;
+    }
+
+    /* معرض الصور */
+    .gallery-section {
+      width: 100%;
+      margin-top: 20px;
+      border-top: 1px solid #d4c5a0;
+      padding-top: 16px;
+      display: none;
+    }
+
+    .gallery-section.active {
+      display: block;
+    }
+
+    .gallery-title {
+      font-size: 0.9rem;
+      color: #3d3227;
+      font-weight: 600;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .gallery-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .gallery-item {
+      width: 70px;
+      height: 70px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 2px solid #b8a07c;
+      cursor: pointer;
+      transition: 0.15s;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    .gallery-item:hover {
+      transform: scale(1.05);
+      border-color: #3d3327;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .gallery-item .remove-btn {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      background: rgba(0,0,0,0.6);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: 0.2s;
+    }
+
+    .gallery-item:hover .remove-btn {
+      opacity: 1;
+    }
+
+    .gallery-item .remove-btn:hover {
+      background: #c0392b;
+    }
+
+    @media (max-width: 650px) {
+      .paper {
+        padding: 1.5rem 1rem 1.5rem;
+      }
+      .content h1 {
+        font-size: 1.6rem;
+      }
+      .upload-area {
+        gap: 10px;
+      }
+      .upload-btn, .reset-btn, .download-btn {
+        padding: 10px 18px;
+        font-size: 0.95rem;
+      }
+      .gallery-item {
+        width: 55px;
+        height: 55px;
+      }
+      .paper::before {
+        font-size: 0.8rem;
+        line-height: 2.5;
+        gap: 10px 20px;
+        padding: 10px;
+      }
+      .paper::after {
+        font-size: 4rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="navbar-container">
-            <div class="logo">منصة تعليمية</div>
-            <div class="nav-links">
-                <span id="userName"></span>
-                <button class="btn btn-danger" onclick="logout()">تسجيل خروج</button>
-            </div>
-        </div>
-    </nav>
-    
-    <div class="container">
-        <div class="stats-grid" id="studentInfo">
-            <!-- سيتم ملء بيانات الطالب هنا -->
-        </div>
-        
-        <div class="card">
-            <h2>المجموعات المشترك بها</h2>
-            <div id="groupsList"></div>
-        </div>
-        
-        <div class="card">
-            <h2>إشعارات الإدارة</h2>
-            <div id="notificationsList"></div>
-        </div>
-        
-        <div class="card">
-            <h2>المجموعات المتاحة للاشتراك</h2>
-            <div id="availableGroups"></div>
-        </div>
+
+<div class="paper">
+
+  <div class="exam-image-wrapper" id="examWrapper">
+    <!-- placeholder -->
+    <div class="default-placeholder" id="defaultPlaceholder">
+      <span>📄</span>
+      <p>ارفع صورة الامتحان</p>
+      <div class="drop-hint"><i class="fas fa-arrow-down"></i> اسحب الصورة هنا أو استخدم الزر</div>
     </div>
-    
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <script src="js/firebase-config.js"></script>
-    <script>
-        let currentUser = null;
-        let currentUserData = null;
-        
-        auth.onAuthStateChanged(async (user) => {
-            if (!user) {
-                window.location.href = 'index.html';
-                return;
+
+    <!-- الصورة -->
+    <img id="examImage" src="" alt="صورة الامتحان" style="display: none;">
+
+    <!-- العلامة المائية المركزية -->
+    <div class="watermark-on-image">◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆</div>
+  </div>
+
+  <div class="content">
+    <h1>📝 ورقة الامتحان الرسمية</h1>
+    <p>العلامة المائية تتكيف مع حجم الصورة المرفوعة</p>
+  </div>
+
+  <div class="upload-area">
+    <button class="upload-btn" id="uploadBtn"><i class="fas fa-cloud-upload-alt"></i> رفع صورة</button>
+    <input type="file" id="fileInput" accept="image/*" multiple>
+    <span class="file-name" id="fileName"><i class="fas fa-image"></i> لا توجد صورة</span>
+    <button class="download-btn" id="downloadBtn" disabled><i class="fas fa-download"></i> تحميل</button>
+    <button class="reset-btn" id="resetBtn"><i class="fas fa-undo-alt"></i> إعادة</button>
+  </div>
+
+  <!-- شريط التقدم -->
+  <div class="progress-container" id="progressContainer">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="progress-text" id="progressText">0%</div>
+  </div>
+
+  <!-- معرض الصور -->
+  <div class="gallery-section" id="gallerySection">
+    <div class="gallery-title"><i class="fas fa-images"></i> الصور المحفوظة</div>
+    <div class="gallery-grid" id="galleryGrid"></div>
+  </div>
+
+</div>
+
+<script>
+  (function() {
+    "use strict";
+
+    // العناصر
+    const fileInput = document.getElementById('fileInput');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const examImage = document.getElementById('examImage');
+    const defaultPlaceholder = document.getElementById('defaultPlaceholder');
+    const fileNameSpan = document.getElementById('fileName');
+    const wrapper = document.getElementById('examWrapper');
+    const progressContainer = document.getElementById('progressContainer');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    const gallerySection = document.getElementById('gallerySection');
+    const galleryGrid = document.getElementById('galleryGrid');
+
+    // تخزين الصور
+    let imageHistory = [];
+    let currentImageData = null; // data URL للصورة المعروضة حالياً
+
+    // تحميل من localStorage
+    function loadHistory() {
+      try {
+        const stored = localStorage.getItem('examImageHistory');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            imageHistory = parsed.slice(0, 5);
+            renderGallery();
+            const last = imageHistory[imageHistory.length - 1];
+            if (last) {
+              currentImageData = last;
+              examImage.src = last;
+              examImage.style.display = 'block';
+              defaultPlaceholder.style.display = 'none';
+              fileNameSpan.innerHTML = `<i class="fas fa-image"></i> صورة محفوظة`;
+              downloadBtn.disabled = false;
             }
-            
-            currentUser = user;
-            await loadUserData();
-            loadGroups();
-            loadNotifications();
-            loadAvailableGroups();
+          } else {
+            resetToDefault();
+          }
+        } else {
+          resetToDefault();
+        }
+      } catch (_) {
+        resetToDefault();
+      }
+    }
+
+    function saveHistory() {
+      try {
+        localStorage.setItem('examImageHistory', JSON.stringify(imageHistory));
+      } catch (_) {}
+    }
+
+    function resetToDefault() {
+      examImage.style.display = 'none';
+      defaultPlaceholder.style.display = 'flex';
+      fileNameSpan.innerHTML = `<i class="fas fa-image"></i> لا توجد صورة`;
+      currentImageData = null;
+      downloadBtn.disabled = true;
+    }
+
+    function renderGallery() {
+      galleryGrid.innerHTML = '';
+      if (imageHistory.length === 0) {
+        gallerySection.classList.remove('active');
+        return;
+      }
+      gallerySection.classList.add('active');
+      const items = [...imageHistory].reverse();
+      items.forEach((url, index) => {
+        const div = document.createElement('div');
+        div.className = 'gallery-item';
+        const img = document.createElement('img');
+        img.src = url;
+        img.alt = 'صورة مصغرة';
+        img.loading = 'lazy';
+        div.appendChild(img);
+
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'remove-btn';
+        removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+        removeBtn.title = 'حذف الصورة';
+        removeBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          const idx = imageHistory.indexOf(url);
+          if (idx !== -1) {
+            imageHistory.splice(idx, 1);
+            saveHistory();
+            renderGallery();
+            if (currentImageData === url) {
+              if (imageHistory.length > 0) {
+                const last = imageHistory[imageHistory.length - 1];
+                currentImageData = last;
+                examImage.src = last;
+                examImage.style.display = 'block';
+                defaultPlaceholder.style.display = 'none';
+                fileNameSpan.innerHTML = `<i class="fas fa-image"></i> صورة محفوظة`;
+                downloadBtn.disabled = false;
+              } else {
+                resetToDefault();
+                examImage.src = '';
+              }
+            }
+          }
         });
-        
-        async function loadUserData() {
-            const userDoc = await db.collection('users').doc(currentUser.uid).get();
-            currentUserData = userDoc.data();
-            
-            document.getElementById('userName').textContent = `مرحباً ${currentUserData.fullName}`;
-            
-            const subscriptionStatus = currentUserData.subscriptionStatus;
-            const statusText = subscriptionStatus === 'active' ? 'تم تفعيل الاشتراك' : 
-                              subscriptionStatus === 'pending' ? 'الاشتراك قيد المراجعة' : 'الاشتراك منتهي';
-            const statusClass = subscriptionStatus === 'active' ? 'status-active' : 
-                               subscriptionStatus === 'pending' ? 'status-pending' : 'status-expired';
-            
-            document.getElementById('studentInfo').innerHTML = `
-                <div class="stat-card">
-                    <h3>الاسم</h3>
-                    <div class="stat-number">${currentUserData.fullName}</div>
-                </div>
-                <div class="stat-card">
-                    <h3>كود الطالب</h3>
-                    <div class="stat-number">${currentUserData.studentCode}</div>
-                </div>
-                <div class="stat-card">
-                    <h3>الصف الدراسي</h3>
-                    <div class="stat-number">${currentUserData.grade}</div>
-                </div>
-                <div class="stat-card">
-                    <h3>حالة الاشتراك</h3>
-                    <div class="stat-number"><span class="status-badge ${statusClass}">${statusText}</span></div>
-                </div>
-                <div class="stat-card">
-                    <h3>تاريخ التسجيل</h3>
-                    <div class="stat-number">${new Date(currentUserData.registrationDate).toLocaleDateString('ar-EG')}</div>
-                </div>
-            `;
+        div.appendChild(removeBtn);
+
+        div.addEventListener('click', function() {
+          currentImageData = url;
+          examImage.src = url;
+          examImage.style.display = 'block';
+          defaultPlaceholder.style.display = 'none';
+          fileNameSpan.innerHTML = `<i class="fas fa-image"></i> صورة محفوظة`;
+          downloadBtn.disabled = false;
+        });
+
+        galleryGrid.appendChild(div);
+      });
+    }
+
+    function addToHistory(url) {
+      imageHistory = imageHistory.filter(item => item !== url);
+      imageHistory.push(url);
+      if (imageHistory.length > 5) {
+        imageHistory = imageHistory.slice(-5);
+      }
+      saveHistory();
+      renderGallery();
+    }
+
+    // معالجة الملف
+    function handleFile(file) {
+      if (!file) return;
+      if (!file.type.startsWith('image/')) {
+        alert('الرجاء اختيار ملف صورة صالح');
+        return;
+      }
+
+      progressContainer.classList.add('active');
+      progressFill.style.width = '0%';
+      progressText.textContent = '0%';
+
+      const reader = new FileReader();
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += Math.floor(Math.random() * 15) + 5;
+        if (progress >= 100) {
+          progress = 100;
+          clearInterval(interval);
         }
-        
-        async function loadGroups() {
-            const subscriptions = await db.collection('subscriptions')
-                .where('studentId', '==', currentUser.uid)
-                .where('status', '==', 'active')
-                .get();
-            
-            let groupsHtml = '<div class="table-container"><table><thead><tr><th>اسم المجموعة</th><th>المدرس</th><th>تاريخ الاشتراك</th><th>تاريخ الانتهاء</th></tr></thead><tbody>';
-            
-            for (const sub of subscriptions.docs) {
-                const subData = sub.data();
-                const groupDoc = await db.collection('groups').doc(subData.groupId).get();
-                const groupData = groupDoc.data();
-                
-                groupsHtml += `
-                    <tr>
-                        <td>${groupData.name}</td>
-                        <td>${groupData.teacher}</td>
-                        <td>${new Date(subData.startDate).toLocaleDateString('ar-EG')}</td>
-                        <td>${new Date(subData.endDate).toLocaleDateString('ar-EG')}</td>
-                    </tr>
-                `;
-            }
-            
-            groupsHtml += '</tbody></table></div>';
-            document.getElementById('groupsList').innerHTML = groupsHtml || '<p>لا توجد مجموعات مشترك بها</p>';
+        progressFill.style.width = progress + '%';
+        progressText.textContent = progress + '%';
+      }, 100);
+
+      reader.onload = function(e) {
+        clearInterval(interval);
+        progressFill.style.width = '100%';
+        progressText.textContent = '100%';
+
+        const result = e.target.result;
+        if (typeof result === 'string') {
+          currentImageData = result;
+          examImage.src = result;
+          examImage.style.display = 'block';
+          defaultPlaceholder.style.display = 'none';
+          fileNameSpan.innerHTML = `<i class="fas fa-image"></i> ${file.name.length > 18 ? file.name.slice(0, 15) + '…' : file.name}`;
+          downloadBtn.disabled = false;
+
+          addToHistory(result);
+
+          setTimeout(() => {
+            progressContainer.classList.remove('active');
+          }, 600);
         }
-        
-        async function loadNotifications() {
-            const notifications = await db.collection('notifications')
-                .where('studentId', '==', currentUser.uid)
-                .orderBy('createdAt', 'desc')
-                .limit(20)
-                .get();
-            
-            let notificationsHtml = '<div class="table-container"><table><thead><tr><th>العنوان</th><th>المحتوى</th><th>التاريخ</th></tr></thead><tbody>';
-            
-            notifications.forEach(doc => {
-                const data = doc.data();
-                notificationsHtml += `
-                    <tr>
-                        <td>${data.title}</td>
-                        <td>${data.content}</td>
-                        <td>${new Date(data.createdAt?.toDate()).toLocaleDateString('ar-EG')}</td>
-                    </tr>
-                `;
-            });
-            
-            notificationsHtml += '</tbody></table></div>';
-            document.getElementById('notificationsList').innerHTML = notificationsHtml || '<p>لا توجد إشعارات</p>';
+      };
+
+      reader.onerror = function() {
+        clearInterval(interval);
+        progressContainer.classList.remove('active');
+        alert('حدث خطأ أثناء قراءة الملف.');
+      };
+
+      reader.readAsDataURL(file);
+    }
+
+    function handleFiles(files) {
+      if (!files || files.length === 0) return;
+      const validFiles = [];
+      for (let f of files) {
+        if (f.type.startsWith('image/')) {
+          validFiles.push(f);
         }
-        
-        async function loadAvailableGroups() {
-            const groups = await db.collection('groups').get();
-            
-            let groupsHtml = '<div class="table-container"><table><thead><tr><th>اسم المجموعة</th><th>المدرس</th><th>السعر</th><th>المدة</th><th>الوصف</th><th>إجراء</th></tr></thead><tbody>';
-            
-            for (const group of groups.docs) {
-                const groupData = group.data();
-                
-                // التحقق من الاشتراك الحالي
-                const existingSub = await db.collection('subscriptions')
-                    .where('studentId', '==', currentUser.uid)
-                    .where('groupId', '==', group.id)
-                    .where('status', 'in', ['active', 'pending'])
-                    .get();
-                
-                const isSubscribed = !existingSub.empty;
-                
-                groupsHtml += `
-                    <tr>
-                        <td>${groupData.name}</td>
-                        <td>${groupData.teacher}</td>
-                        <td>${groupData.price} ج.م</td>
-                        <td>${groupData.duration} شهر</td>
-                        <td>${groupData.description || '-'}</td>
-                        <td>
-                            ${!isSubscribed ? `<button class="btn btn-primary" onclick="requestSubscription('${group.id}', ${groupData.price})">طلب اشتراك</button>` : '<span class="status-badge status-pending">تم الطلب مسبقاً</span>'}
-                        </td>
-                    </tr>
-                `;
-            }
-            
-            groupsHtml += '</tbody></table></div>';
-            document.getElementById('availableGroups').innerHTML = groupsHtml;
+      }
+      if (validFiles.length === 0) {
+        alert('الرجاء اختيار ملفات صور صالحة.');
+        return;
+      }
+
+      handleFile(validFiles[0]);
+
+      for (let i = 1; i < validFiles.length && i < 5; i++) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          if (typeof e.target.result === 'string') {
+            addToHistory(e.target.result);
+          }
+        };
+        reader.readAsDataURL(validFiles[i]);
+      }
+    }
+
+    // --- زر التحميل: دمج الصورة مع العلامة المائية ---
+    function downloadImageWithWatermark() {
+      if (!currentImageData) {
+        alert('لا توجد صورة للتحميل.');
+        return;
+      }
+
+      downloadBtn.disabled = true;
+      downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحضير...';
+
+      const img = new Image();
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+
+        const width = img.naturalWidth || img.width;
+        const height = img.naturalHeight || img.height;
+        canvas.width = width;
+        canvas.height = height;
+
+        // رسم الصورة
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // رسم العلامة المائية المركزية
+        const watermarkText = '◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆';
+        const fontSize = Math.min(width, height) * 0.12;
+        ctx.font = `900 ${fontSize}px 'Times New Roman', serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        ctx.save();
+        ctx.translate(width / 2, height / 2);
+        ctx.rotate(-12 * Math.PI / 180);
+        ctx.scale(1.1, 1.1);
+
+        ctx.shadowColor = 'rgba(255,255,255,0.4)';
+        ctx.shadowBlur = fontSize * 0.15;
+        ctx.fillStyle = 'rgba(26, 15, 7, 0.2)';
+        ctx.fillText(watermarkText, 0, 0);
+
+        ctx.shadowColor = 'transparent';
+        ctx.fillStyle = 'rgba(26, 15, 7, 0.2)';
+        ctx.fillText(watermarkText, 0, 0);
+
+        ctx.restore();
+
+        // إضافة علامة مائية متكررة حول الصورة (خلفية)
+        ctx.save();
+        ctx.globalAlpha = 0.04;
+        ctx.font = `700 ${Math.min(width, height) * 0.04}px 'Times New Roman', serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#1a0f07';
+
+        // تكرار النص في جميع أنحاء الصورة
+        const repeatText = '◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆';
+        const spacing = Math.min(width, height) * 0.15;
+        for (let y = spacing; y < height; y += spacing) {
+          for (let x = spacing; x < width; x += spacing) {
+            ctx.fillText(repeatText, x, y);
+          }
         }
-        
-        async function requestSubscription(groupId, price) {
-            if (confirm(`هل تريد طلب الاشتراك في هذه المجموعة بقيمة ${price} ج.م؟`)) {
-                await db.collection('subscriptions').add({
-                    studentId: currentUser.uid,
-                    groupId: groupId,
-                    status: 'pending',
-                    price: price,
-                    requestDate: firebase.firestore.FieldValue.serverTimestamp(),
-                    startDate: null,
-                    endDate: null
-                });
-                
-                alert('تم إرسال طلب الاشتراك بنجاح، سيتم مراجعته من قبل الإدارة');
-                loadAvailableGroups();
-            }
-        }
-        
-        function logout() {
-            auth.signOut();
-            window.location.href = 'index.html';
-        }
-    </script>
+        ctx.restore();
+
+        const link = document.createElement('a');
+        link.download = `exam_watermarked_${Date.now()}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+
+        downloadBtn.disabled = false;
+        downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل';
+      };
+
+      img.onerror = function() {
+        alert('حدث خطأ أثناء تحميل الصورة. حاول مرة أخرى.');
+        downloadBtn.disabled = false;
+        downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل';
+      };
+
+      img.src = currentImageData;
+    }
+
+    // --- الأحداث ---
+    uploadBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      fileInput.click();
+    });
+
+    fileInput.addEventListener('change', function(e) {
+      if (this.files && this.files.length > 0) {
+        handleFiles(this.files);
+      }
+      this.value = '';
+    });
+
+    resetBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      examImage.style.display = 'none';
+      defaultPlaceholder.style.display = 'flex';
+      fileNameSpan.innerHTML = `<i class="fas fa-image"></i> لا توجد صورة`;
+      currentImageData = null;
+      downloadBtn.disabled = true;
+      examImage.src = '';
+      progressContainer.classList.remove('active');
+    });
+
+    downloadBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      downloadImageWithWatermark();
+    });
+
+    wrapper.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      this.classList.add('drag-over');
+    });
+
+    wrapper.addEventListener('dragleave', function(e) {
+      e.preventDefault();
+      this.classList.remove('drag-over');
+    });
+
+    wrapper.addEventListener('drop', function(e) {
+      e.preventDefault();
+      this.classList.remove('drag-over');
+      const files = e.dataTransfer.files;
+      if (files && files.length > 0) {
+        handleFiles(files);
+      }
+    });
+
+    loadHistory();
+
+    if (imageHistory.length > 0 && examImage.style.display === 'none') {
+      const last = imageHistory[imageHistory.length - 1];
+      if (last) {
+        currentImageData = last;
+        examImage.src = last;
+        examImage.style.display = 'block';
+        defaultPlaceholder.style.display = 'none';
+        fileNameSpan.innerHTML = `<i class="fas fa-image"></i> صورة محفوظة`;
+        downloadBtn.disabled = false;
+      }
+    }
+
+    resetBtn.addEventListener('dblclick', function() {
+      if (confirm('هل تريد حذف جميع الصور المحفوظة؟')) {
+        imageHistory = [];
+        saveHistory();
+        renderGallery();
+        resetToDefault();
+        examImage.src = '';
+        currentImageData = null;
+        downloadBtn.disabled = true;
+        progressContainer.classList.remove('active');
+      }
+    });
+
+  })();
+</script>
+
 </body>
 </html>
