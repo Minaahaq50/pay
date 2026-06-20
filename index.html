@@ -48,6 +48,38 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      overflow: hidden;
+    }
+
+    /* علامة مائية خلفية متكررة حول الورقة - مرئية بوضوح */
+    .watermark-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+      display: flex;
+      flex-wrap: wrap;
+      align-content: center;
+      justify-content: center;
+      gap: 30px 50px;
+      padding: 20px;
+      opacity: 0.12;
+    }
+
+    .watermark-bg span {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #1a0f07;
+      font-family: 'Times New Roman', serif;
+      letter-spacing: 3px;
+      white-space: nowrap;
+      transform: rotate(-8deg);
+      user-select: none;
+      text-shadow: 1px 1px 2px rgba(255,255,255,0.3);
     }
 
     /* حاوية الصورة */
@@ -80,7 +112,7 @@
       z-index: 5;
     }
 
-    /* العلامة المائية */
+    /* العلامة المائية المركزية */
     .watermark-on-image {
       position: absolute;
       top: 0;
@@ -92,7 +124,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      opacity: 0.2;
+      opacity: 0.25;
       font-size: clamp(2.5rem, 12vw, 7rem);
       font-weight: 900;
       color: #1a0f07;
@@ -144,7 +176,7 @@
       z-index: 40;
       width: 100%;
       text-align: center;
-      background: rgba(252, 248, 240, 0.8);
+      background: rgba(252, 248, 240, 0.85);
       backdrop-filter: blur(2px);
       padding: 14px 20px;
       border-radius: 50px;
@@ -419,12 +451,24 @@
         width: 55px;
         height: 55px;
       }
+      .watermark-bg {
+        gap: 20px 30px;
+        padding: 10px;
+      }
+      .watermark-bg span {
+        font-size: 1.4rem;
+      }
     }
   </style>
 </head>
 <body>
 
 <div class="paper">
+
+  <!-- العلامة المائية الخلفية المتكررة -->
+  <div class="watermark-bg" id="watermarkBg">
+    <!-- سيتم إضافة العناصر بواسطة JavaScript -->
+  </div>
 
   <div class="exam-image-wrapper" id="examWrapper">
     <!-- placeholder -->
@@ -437,8 +481,8 @@
     <!-- الصورة -->
     <img id="examImage" src="" alt="صورة الامتحان" style="display: none;">
 
-    <!-- العلامة المائية -->
-    <div class="watermark-on-image">◆𝑬𝒍 𝑱𝒐𝒌𝒆𝒓◆</div>
+    <!-- العلامة المائية المركزية -->
+    <div class="watermark-on-image">◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆</div>
   </div>
 
   <div class="content">
@@ -474,6 +518,25 @@
   (function() {
     "use strict";
 
+    // إنشاء العلامات المائية المتكررة
+    function createWatermarkPattern() {
+      const container = document.getElementById('watermarkBg');
+      const text = '◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆';
+      // إنشاء 40 عنصر مائي لتغطية الورقة بالكامل
+      for (let i = 0; i < 40; i++) {
+        const span = document.createElement('span');
+        span.textContent = text;
+        // توزيع عشوائي للميلان
+        const rotation = (Math.random() * 12) - 6; // -6 إلى 6 درجات
+        span.style.transform = `rotate(${rotation}deg)`;
+        // تغيير بسيط في الحجم لبعض العناصر
+        if (i % 3 === 0) {
+          span.style.fontSize = '2.6rem';
+        }
+        container.appendChild(span);
+      }
+    }
+
     // العناصر
     const fileInput = document.getElementById('fileInput');
     const uploadBtn = document.getElementById('uploadBtn');
@@ -491,7 +554,7 @@
 
     // تخزين الصور
     let imageHistory = [];
-    let currentImageData = null; // data URL للصورة المعروضة حالياً
+    let currentImageData = null;
 
     // تحميل من localStorage
     function loadHistory() {
@@ -687,70 +750,93 @@
     }
 
     // --- زر التحميل: دمج الصورة مع العلامة المائية ---
-function downloadImageWithWatermark() {
-  if (!currentImageData) {
-    alert('لا توجد صورة للتحميل.');
-    return;
-  }
+    function downloadImageWithWatermark() {
+      if (!currentImageData) {
+        alert('لا توجد صورة للتحميل.');
+        return;
+      }
 
-  downloadBtn.disabled = true;
-  downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحضير...';
+      downloadBtn.disabled = true;
+      downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحضير...';
 
-  const img = new Image();
+      const img = new Image();
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
 
-  img.onload = function () {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+        const width = img.naturalWidth || img.width;
+        const height = img.naturalHeight || img.height;
+        canvas.width = width;
+        canvas.height = height;
 
-    const width = img.naturalWidth || img.width;
-    const height = img.naturalHeight || img.height;
+        // رسم الصورة
+        ctx.drawImage(img, 0, 0, width, height);
 
-    canvas.width = width;
-    canvas.height = height;
+        // رسم العلامة المائية المركزية
+        const watermarkText = '◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆';
+        const fontSize = Math.min(width, height) * 0.12;
+        ctx.font = `900 ${fontSize}px 'Times New Roman', serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
 
-    // رسم الصورة الأصلية
-    ctx.drawImage(img, 0, 0, width, height);
+        ctx.save();
+        ctx.translate(width / 2, height / 2);
+        ctx.rotate(-12 * Math.PI / 180);
+        ctx.scale(1.1, 1.1);
 
-    // ===== إعداد العلامة المائية =====
-    const fontSize = Math.min(width, height) * 0.10;
+        ctx.shadowColor = 'rgba(255,255,255,0.4)';
+        ctx.shadowBlur = fontSize * 0.15;
+        ctx.fillStyle = 'rgba(26, 15, 7, 0.2)';
+        ctx.fillText(watermarkText, 0, 0);
 
-    ctx.save();
-    ctx.translate(width / 2, height / 2);
-    ctx.rotate(-12 * Math.PI / 180);
+        ctx.shadowColor = 'transparent';
+        ctx.fillStyle = 'rgba(26, 15, 7, 0.2)';
+        ctx.fillText(watermarkText, 0, 0);
 
-    ctx.font = `900 ${fontSize}px Arial`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
+        ctx.restore();
 
-    ctx.fillStyle = "rgba(26,15,7,0.18)";
-    ctx.shadowColor = "rgba(255,255,255,0.4)";
-    ctx.shadowBlur = fontSize * 0.15;
+        // إضافة علامة مائية متكررة حول الصورة (خلفية) - واضحة
+        ctx.save();
+        ctx.globalAlpha = 0.08;
+        ctx.font = `700 ${Math.min(width, height) * 0.05}px 'Times New Roman', serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#1a0f07';
 
-    // النص (3 سطور)
-    ctx.fillText("EL JOKER", 0, -fontSize);
-    ctx.fillText("الثانوية العامة", 0, 0);
-    ctx.fillText("2027", 0, fontSize);
+        const repeatText = '◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆';
+        const spacing = Math.min(width, height) * 0.16;
+        const offsetX = spacing / 2;
+        const offsetY = spacing / 2;
+        
+        for (let y = offsetY; y < height; y += spacing) {
+          for (let x = offsetX; x < width; x += spacing) {
+            const rotation = (Math.random() * 10) - 5;
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(rotation * Math.PI / 180);
+            ctx.fillText(repeatText, 0, 0);
+            ctx.restore();
+          }
+        }
+        ctx.restore();
 
-    ctx.restore();
+        const link = document.createElement('a');
+        link.download = `exam_watermarked_${Date.now()}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
 
-    // تحميل الصورة
-    const link = document.createElement('a');
-    link.download = `exam_watermarked_${Date.now()}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
+        downloadBtn.disabled = false;
+        downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل';
+      };
 
-    downloadBtn.disabled = false;
-    downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل';
-  };
+      img.onerror = function() {
+        alert('حدث خطأ أثناء تحميل الصورة. حاول مرة أخرى.');
+        downloadBtn.disabled = false;
+        downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل';
+      };
 
-  img.onerror = function () {
-    alert('حدث خطأ أثناء تحميل الصورة');
-    downloadBtn.disabled = false;
-    downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل';
-  };
-
-  img.src = currentImageData;
-}
+      img.src = currentImageData;
+    }
 
     // --- الأحداث ---
     uploadBtn.addEventListener('click', function(e) {
@@ -776,13 +862,11 @@ function downloadImageWithWatermark() {
       progressContainer.classList.remove('active');
     });
 
-    // زر التحميل
     downloadBtn.addEventListener('click', function(e) {
       e.preventDefault();
       downloadImageWithWatermark();
     });
 
-    // سحب وإفلات
     wrapper.addEventListener('dragover', function(e) {
       e.preventDefault();
       this.classList.add('drag-over');
@@ -802,10 +886,11 @@ function downloadImageWithWatermark() {
       }
     });
 
-    // تحميل البيانات
+    // إنشاء نمط العلامة المائية المتكررة
+    createWatermarkPattern();
+
     loadHistory();
 
-    // إذا كان هناك صورة في localStorage ولم تظهر
     if (imageHistory.length > 0 && examImage.style.display === 'none') {
       const last = imageHistory[imageHistory.length - 1];
       if (last) {
@@ -818,7 +903,6 @@ function downloadImageWithWatermark() {
       }
     }
 
-    // زر مزدوج على reset لمسح المعرض
     resetBtn.addEventListener('dblclick', function() {
       if (confirm('هل تريد حذف جميع الصور المحفوظة؟')) {
         imageHistory = [];
