@@ -51,35 +51,50 @@
       overflow: hidden;
     }
 
-    /* علامة مائية خلفية متكررة حول الورقة - مرئية بوضوح */
-    .watermark-bg {
+    /* علامة مائية خلفية متكررة حول الورقة */
+    .paper::before {
+      content: "◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆ ◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆ ◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆ ◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆ ◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆ ◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆ ◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆ ◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆ ◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆ ◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆ ◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆ ◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆";
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: rgba(26, 15, 7, 0.04);
+      font-family: 'Times New Roman', serif;
+      letter-spacing: 8px;
+      white-space: normal;
+      word-wrap: break-word;
+      line-height: 3.5;
+      text-align: center;
+      padding: 20px;
       pointer-events: none;
-      z-index: 1;
-      overflow: hidden;
+      z-index: 0;
+      transform: rotate(0deg);
       display: flex;
       flex-wrap: wrap;
-      align-content: center;
+      align-items: center;
       justify-content: center;
-      gap: 30px 50px;
-      padding: 20px;
-      opacity: 0.12;
+      gap: 20px 40px;
+      content: "";
     }
 
-    .watermark-bg span {
-      font-size: 2.2rem;
-      font-weight: 700;
-      color: #1a0f07;
+    /* إضافة علامات مائية إضافية باستخدام pseudo-element آخر */
+    .paper::after {
+      content: "◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-12deg) scale(1.5);
+      font-size: 8rem;
+      font-weight: 900;
+      color: rgba(26, 15, 7, 0.04);
       font-family: 'Times New Roman', serif;
-      letter-spacing: 3px;
+      letter-spacing: 12px;
       white-space: nowrap;
-      transform: rotate(-8deg);
-      user-select: none;
-      text-shadow: 1px 1px 2px rgba(255,255,255,0.3);
+      pointer-events: none;
+      z-index: 0;
     }
 
     /* حاوية الصورة */
@@ -124,7 +139,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      opacity: 0.25;
+      opacity: 0.2;
       font-size: clamp(2.5rem, 12vw, 7rem);
       font-weight: 900;
       color: #1a0f07;
@@ -176,7 +191,7 @@
       z-index: 40;
       width: 100%;
       text-align: center;
-      background: rgba(252, 248, 240, 0.85);
+      background: rgba(252, 248, 240, 0.8);
       backdrop-filter: blur(2px);
       padding: 14px 20px;
       border-radius: 50px;
@@ -451,12 +466,14 @@
         width: 55px;
         height: 55px;
       }
-      .watermark-bg {
-        gap: 20px 30px;
+      .paper::before {
+        font-size: 0.8rem;
+        line-height: 2.5;
+        gap: 10px 20px;
         padding: 10px;
       }
-      .watermark-bg span {
-        font-size: 1.4rem;
+      .paper::after {
+        font-size: 4rem;
       }
     }
   </style>
@@ -464,11 +481,6 @@
 <body>
 
 <div class="paper">
-
-  <!-- العلامة المائية الخلفية المتكررة -->
-  <div class="watermark-bg" id="watermarkBg">
-    <!-- سيتم إضافة العناصر بواسطة JavaScript -->
-  </div>
 
   <div class="exam-image-wrapper" id="examWrapper">
     <!-- placeholder -->
@@ -518,33 +530,7 @@
   (function() {
     "use strict";
 
-    // ============================================================
-    // 1. إعدادات متغيرات المشروع
-    // ============================================================
-    const OWNER_NAME = "𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗";          // اسم المالك
-    const QR_LINK = "https://example.com";          // رابط QR Code (يمكن تغييره)
-
-    // ============================================================
-    // 2. إنشاء العلامات المائية المتكررة في خلفية الورقة
-    // ============================================================
-    function createWatermarkPattern() {
-      const container = document.getElementById('watermarkBg');
-      const text = '◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆';
-      for (let i = 0; i < 40; i++) {
-        const span = document.createElement('span');
-        span.textContent = text;
-        const rotation = (Math.random() * 12) - 6;
-        span.style.transform = `rotate(${rotation}deg)`;
-        if (i % 3 === 0) {
-          span.style.fontSize = '2.6rem';
-        }
-        container.appendChild(span);
-      }
-    }
-
-    // ============================================================
-    // 3. العناصر الأساسية
-    // ============================================================
+    // العناصر
     const fileInput = document.getElementById('fileInput');
     const uploadBtn = document.getElementById('uploadBtn');
     const resetBtn = document.getElementById('resetBtn');
@@ -559,12 +545,11 @@
     const gallerySection = document.getElementById('gallerySection');
     const galleryGrid = document.getElementById('galleryGrid');
 
-    // ============================================================
-    // 4. إدارة تخزين الصور (LocalStorage)
-    // ============================================================
+    // تخزين الصور
     let imageHistory = [];
-    let currentImageData = null;
+    let currentImageData = null; // data URL للصورة المعروضة حالياً
 
+    // تحميل من localStorage
     function loadHistory() {
       try {
         const stored = localStorage.getItem('examImageHistory');
@@ -676,9 +661,7 @@
       renderGallery();
     }
 
-    // ============================================================
-    // 5. معالجة رفع الملفات
-    // ============================================================
+    // معالجة الملف
     function handleFile(file) {
       if (!file) return;
       if (!file.type.startsWith('image/')) {
@@ -759,351 +742,89 @@
       }
     }
 
-    // ============================================================
-    // 6. دالة إنشاء QR Code باستخدام Canvas (بدون مكتبات)
-    // ============================================================
-    function generateQRCode(data, size) {
-      // تنفيذ بسيط لـ QR Code - استخدام خوارزمية مبسطة
-      // ملاحظة: هذا تنفيذ رمزي، في الواقع يجب استخدام مكتبة
-      // لكن وللحفاظ على خفيفة الوزن، سنقوم برسم مربعات بسيطة
-      const canvas = document.createElement('canvas');
-      canvas.width = size;
-      canvas.height = size;
-      const ctx = canvas.getContext('2d');
-      
-      // خلفية بيضاء
-      ctx.fillStyle = 'white';
-      ctx.fillRect(0, 0, size, size);
-      
-      // رسم شبكة بسيطة تمثل QR Code (رمزية)
-      // نقوم برسم نمط بسيط من المربعات السوداء
-      const gridSize = 21;
-      const cellSize = size / gridSize;
-      
-      // تعبئة عشوائية ولكن مع نمط ثابت
-      const seed = 42;
-      let pseudoRandom = function(seed) {
-        return function() {
-          seed = (seed * 9301 + 49297) % 233280;
-          return seed / 233280;
-        };
-      };
-      const random = pseudoRandom(seed);
-      
-      // رسم نمط ثابت للـ QR Code (رمزية)
-      for (let row = 0; row < gridSize; row++) {
-        for (let col = 0; col < gridSize; col++) {
-          // تحديد مواقع المربعات السوداء بشكل ثابت
-          let isBlack = false;
-          
-          // نمط ثابت لمحاكاة QR Code
-          if ((row + col) % 3 === 0 || (row * col) % 5 === 0 || (row + col * 2) % 4 === 0) {
-            isBlack = true;
-          }
-          
-          // بعض المناطق البيضاء الثابتة
-          if (row < 4 && col < 4) isBlack = true;
-          if (row < 4 && col > gridSize - 5) isBlack = true;
-          if (row > gridSize - 5 && col < 4) isBlack = true;
-          if (row > gridSize - 5 && col > gridSize - 5) isBlack = true;
-          
-          // مركز QR Code
-          if (row > 8 && row < 13 && col > 8 && col < 13) isBlack = false;
-          
-          if (isBlack) {
-            ctx.fillStyle = '#1a0f07';
-            ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
-          }
-        }
-      }
-      
-      // إضافة نقاط صغيرة للتفاصيل
-      ctx.fillStyle = '#1a0f07';
-      for (let i = 0; i < 30; i++) {
-        const x = Math.floor(random() * gridSize);
-        const y = Math.floor(random() * gridSize);
-        if (x > 4 && x < gridSize - 5 && y > 4 && y < gridSize - 5) {
-          ctx.fillRect(x * cellSize + cellSize * 0.3, y * cellSize + cellSize * 0.3, cellSize * 0.4, cellSize * 0.4);
-        }
-      }
-      
-      return canvas;
-    }
-
-    // ============================================================
-    // 7. دالة إنشاء الختم الدائري الرسمي
-    // ============================================================
-    function createOfficialSeal(size) {
-      const canvas = document.createElement('canvas');
-      canvas.width = size;
-      canvas.height = size;
-      const ctx = canvas.getContext('2d');
-      const centerX = size / 2;
-      const centerY = size / 2;
-      const radius = size / 2 - 5;
-      
-      // خلفية شفافة
-      ctx.clearRect(0, 0, size, size);
-      
-      // رسم دائرة خارجية
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-      ctx.strokeStyle = 'rgba(200, 0, 0, 0.7)';
-      ctx.lineWidth = 4;
-      ctx.stroke();
-      
-      // رسم دائرة داخلية
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, radius * 0.75, 0, 2 * Math.PI);
-      ctx.strokeStyle = 'rgba(200, 0, 0, 0.5)';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-      
-      // رسم نجوم أو نقاط على الحافة
-      for (let i = 0; i < 12; i++) {
-        const angle = (i / 12) * 2 * Math.PI - Math.PI / 2;
-        const x = centerX + (radius * 0.92) * Math.cos(angle);
-        const y = centerY + (radius * 0.92) * Math.sin(angle);
-        ctx.beginPath();
-        ctx.arc(x, y, 3, 0, 2 * Math.PI);
-        ctx.fillStyle = 'rgba(200, 0, 0, 0.7)';
-        ctx.fill();
-      }
-      
-      // رسم النص الرئيسي
-      ctx.save();
-      ctx.translate(centerX, centerY);
-      
-      // النص العلوي (مقوس)
-      const text = 'OFFICIAL EXAM';
-      const fontSize = radius * 0.18;
-      ctx.font = `bold ${fontSize}px Arial`;
-      ctx.fillStyle = 'rgba(200, 0, 0, 0.8)';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      
-      // رسم النص بشكل مستقيم في المنتصف
-      ctx.fillText(text, 0, -5);
-      
-      // رسم نجمة في المنتصف
-      ctx.font = `${radius * 0.25}px Arial`;
-      ctx.fillText('✦', 0, radius * 0.25);
-      
-      ctx.restore();
-      
-      // إضافة تأثير شفافية للختم
-      return canvas;
-    }
-
-    // ============================================================
-    // 8. الدالة الرئيسية - تحميل الصورة مع جميع الميزات
-    // ============================================================
+    // --- زر التحميل: دمج الصورة مع العلامة المائية ---
     function downloadImageWithWatermark() {
-      // التحقق من وجود صورة
       if (!currentImageData) {
-        alert('⚠️ لا توجد صورة للتحميل. يرجى رفع صورة أولاً.');
+        alert('لا توجد صورة للتحميل.');
         return;
       }
 
-      // تعطيل الزر أثناء التحميل
       downloadBtn.disabled = true;
       downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحضير...';
 
-      // إنشاء كائن الصورة
       const img = new Image();
-      
       img.onload = function() {
-        try {
-          // الحصول على الأبعاد الأصلية للصورة
-          const width = img.naturalWidth || img.width;
-          const height = img.naturalHeight || img.height;
-          
-          // إنشاء Canvas بالحجم الأصلي للحفاظ على الجودة
-          const canvas = document.createElement('canvas');
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d', { alpha: false });
-          
-          // 7-أ: رسم الصورة الأصلية بجودة عالية
-          ctx.imageSmoothingEnabled = true;
-          ctx.imageSmoothingQuality = 'high';
-          ctx.drawImage(img, 0, 0, width, height);
-          
-          // ============================================================
-          // 7-ب: إضافة معلومات الحماية (اسم المالك، التاريخ، ID)
-          // ============================================================
-          const now = new Date();
-          const dateTime = now.toLocaleString('ar-EG', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-          });
-          const uniqueId = 'EXAM-' + Date.now().toString(36).toUpperCase() + '-' + 
-                          Math.random().toString(36).substring(2, 7).toUpperCase();
-          
-          // معلومات الحماية - أعلى الصورة
-          const infoFontSize = Math.max(16, Math.min(width, height) * 0.025);
-          ctx.save();
-          ctx.font = `bold ${infoFontSize}px 'Times New Roman', Arial`;
-          ctx.textAlign = 'right';
-          ctx.textBaseline = 'top';
-          
-          // خلفية شفافة للنص
-          const textLines = [
-            `👤 المالك: ${OWNER_NAME}`,
-            `📅 ${dateTime}`,
-            `🆔 ${uniqueId}`
-          ];
-          
-          const padding = infoFontSize * 0.8;
-          const lineHeight = infoFontSize * 1.4;
-          const startX = width - padding;
-          const startY = padding;
-          
-          // رسم خلفية شفافة للنص
-          const maxWidth = Math.max(...textLines.map(line => ctx.measureText(line).width));
-          const bgHeight = textLines.length * lineHeight + padding;
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-          ctx.shadowColor = 'rgba(0,0,0,0.1)';
-          ctx.shadowBlur = 10;
-          ctx.roundRect ? ctx.roundRect(width - maxWidth - padding * 1.5, padding, maxWidth + padding * 1.5, bgHeight, 8) : 
-                          ctx.fillRect(width - maxWidth - padding * 1.5, padding, maxWidth + padding * 1.5, bgHeight);
-          ctx.shadowBlur = 0;
-          ctx.fill();
-          
-          // رسم النص
-          ctx.fillStyle = 'rgba(26, 15, 7, 0.85)';
-          ctx.shadowColor = 'rgba(255,255,255,0.5)';
-          ctx.shadowBlur = 3;
-          textLines.forEach((line, index) => {
-            ctx.fillText(line, width - padding, startY + index * lineHeight);
-          });
-          ctx.restore();
-          
-          // ============================================================
-          // 7-ج: العلامة المائية المركزية الكبيرة
-          // ============================================================
-          const watermarkText = '◆ ' + OWNER_NAME + ' ◆';
-          const centerFontSize = Math.min(width, height) * 0.12;
-          ctx.save();
-          ctx.translate(width / 2, height / 2);
-          ctx.rotate(-12 * Math.PI / 180);
-          ctx.scale(1.1, 1.1);
-          
-          ctx.font = `900 ${centerFontSize}px 'Times New Roman', serif`;
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.shadowColor = 'rgba(255, 255, 255, 0.4)';
-          ctx.shadowBlur = centerFontSize * 0.15;
-          ctx.fillStyle = 'rgba(26, 15, 7, 0.15)';
-          ctx.fillText(watermarkText, 0, 0);
-          
-          ctx.shadowColor = 'transparent';
-          ctx.fillStyle = 'rgba(26, 15, 7, 0.12)';
-          ctx.fillText(watermarkText, 0, 0);
-          ctx.restore();
-          
-          // ============================================================
-          // 7-د: العلامات المائية المتكررة (تغطية كاملة)
-          // ============================================================
-          ctx.save();
-          ctx.globalAlpha = 0.07;
-          const repeatFontSize = Math.min(width, height) * 0.045;
-          ctx.font = `700 ${repeatFontSize}px 'Times New Roman', serif`;
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillStyle = '#1a0f07';
-          
-          const repeatText = '◆ ' + OWNER_NAME + ' ◆';
-          const spacing = Math.min(width, height) * 0.16;
-          const offsetX = spacing / 2;
-          const offsetY = spacing / 2;
-          
-          for (let y = offsetY; y < height; y += spacing) {
-            for (let x = offsetX; x < width; x += spacing) {
-              const rotation = (Math.random() * 10) - 5;
-              ctx.save();
-              ctx.translate(x, y);
-              ctx.rotate(rotation * Math.PI / 180);
-              ctx.fillText(repeatText, 0, 0);
-              ctx.restore();
-            }
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+
+        const width = img.naturalWidth || img.width;
+        const height = img.naturalHeight || img.height;
+        canvas.width = width;
+        canvas.height = height;
+
+        // رسم الصورة
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // رسم العلامة المائية المركزية
+        const watermarkText = '◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆';
+        const fontSize = Math.min(width, height) * 0.12;
+        ctx.font = `900 ${fontSize}px 'Times New Roman', serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        ctx.save();
+        ctx.translate(width / 2, height / 2);
+        ctx.rotate(-12 * Math.PI / 180);
+        ctx.scale(1.1, 1.1);
+
+        ctx.shadowColor = 'rgba(255,255,255,0.4)';
+        ctx.shadowBlur = fontSize * 0.15;
+        ctx.fillStyle = 'rgba(26, 15, 7, 0.2)';
+        ctx.fillText(watermarkText, 0, 0);
+
+        ctx.shadowColor = 'transparent';
+        ctx.fillStyle = 'rgba(26, 15, 7, 0.2)';
+        ctx.fillText(watermarkText, 0, 0);
+
+        ctx.restore();
+
+        // إضافة علامة مائية متكررة حول الصورة (خلفية)
+        ctx.save();
+        ctx.globalAlpha = 0.04;
+        ctx.font = `700 ${Math.min(width, height) * 0.04}px 'Times New Roman', serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#1a0f07';
+
+        // تكرار النص في جميع أنحاء الصورة
+        const repeatText = '◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆';
+        const spacing = Math.min(width, height) * 0.15;
+        for (let y = spacing; y < height; y += spacing) {
+          for (let x = spacing; x < width; x += spacing) {
+            ctx.fillText(repeatText, x, y);
           }
-          ctx.restore();
-          
-          // ============================================================
-          // 7-هـ: QR Code (أسفل يسار الصورة)
-          // ============================================================
-          const qrSize = Math.min(width, height) * 0.15;
-          const qrCanvas = generateQRCode(QR_LINK, qrSize);
-          const qrX = qrSize * 0.15;
-          const qrY = height - qrSize * 1.2;
-          
-          // خلفية بيضاء للـ QR Code
-          ctx.save();
-          ctx.shadowColor = 'rgba(0,0,0,0.15)';
-          ctx.shadowBlur = 15;
-          ctx.fillStyle = 'white';
-          ctx.beginPath();
-          ctx.roundRect ? ctx.roundRect(qrX - 5, qrY - 5, qrSize + 10, qrSize + 10, 5) :
-                          ctx.fillRect(qrX - 5, qrY - 5, qrSize + 10, qrSize + 10);
-          ctx.shadowBlur = 0;
-          ctx.fill();
-          ctx.restore();
-          
-          ctx.drawImage(qrCanvas, qrX, qrY, qrSize, qrSize);
-          
-          // ============================================================
-          // 7-و: الختم الرسمي الدائري (أسفل يمين الصورة)
-          // ============================================================
-          const sealSize = Math.min(width, height) * 0.14;
-          const sealCanvas = createOfficialSeal(sealSize);
-          const sealX = width - sealSize * 1.2;
-          const sealY = height - sealSize * 1.2;
-          
-          ctx.save();
-          ctx.globalAlpha = 0.6;
-          ctx.shadowColor = 'rgba(0,0,0,0.1)';
-          ctx.shadowBlur = 10;
-          ctx.drawImage(sealCanvas, sealX, sealY, sealSize, sealSize);
-          ctx.restore();
-          
-          // ============================================================
-          // 7-ز: تحميل الصورة النهائية بجودة عالية
-          // ============================================================
-          const link = document.createElement('a');
-          link.download = `exam_${uniqueId}_${Date.now()}.png`;
-          link.href = canvas.toDataURL('image/png', 1.0); // جودة 100%
-          link.click();
-          
-          // إعادة تفعيل الزر
-          downloadBtn.disabled = false;
-          downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل';
-          
-        } catch (error) {
-          // معالجة الأخطاء
-          console.error('خطأ في معالجة الصورة:', error);
-          alert('❌ حدث خطأ أثناء معالجة الصورة. يرجى المحاولة مرة أخرى.');
-          downloadBtn.disabled = false;
-          downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل';
         }
-      };
-      
-      img.onerror = function() {
-        alert('❌ حدث خطأ أثناء تحميل الصورة. يرجى المحاولة مرة أخرى.');
+        ctx.restore();
+
+        const link = document.createElement('a');
+        link.download = `exam_watermarked_${Date.now()}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+
         downloadBtn.disabled = false;
         downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل';
       };
-      
+
+      img.onerror = function() {
+        alert('حدث خطأ أثناء تحميل الصورة. حاول مرة أخرى.');
+        downloadBtn.disabled = false;
+        downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل';
+      };
+
       img.src = currentImageData;
     }
 
-    // ============================================================
-    // 9. ربط الأحداث (Events)
-    // ============================================================
+    // --- الأحداث ---
     uploadBtn.addEventListener('click', function(e) {
       e.preventDefault();
       fileInput.click();
@@ -1151,10 +872,6 @@
       }
     });
 
-    // ============================================================
-    // 10. تهيئة المشروع
-    // ============================================================
-    createWatermarkPattern();
     loadHistory();
 
     if (imageHistory.length > 0 && examImage.style.display === 'none') {
@@ -1181,25 +898,6 @@
         progressContainer.classList.remove('active');
       }
     });
-
-    // إضافة دالة roundRect إذا لم تكن موجودة
-    if (!CanvasRenderingContext2D.prototype.roundRect) {
-      CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
-        if (r > w/2) r = w/2;
-        if (r > h/2) r = h/2;
-        this.moveTo(x + r, y);
-        this.lineTo(x + w - r, y);
-        this.quadraticCurveTo(x + w, y, x + w, y + r);
-        this.lineTo(x + w, y + h - r);
-        this.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-        this.lineTo(x + r, y + h);
-        this.quadraticCurveTo(x, y + h, x, y + h - r);
-        this.lineTo(x, y + r);
-        this.quadraticCurveTo(x, y, x + r, y);
-        this.closePath();
-        return this;
-      };
-    }
 
   })();
 </script>
