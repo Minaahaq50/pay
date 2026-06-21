@@ -706,27 +706,23 @@
         // رسم الصورة
         ctx.drawImage(img, 0, 0, width, height);
 
-        // رسم العلامة المائية
-        const watermarkText = '◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆';
-        const fontSize = Math.min(width, height) * 0.12; // 12% من الحجم الأصغر
-        ctx.font = `900 ${fontSize}px 'Times New Roman', serif`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-
+        // Watermark احترافية تغطي الورقة بالكامل
 ctx.save();
 
-ctx.rotate(-25 * Math.PI / 180);
+ctx.translate(width / 2, height / 2);
+ctx.rotate(-30 * Math.PI / 180);
 
-const fontSize = Math.max(width, height) * 0.14;
+const wmSize = Math.max(width, height) * 0.18;
 
-ctx.font = `900 ${fontSize}px Arial`;
-ctx.fillStyle = "rgba(0,0,0,0.08)";
+ctx.font = `900 ${wmSize}px Arial Black`;
+ctx.fillStyle = "rgba(0,0,0,0.05)";
 ctx.textAlign = "center";
+ctx.textBaseline = "middle";
 
-for (let y = -height; y < height * 2; y += fontSize * 2.5) {
-    for (let x = -width; x < width * 2; x += fontSize * 5) {
-        ctx.fillText("◆ EL JOKER DEV ◆", x, y);
-    }
+for (let y = -height * 2; y < height * 2; y += wmSize * 1.8) {
+  for (let x = -width * 2; x < width * 2; x += wmSize * 3.5) {
+    ctx.fillText("◆ EL JOKER DEV ◆", x, y);
+  }
 }
 
 ctx.restore();
