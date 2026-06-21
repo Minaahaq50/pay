@@ -86,19 +86,31 @@
     inset:0;
     z-index:30;
     pointer-events:none;
-    opacity:.08;
     overflow:hidden;
 }
+
 .watermark-on-image::before{
-    content:"EL JOKER DEV EL JOKER DEV EL JOKER DEV EL JOKER DEV EL JOKER DEV EL JOKER DEV";
+    content:"EL JOKER DEV";
     position:absolute;
     top:50%;
     left:50%;
     transform:translate(-50%,-50%) rotate(-30deg);
-    font-size:12vw;
+    font-size:10vw;
     font-weight:900;
+    color:rgba(0,0,0,.12);
     white-space:nowrap;
-    color:#000;
+    letter-spacing:8px;
+}
+
+.watermark-on-image{
+    background-image:
+    repeating-linear-gradient(
+      -30deg,
+      rgba(0,0,0,.05) 0px,
+      rgba(0,0,0,.05) 2px,
+      transparent 2px,
+      transparent 250px
+    );
 }
 
     /* placeholder */
