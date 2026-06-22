@@ -178,18 +178,15 @@
 
     // ⚠️ هنا يمكنك تعديل النصوص الثابتة للعلامة المائية ⚠️
     const CHANNEL_NAME = '𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗';
-    const CHANNEL_ID = '@ElJokerDev';
-    // ⚠️ ضع مسار الشعار الخاص بك هنا ⚠️
-    const LOGO_URL = 'https://via.placeholder.com/400x200/1a0f07/ffffff?text=LOGO';
+const CHANNEL_ID = '@ElJokerDev';
 
-    // تعيين القيم الثابتة
-    channelNameSpan.textContent = CHANNEL_NAME;
-    channelIdSpan.textContent = CHANNEL_ID;
-    fixedLogo.src = LOGO_URL;
+// تعيين القيم الثابتة
+channelNameSpan.textContent = CHANNEL_NAME;
+channelIdSpan.textContent = CHANNEL_ID;
 
-    // الحالة
-    let imageHistory = [];
-    let currentImageData = null;
+// الحالة
+let imageHistory = [];
+let currentImageData = null;
 
     // تحميل من localStorage
     function loadHistory() {
