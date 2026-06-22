@@ -1,420 +1,438 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ورقة امتحان - علامة مائية ثابتة (شعار + نص)</title>
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scanner Effect Exam</title>
   <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
+    /* reset & base */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+    }
+
     body {
-      min-height:100vh; display:flex; justify-content:center; align-items:center;
-      background:#2b2b2b; font-family:'Segoe UI',Tahoma,sans-serif; padding:20px;
+      background: #2b2b2b;
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 20px;
     }
+
+    /* الورقة الرئيسية */
     .paper {
-      position:relative; width:820px; max-width:100%; padding:2.5rem 2.5rem 2rem;
-      background:#fcf8f0;
-      background-image:repeating-linear-gradient(90deg,rgba(180,160,130,0.08) 0px,rgba(180,160,130,0.08) 1px,transparent 1px,transparent 14px),
-                      repeating-linear-gradient(180deg,rgba(180,160,130,0.06) 0px,rgba(180,160,130,0.06) 1px,transparent 1px,transparent 20px);
-      box-shadow:0 12px 40px rgba(0,0,0,0.6),0 0 0 1px #d4c5a0 inset;
-      border-radius:12px 12px 20px 20px; min-height:500px; display:flex; flex-direction:column; align-items:center;
+      max-width: 860px;
+      width: 100%;
+      background: #f7f1e3;
+      padding: 24px 24px 30px;
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      transition: box-shadow 0.2s;
     }
+
+    /* إطار الصورة مع تأثير الورق */
     .exam-image-wrapper {
-      position:relative; z-index:10; width:100%; border-radius:10px; overflow:hidden;
-      box-shadow:0 4px 20px rgba(0,0,0,0.3); border:3px solid #b8a07c;
-      background:#e5dccc; display:inline-block; margin-bottom:20px; line-height:0;
-      transition:all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+      border: 3px solid #b89b6b;
+      border-radius: 14px;
+      background: #e5dccd;
+      box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.08);
     }
-    .exam-image-wrapper.drag-over { border-color:#f5b342; box-shadow:0 0 0 4px #f5b34288; }
-    .exam-image-wrapper img {
-      width:100%; height:auto; display:block; background:#fcf8f0; position:relative; z-index:5;
+
+    /* الصورة + تأثير الـ scan (يُطبق عبر JS أيضاً لكن نحتفظ بالكلاس) */
+    .scan-effect {
+      display: block;
+      width: 100%;
+      height: auto;
+      filter: contrast(1.18) brightness(1.06) saturate(0.88) sepia(0.04) blur(0.3px);
+      transform: rotate(-0.2deg) scale(1.005);
+      transition: filter 0.2s;
     }
-    /* الطبقة الثابتة: شعار + نص */
-    .watermark-layer {
-      position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:30;
-      display:flex; align-items:center; justify-content:center;
-      opacity:0.85; /* شفافية ثابتة */
+
+    /* نسيج الورق (paper fibers) فوق الصورة */
+    .exam-image-wrapper::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: url("https://www.transparenttextures.com/patterns/paper-fibers.png");
+      opacity: 0.13;
+      mix-blend-mode: multiply;
+      pointer-events: none;
+      border-radius: 12px;
     }
-    .watermark-content {
-      display:flex; flex-direction:column; align-items:center; justify-content:center;
-      width:70%; /* حجم ثابت 70% من عرض الصورة */
-      max-width:70%;
-      text-align:center;
+
+    /* منطقة التحكم */
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      margin-top: 22px;
     }
-    .watermark-content img {
-      width:100%; height:auto; display:block;
-      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
+
+    /* زر الملف مخفي لكن نجعله شفاف مع تنسيق */
+    .file-label {
+      background: #3d3d3d;
+      color: #f0eadb;
+      padding: 12px 26px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border: 1px solid #5a5a5a;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
-    .watermark-text {
-      margin-top:6px; color:#1a0f07; text-shadow:2px 2px 12px rgba(255,255,255,0.5),0 0 20px rgba(0,0,0,0.05);
-      font-weight:900; letter-spacing:2px; line-height:1.2;
+
+    .file-label:hover {
+      background: #4f4f4f;
+      transform: scale(1.02);
+      border-color: #b89b6b;
     }
-    .watermark-text .channel-name {
-      font-size:clamp(1.8rem, 5vw, 3.8rem); font-family:'Times New Roman',serif;
-      text-transform:uppercase; display:block;
+
+    .file-label:active {
+      transform: scale(0.96);
     }
-    .watermark-text .channel-id {
-      font-size:clamp(0.9rem, 2vw, 1.8rem); font-weight:400; opacity:0.85;
-      font-family:'Segoe UI',sans-serif; display:block; margin-top:2px;
+
+    #file {
+      display: none;
     }
-    .default-placeholder {
-      width:100%; min-height:300px; display:flex; flex-direction:column; align-items:center; justify-content:center;
-      color:#5f4e38; font-size:1.4rem; background:#e8ddcc; padding:50px 20px; text-align:center; gap:10px;
-      position:relative; z-index:5;
+
+    /* زر التحميل */
+    .download-btn {
+      background: #2c6e49;
+      color: white;
+      border: none;
+      padding: 12px 32px;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 4px 10px rgba(44, 110, 73, 0.4);
+      letter-spacing: 0.5px;
+      border: 1px solid #3d8b5a;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
     }
-    .default-placeholder span { font-size:4.5rem; opacity:0.4; }
-    .default-placeholder .drop-hint { font-size:0.95rem; opacity:0.7; background:rgba(0,0,0,0.04); padding:6px 18px; border-radius:30px; border:1px dashed #a48f74; }
-    .content {
-      position:relative; z-index:40; width:100%; text-align:center;
-      background:rgba(252,248,240,0.8); backdrop-filter:blur(2px); padding:14px 20px;
-      border-radius:50px; margin-bottom:16px; border:1px solid #d4c5a0; box-shadow:0 2px 10px rgba(0,0,0,0.05);
+
+    .download-btn:hover {
+      background: #1f5a38;
+      transform: scale(1.02);
+      box-shadow: 0 6px 14px rgba(44, 110, 73, 0.6);
     }
-    .content h1 { font-size:2.2rem; color:#2d241a; letter-spacing:1px; text-shadow:1px 1px 0 rgba(255,245,225,0.7); }
-    .content p { font-size:1.1rem; color:#3d3227; margin-top:6px; }
-    .upload-area {
-      position:relative; z-index:45; display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
-      gap:14px; margin-top:8px; width:100%;
+
+    .download-btn:active {
+      transform: scale(0.95);
     }
-    .upload-btn, .reset-btn, .download-btn {
-      border:none; border-radius:40px; font-weight:600; cursor:pointer;
-      display:flex; align-items:center; gap:8px; transition:0.06s linear;
-      padding:12px 28px; font-size:1.05rem;
+
+    .download-btn:disabled {
+      opacity: 0.5;
+      pointer-events: none;
+      filter: grayscale(0.6);
     }
-    .upload-btn { background:#3d3327; color:#f5ede1; box-shadow:0 5px 0 #1f1811; border:1px solid #b8a07c; }
-    .upload-btn:active { transform:translateY(5px); box-shadow:0 0 0 #1f1811; }
-    .reset-btn { background:#7a6852; color:white; box-shadow:0 4px 0 #4d3f31; border:1px solid #b8a07c; }
-    .reset-btn:active { transform:translateY(4px); box-shadow:0 0 0 #4d3f31; }
-    .download-btn { background:#2c6e49; color:white; box-shadow:0 4px 0 #1a3d2a; border:1px solid #4c8b6a; }
-    .download-btn:active { transform:translateY(4px); box-shadow:0 0 0 #1a3d2a; }
-    .download-btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; box-shadow:0 4px 0 #1a3d2a; }
-    #fileInput { display:none; }
-    .file-name {
-      font-size:0.95rem; color:#3d3227; background:#e8ddcc; padding:6px 22px;
-      border-radius:30px; border:1px dashed #a48f74; max-width:200px; overflow:hidden;
-      text-overflow:ellipsis; white-space:nowrap; display:flex; align-items:center; gap:6px;
+
+    /* رسالة ترحيب عند عدم وجود صورة */
+    .placeholder-msg {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 180px;
+      background: #e8dfce;
+      color: #6a5e4b;
+      font-size: 1.2rem;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      border: 2px dashed #b89b6b;
+      opacity: 0.7;
     }
-    .gallery-section { width:100%; margin-top:20px; border-top:1px solid #d4c5a0; padding-top:16px; display:none; }
-    .gallery-section.active { display:block; }
-    .gallery-title { font-size:0.9rem; color:#3d3227; font-weight:600; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
-    .gallery-grid { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; }
-    .gallery-item { width:70px; height:70px; border-radius:8px; overflow:hidden; border:2px solid #b8a07c; cursor:pointer; transition:0.15s; box-shadow:0 2px 6px rgba(0,0,0,0.1); position:relative; }
-    .gallery-item:hover { transform:scale(1.05); border-color:#3d3327; }
-    .gallery-item img { width:100%; height:100%; object-fit:cover; display:block; }
-    .gallery-item .remove-btn { position:absolute; top:2px; left:2px; background:rgba(0,0,0,0.6); color:white; border:none; border-radius:50%; width:18px; height:18px; font-size:10px; display:flex; align-items:center; justify-content:center; cursor:pointer; opacity:0; transition:0.2s; }
-    .gallery-item:hover .remove-btn { opacity:1; }
-    .gallery-item .remove-btn:hover { background:#c0392b; }
-    @media (max-width:650px) {
-      .paper { padding:1.5rem 1rem; }
-      .content h1 { font-size:1.6rem; }
-      .upload-area { gap:10px; }
-      .upload-btn, .reset-btn, .download-btn { padding:10px 18px; font-size:0.95rem; }
-      .gallery-item { width:55px; height:55px; }
+
+    #img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    /* التكيف مع الشاشات الصغيرة */
+    @media (max-width: 600px) {
+      .paper {
+        padding: 16px;
+      }
+      .controls {
+        gap: 12px;
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .file-label,
+      .download-btn {
+        justify-content: center;
+        padding: 14px 16px;
+      }
+      .placeholder-msg {
+        min-height: 120px;
+        font-size: 1rem;
+      }
     }
   </style>
 </head>
 <body>
-<div class="paper">
-  <div class="exam-image-wrapper" id="examWrapper">
-    <div class="default-placeholder" id="defaultPlaceholder">
-      <span>📄</span>
-      <p>ارفع صورة الامتحان</p>
-      <div class="drop-hint"><i class="fas fa-arrow-down"></i> اسحب الصورة هنا أو استخدم الزر</div>
-    </div>
-    <img id="examImage" src="" alt="صورة الامتحان" style="display:none;">
-    <!-- العلامة المائية الثابتة (شعار + نص) -->
-    <div class="watermark-layer" id="watermarkLayer">
-      <div class="watermark-content" id="watermarkContent">
-        <!-- ⚠️ ضع مسار الشعار الخاص بك هنا ⚠️ -->
-        <img id="fixedLogo" src="logo.png" alt="شعار العلامة المائية">
-        <div class="watermark-text">
-          <span class="channel-name">𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗</span>
-          <span class="channel-id">@ElJokerDev</span>
-        </div>
+
+  <div class="paper">
+    <!-- حاوية الصورة مع تأثير الورق -->
+    <div class="exam-image-wrapper" id="imageWrapper">
+      <img id="img" src="" alt="الصورة المرفوعة" style="display: none;" />
+      <div class="placeholder-msg" id="placeholder">
+        📄 اختر صورة لتفعيل تأثير الماسح الضوئي
       </div>
     </div>
+
+    <!-- عناصر التحكم -->
+    <div class="controls">
+      <label for="file" class="file-label">
+        <span>📂</span> اختيار صورة
+      </label>
+      <input type="file" id="file" accept="image/*" />
+
+      <button class="download-btn" id="downloadBtn" disabled>
+        ⬇️ تحميل مع Scan
+      </button>
+    </div>
   </div>
 
-  <div class="content">
-    <h1>📝 ورقة الامتحان الرسمية</h1>
-    <p>علامة مائية ثابتة (شعار + نص) بجودة احترافية</p>
-  </div>
+  <script>
+    (function() {
+      // عناصر DOM
+      const fileInput = document.getElementById('file');
+      const imgElement = document.getElementById('img');
+      const placeholder = document.getElementById('placeholder');
+      const downloadBtn = document.getElementById('downloadBtn');
+      const imageWrapper = document.getElementById('imageWrapper');
 
-  <div class="upload-area">
-    <button class="upload-btn" id="uploadBtn"><i class="fas fa-cloud-upload-alt"></i> رفع صورة</button>
-    <input type="file" id="fileInput" accept="image/*" multiple>
-    <span class="file-name" id="fileName"><i class="fas fa-image"></i> لا توجد صورة</span>
-    <button class="download-btn" id="downloadBtn" disabled><i class="fas fa-download"></i> تحميل</button>
-    <button class="reset-btn" id="resetBtn"><i class="fas fa-undo-alt"></i> إعادة</button>
-  </div>
+      // تخزين الـ data URL للصورة الحالية
+      let currentImageDataURL = null;
+      // علم بوجود صورة
+      let imageLoaded = false;
 
-  <!-- معرض الصور -->
-  <div class="gallery-section" id="gallerySection">
-    <div class="gallery-title"><i class="fas fa-images"></i> الصور المحفوظة</div>
-    <div class="gallery-grid" id="galleryGrid"></div>
-  </div>
-</div>
+      // إظهار الصورة وتطبيق تأثير الـ scan (مع إخفاء placeholder)
+      function displayImage(dataUrl) {
+        currentImageDataURL = dataUrl;
+        imgElement.src = dataUrl;
+        imgElement.style.display = 'block';
+        imgElement.classList.add('scan-effect');
 
-<script>
-  (function() {
-    "use strict";
-    // العناصر الأساسية
-    const fileInput = document.getElementById('fileInput');
-    const uploadBtn = document.getElementById('uploadBtn');
-    const resetBtn = document.getElementById('resetBtn');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const examImage = document.getElementById('examImage');
-    const defaultPlaceholder = document.getElementById('defaultPlaceholder');
-    const fileNameSpan = document.getElementById('fileName');
-    const wrapper = document.getElementById('examWrapper');
-    const gallerySection = document.getElementById('gallerySection');
-    const galleryGrid = document.getElementById('galleryGrid');
-    
-    // عناصر العلامة المائية الثابتة
-    const watermarkLayer = document.getElementById('watermarkLayer');
-    const fixedLogo = document.getElementById('fixedLogo');
-    const channelNameSpan = document.querySelector('.channel-name');
-    const channelIdSpan = document.querySelector('.channel-id');
-
-    // ⚠️ هنا يمكنك تعديل النصوص الثابتة للعلامة المائية ⚠️
-    const CHANNEL_NAME = '𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗';
-const CHANNEL_ID = '@ElJokerDev';
-
-// تعيين القيم الثابتة
-channelNameSpan.textContent = CHANNEL_NAME;
-channelIdSpan.textContent = CHANNEL_ID;
-
-// الحالة
-let imageHistory = [];
-let currentImageData = null;
-
-    // تحميل من localStorage
-    function loadHistory() {
-      try {
-        const stored = localStorage.getItem('examImageHistory');
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            imageHistory = parsed.slice(0, 5);
-            renderGallery();
-            const last = imageHistory[imageHistory.length - 1];
-            if (last) {
-              currentImageData = last;
-              examImage.src = last;
-              examImage.style.display = 'block';
-              defaultPlaceholder.style.display = 'none';
-              fileNameSpan.innerHTML = `<i class="fas fa-image"></i> صورة محفوظة`;
-              downloadBtn.disabled = false;
-            }
-          } else resetToDefault();
-        } else resetToDefault();
-      } catch(_) { resetToDefault(); }
-    }
-    function saveHistory() {
-      try { localStorage.setItem('examImageHistory', JSON.stringify(imageHistory)); } catch(_) {}
-    }
-    function resetToDefault() {
-      examImage.style.display = 'none';
-      defaultPlaceholder.style.display = 'flex';
-      fileNameSpan.innerHTML = `<i class="fas fa-image"></i> لا توجد صورة`;
-      currentImageData = null;
-      downloadBtn.disabled = true;
-    }
-    function renderGallery() {
-      galleryGrid.innerHTML = '';
-      if (imageHistory.length === 0) { gallerySection.classList.remove('active'); return; }
-      gallerySection.classList.add('active');
-      [...imageHistory].reverse().forEach(url => {
-        const div = document.createElement('div'); div.className = 'gallery-item';
-        const img = document.createElement('img'); img.src = url; img.alt = 'صورة مصغرة'; img.loading = 'lazy';
-        div.appendChild(img);
-        const removeBtn = document.createElement('button'); removeBtn.className = 'remove-btn';
-        removeBtn.innerHTML = '<i class="fas fa-times"></i>';
-        removeBtn.addEventListener('click', e => {
-          e.stopPropagation();
-          const idx = imageHistory.indexOf(url);
-          if (idx !== -1) {
-            imageHistory.splice(idx, 1);
-            saveHistory(); renderGallery();
-            if (currentImageData === url) {
-              if (imageHistory.length > 0) {
-                const last = imageHistory[imageHistory.length - 1];
-                currentImageData = last; examImage.src = last; examImage.style.display = 'block';
-                defaultPlaceholder.style.display = 'none'; fileNameSpan.innerHTML = `<i class="fas fa-image"></i> صورة محفوظة`;
-                downloadBtn.disabled = false;
-              } else { resetToDefault(); examImage.src = ''; }
-            }
-          }
-        });
-        div.appendChild(removeBtn);
-        div.addEventListener('click', function() {
-          currentImageData = url; examImage.src = url; examImage.style.display = 'block';
-          defaultPlaceholder.style.display = 'none'; fileNameSpan.innerHTML = `<i class="fas fa-image"></i> صورة محفوظة`;
-          downloadBtn.disabled = false;
-        });
-        galleryGrid.appendChild(div);
-      });
-    }
-    function addToHistory(url) {
-      imageHistory = imageHistory.filter(item => item !== url);
-      imageHistory.push(url);
-      if (imageHistory.length > 5) imageHistory = imageHistory.slice(-5);
-      saveHistory(); renderGallery();
-    }
-
-    // معالجة ملف الصورة الأساسية
-    function handleFile(file) {
-      if (!file || !file.type.startsWith('image/')) { alert('الرجاء اختيار ملف صورة صالح'); return; }
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const result = e.target.result;
-        if (typeof result === 'string') {
-          currentImageData = result;
-          examImage.src = result;
-          examImage.style.display = 'block';
-          defaultPlaceholder.style.display = 'none';
-          fileNameSpan.innerHTML = `<i class="fas fa-image"></i> ${file.name.length > 18 ? file.name.slice(0,15)+'…' : file.name}`;
-          downloadBtn.disabled = false;
-          addToHistory(result);
+        // إخفاء النص المؤقت
+        if (placeholder) {
+          placeholder.style.display = 'none';
         }
-      };
-      reader.readAsDataURL(file);
-    }
 
-    function handleFiles(files) {
-      if (!files || files.length === 0) return;
-      const valid = [...files].filter(f => f.type.startsWith('image/'));
-      if (valid.length === 0) { alert('الرجاء اختيار ملفات صور صالحة.'); return; }
-      handleFile(valid[0]);
-      for (let i = 1; i < valid.length && i < 5; i++) {
-        const r = new FileReader();
-        r.onload = e => { if (typeof e.target.result === 'string') addToHistory(e.target.result); };
-        r.readAsDataURL(valid[i]);
-      }
-    }
-
-    // تحميل الصورة مع العلامة المائية (دمج)
-    function downloadImageWithWatermark() {
-      if (!currentImageData) { alert('لا توجد صورة للتحميل.'); return; }
-      downloadBtn.disabled = true;
-      downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحضير...';
-
-      const img = new Image();
-      img.onload = function() {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        const w = img.naturalWidth || img.width;
-        const h = img.naturalHeight || img.height;
-        canvas.width = w; canvas.height = h;
-        ctx.drawImage(img, 0, 0, w, h);
-
-        // رسم العلامة المائية (شعار + نص) بنفس خصائص المعاينة
-        const sizeRatio = 0.70; // 70% من عرض الصورة
-        const baseSize = Math.min(w, h) * sizeRatio;
-        const logoSize = baseSize * 0.7;
-        const textSize = baseSize * 0.25;
-
-        // تحميل الشعار من المسار الثابت
-        const logoImg = new Image();
-        logoImg.crossOrigin = 'anonymous';
-        logoImg.onload = function() {
-          const logoW = logoImg.naturalWidth || logoImg.width;
-          const logoH = logoImg.naturalHeight || logoImg.height;
-          const aspect = logoW / logoH;
-          let drawW, drawH;
-          if (aspect > 1) { drawW = logoSize; drawH = logoSize / aspect; }
-          else { drawH = logoSize; drawW = logoSize * aspect; }
-          const x = (w - drawW) / 2;
-          const y = (h - drawH) / 2 - textSize * 0.6;
-          ctx.globalAlpha = 0.85;
-          ctx.drawImage(logoImg, x, y, drawW, drawH);
-          // رسم النص
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'bottom';
-          ctx.font = `900 ${textSize * 1.4}px 'Times New Roman', serif`;
-          ctx.shadowColor = 'rgba(255,255,255,0.6)';
-          ctx.shadowBlur = 12;
-          ctx.fillStyle = '#1a0f07';
-          ctx.fillText(CHANNEL_NAME, w/2, y + drawH + textSize * 0.2);
-          ctx.font = `400 ${textSize * 0.7}px 'Segoe UI', sans-serif`;
-          ctx.shadowBlur = 8;
-          ctx.fillStyle = '#1a0f07';
-          ctx.fillText(CHANNEL_ID, w/2, y + drawH + textSize * 0.9);
-          ctx.globalAlpha = 1.0;
-          finishDownload(canvas);
-        };
-        logoImg.onerror = function() {
-          // إذا فشل تحميل الشعار، نرسم النص فقط
-          ctx.globalAlpha = 0.85;
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.font = `900 ${textSize * 2.2}px 'Times New Roman', serif`;
-          ctx.shadowColor = 'rgba(255,255,255,0.6)';
-          ctx.shadowBlur = 16;
-          ctx.fillStyle = '#1a0f07';
-          ctx.fillText(CHANNEL_NAME, w/2, h/2 - textSize * 0.5);
-          ctx.font = `400 ${textSize * 1.1}px 'Segoe UI', sans-serif`;
-          ctx.fillText(CHANNEL_ID, w/2, h/2 + textSize * 0.8);
-          ctx.globalAlpha = 1.0;
-          finishDownload(canvas);
-        };
-        logoImg.src = fixedLogo.src;
-        
-        function finishDownload(canvas) {
-          const link = document.createElement('a');
-          link.download = `exam_watermarked_${Date.now()}.png`;
-          link.href = canvas.toDataURL('image/png');
-          link.click();
-          downloadBtn.disabled = false;
-          downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل';
-        }
-      };
-      img.onerror = function() {
-        alert('خطأ في تحميل الصورة');
+        imageLoaded = true;
         downloadBtn.disabled = false;
-        downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل';
-      };
-      img.src = currentImageData;
-    }
-
-    // --- الأحداث ---
-    uploadBtn.addEventListener('click', e => { e.preventDefault(); fileInput.click(); });
-    fileInput.addEventListener('change', function(e) {
-      if (this.files && this.files.length > 0) { handleFiles(this.files); }
-      this.value = '';
-    });
-    resetBtn.addEventListener('click', function(e) {
-      e.preventDefault();
-      examImage.style.display = 'none';
-      defaultPlaceholder.style.display = 'flex';
-      fileNameSpan.innerHTML = `<i class="fas fa-image"></i> لا توجد صورة`;
-      currentImageData = null; downloadBtn.disabled = true; examImage.src = '';
-    });
-    downloadBtn.addEventListener('click', e => { e.preventDefault(); downloadImageWithWatermark(); });
-
-    // سحب وإفلات
-    wrapper.addEventListener('dragover', e => { e.preventDefault(); wrapper.classList.add('drag-over'); });
-    wrapper.addEventListener('dragleave', e => { e.preventDefault(); wrapper.classList.remove('drag-over'); });
-    wrapper.addEventListener('drop', function(e) {
-      e.preventDefault(); wrapper.classList.remove('drag-over');
-      const files = e.dataTransfer.files;
-      if (files && files.length > 0) handleFiles(files);
-    });
-
-    // تحميل البيانات
-    loadHistory();
-    if (imageHistory.length > 0 && examImage.style.display === 'none') {
-      const last = imageHistory[imageHistory.length - 1];
-      if (last) { currentImageData = last; examImage.src = last; examImage.style.display = 'block'; defaultPlaceholder.style.display = 'none'; fileNameSpan.innerHTML = `<i class="fas fa-image"></i> صورة محفوظة`; downloadBtn.disabled = false; }
-    }
-    // مزدوج على reset لمسح المعرض
-    resetBtn.addEventListener('dblclick', function() {
-      if (confirm('حذف جميع الصور المحفوظة؟')) {
-        imageHistory = []; saveHistory(); renderGallery(); resetToDefault(); examImage.src = ''; currentImageData = null; downloadBtn.disabled = true;
       }
-    });
 
-  })();
-</script>
+      // معالجة رفع الملف
+      fileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        // التحقق من أنه صورة
+        if (!file.type.startsWith('image/')) {
+          alert('الرجاء اختيار ملف صورة صحيح');
+          fileInput.value = '';
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+          const result = ev.target.result;
+          displayImage(result);
+        };
+
+        reader.onerror = function() {
+          alert('حدث خطأ أثناء قراءة الملف');
+          fileInput.value = '';
+        };
+
+        reader.readAsDataURL(file);
+      });
+
+      // --- دالة التحميل مع تأثير "سكان" كامل (باستخدام Canvas) ---
+      function downloadScannedImage() {
+        if (!currentImageDataURL) {
+          alert('لا توجد صورة للتحميل');
+          return;
+        }
+
+        // نستخدم Image لتحميل الصورة إلى Canvas
+        const img = new Image();
+        img.crossOrigin = 'anonymous'; // غير مطلوب لكن للأمان
+
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+
+          // أبعاد الصورة الأصلية
+          const w = img.naturalWidth || img.width;
+          const h = img.naturalHeight || img.height;
+          canvas.width = w;
+          canvas.height = h;
+
+          // 1. تطبيق الفلاتر الأساسية (تباين، سطوع، تشبع، صبغة)
+          ctx.filter = 'contrast(1.2) brightness(1.08) saturate(0.9) sepia(0.03)';
+          ctx.drawImage(img, 0, 0, w, h);
+
+          // 2. إضافة نسيج ورق (paper texture) عبر blend-mode و opacity
+          //    نرسم فوقها texture شفاف باستخدام pattern (نفس الصورة الورقية)
+          const textureImg = new Image();
+          textureImg.crossOrigin = 'anonymous';
+          textureImg.src = 'https://www.transparenttextures.com/patterns/paper-fibers.png';
+
+          // لكن قد لا يتحمّل في الوقت المناسب، لذا نستخدم طريقة مباشرة:
+          // نعدّل البيكسلات بإضافة noise خفيف (محاكاة خشونة الورق)
+          // ثم نضيف تأثير الـ grain
+
+          // (أ) نأخذ بيانات البيكسل ونضيف noise خفيف
+          const imageData = ctx.getImageData(0, 0, w, h);
+          const data = imageData.data;
+
+          // نطبق noise خفيف جداً (يظهر كحبيبات ورق)
+          for (let i = 0; i < data.length; i += 4) {
+            // نطبق noise على قنوات RGB فقط (نترك alpha)
+            const noise = (Math.random() - 0.5) * 7; // بين -3.5 و +3.5
+            data[i] = Math.min(255, Math.max(0, data[i] + noise));
+            data[i + 1] = Math.min(255, Math.max(0, data[i + 1] + noise));
+            data[i + 2] = Math.min(255, Math.max(0, data[i + 2] + noise));
+          }
+
+          // نعيد البيانات المعدلة
+          ctx.putImageData(imageData, 0, 0);
+
+          // (ب) نضيف طبقة نسيج ورق (paper fibers) عبر pattern
+          //    لكن لضمان عدم تأخر التحميل، نستخدم texture جاهزة ونرسمها
+          //    بطريقة متزامنة: نخلق pattern من texture بعد تحميلها
+          const textureCanvas = document.createElement('canvas');
+          textureCanvas.width = w;
+          textureCanvas.height = h;
+          const tCtx = textureCanvas.getContext('2d');
+
+          // نرسم الـ pattern من الصورة الورقية
+          const paperPatternImg = new Image();
+          paperPatternImg.crossOrigin = 'anonymous';
+          paperPatternImg.src = 'https://www.transparenttextures.com/patterns/paper-fibers.png';
+
+          // ولكن قد لا يكون جاهزاً في onload، لذا نستخدم الأسلوب التالي:
+          // نرسم الصورة الأصلية مرة أخرى مع مزج pattern يدوياً (باستخدام drawImage مع opacity)
+          // لكن للتبسيط: نضيف تأثير الورق عبر إعادة رسم الصورة مع opacity من texture بعد تحميلها.
+          // الحل: نستخدم onload للـ pattern ونرسم فوق Canvas الأساسي
+          // لكن لضمان عمل دالة التحميل، سنستخدم طريقة متسلسلة:
+
+          // في حال لم يتحمل pattern، نستخدم Noise فقط مع تعديل طفيف (كافٍ)
+          // لكننا نضيف أيضاً تأثير "ورق" عبر رسم الصورة مرتين بطريقة blend
+
+          // الطريقة الأكثر استقراراً: نرسم الصورة مرة أخرى مع pattern
+          // نضيف الـ texture كطبقة شفافة فوق الصورة باستخدام pattern
+          const patternCanvas = document.createElement('canvas');
+          patternCanvas.width = w;
+          patternCanvas.height = h;
+          const pCtx = patternCanvas.getContext('2d');
+
+          // نرسم الصورة الأصلية (بدون filter) كخلفية
+          pCtx.drawImage(img, 0, 0, w, h);
+
+          // نضيف فوقها الـ pattern (نسيج الورق) مع opacity
+          const pat = new Image();
+          pat.crossOrigin = 'anonymous';
+          pat.src = 'https://www.transparenttextures.com/patterns/paper-fibers.png';
+
+          // نستعمل onload للتأكد من وجود texture
+          pat.onload = function() {
+            // نرسم pattern مكرر (repeat) فوق الصورة
+            const pattern = pCtx.createPattern(pat, 'repeat');
+            pCtx.globalAlpha = 0.16;
+            pCtx.fillStyle = pattern;
+            pCtx.fillRect(0, 0, w, h);
+
+            // الآن ندمج مع canvas الأساسي: نرسم patternCanvas فوق canvas الأساسي مع blend-mode
+            ctx.globalAlpha = 1.0;
+            ctx.drawImage(patternCanvas, 0, 0);
+
+            // إضافة تأثير خفيف جداً (blur أو حدة) لكن نكتفي بهذا
+
+            // تحميل الصورة النهائية
+            const link = document.createElement('a');
+            link.download = 'scan_exam.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+          };
+
+          // في حال فشل تحميل pattern (مهلة) نستخدم البديل: فقط noise + بعض التعديل
+          pat.onerror = function() {
+            // نستخدم ما لدينا: noise مطبق + نضيف بعض التعديلات البسيطة
+            // نعيد رسم الصورة مع إضافة شفافية بسيطة
+            ctx.globalAlpha = 0.96;
+            ctx.drawImage(img, 0, 0, w, h);
+            ctx.globalAlpha = 1.0;
+
+            // نضيف noise إضافي خفيف
+            const imgData2 = ctx.getImageData(0, 0, w, h);
+            const d2 = imgData2.data;
+            for (let i = 0; i < d2.length; i += 4) {
+              const n = (Math.random() - 0.5) * 5;
+              d2[i] = Math.min(255, Math.max(0, d2[i] + n));
+              d2[i + 1] = Math.min(255, Math.max(0, d2[i + 1] + n));
+              d2[i + 2] = Math.min(255, Math.max(0, d2[i + 2] + n));
+            }
+            ctx.putImageData(imgData2, 0, 0);
+
+            const link = document.createElement('a');
+            link.download = 'scan_exam.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+          };
+
+          // نبدأ تحميل الـ pattern
+          pat.src = 'https://www.transparenttextures.com/patterns/paper-fibers.png';
+        };
+
+        img.onerror = function() {
+          alert('تعذر تحميل الصورة، يرجى المحاولة مرة أخرى');
+        };
+
+        img.src = currentImageDataURL;
+      }
+
+      // ربط زر التحميل
+      downloadBtn.addEventListener('click', downloadScannedImage);
+
+      // إعادة تعيين إذا تم اختيار ملف جديد بعد تحميل سابق
+      // (لن نحتاج لأن displayImage تعيد ضبط كل شيء)
+
+      // عند تحميل الصفحة، التأكد من أن placeholder ظاهر
+      // ويمكن إضافة صورة افتراضية للعرض (اختياري)
+      // نضيف مثال: عرض صورة تجريبية صغيرة (لتوضيح التأثير)
+      // لكن الأفضل تركها فارغة مع رسالة.
+
+      // دالة مساعدة لإعادة تعيين الحالة (اختياري)
+      function resetState() {
+        // لا نستخدمها حالياً
+      }
+
+      // (اختياري) إذا أراد المستخدم معاينة الصورة بدون رفع ملف
+      // نضيف صورة تجريبية بشكل تلقائي؟ لكن الأفضل تركها للمستخدم.
+
+      console.log('Scanner Effect Exam جاهز');
+    })();
+  </script>
 </body>
 </html>
