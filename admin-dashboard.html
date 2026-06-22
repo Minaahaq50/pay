@@ -1,477 +1,423 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة الإدارة - منصة تعليمية</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ورقة امتحان - علامة مائية ثابتة (شعار + نص)</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      min-height:100vh; display:flex; justify-content:center; align-items:center;
+      background:#2b2b2b; font-family:'Segoe UI',Tahoma,sans-serif; padding:20px;
+    }
+    .paper {
+      position:relative; width:820px; max-width:100%; padding:2.5rem 2.5rem 2rem;
+      background:#fcf8f0;
+      background-image:repeating-linear-gradient(90deg,rgba(180,160,130,0.08) 0px,rgba(180,160,130,0.08) 1px,transparent 1px,transparent 14px),
+                      repeating-linear-gradient(180deg,rgba(180,160,130,0.06) 0px,rgba(180,160,130,0.06) 1px,transparent 1px,transparent 20px);
+      box-shadow:0 12px 40px rgba(0,0,0,0.6),0 0 0 1px #d4c5a0 inset;
+      border-radius:12px 12px 20px 20px; min-height:500px; display:flex; flex-direction:column; align-items:center;
+    }
+    .exam-image-wrapper {
+      position:relative; z-index:10; width:100%; border-radius:10px; overflow:hidden;
+      box-shadow:0 4px 20px rgba(0,0,0,0.3); border:3px solid #b8a07c;
+      background:#e5dccc; display:inline-block; margin-bottom:20px; line-height:0;
+      transition:all 0.2s ease;
+    }
+    .exam-image-wrapper.drag-over { border-color:#f5b342; box-shadow:0 0 0 4px #f5b34288; }
+    .exam-image-wrapper img {
+      width:100%; height:auto; display:block; background:#fcf8f0; position:relative; z-index:5;
+    }
+    /* الطبقة الثابتة: شعار + نص */
+    .watermark-layer {
+      position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:30;
+      display:flex; align-items:center; justify-content:center;
+      opacity:0.85; /* شفافية ثابتة */
+    }
+    .watermark-content {
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      width:70%; /* حجم ثابت 70% من عرض الصورة */
+      max-width:70%;
+      text-align:center;
+    }
+    .watermark-content img {
+      width:100%; height:auto; display:block;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
+    }
+    .watermark-text {
+      margin-top:6px; color:#1a0f07; text-shadow:2px 2px 12px rgba(255,255,255,0.5),0 0 20px rgba(0,0,0,0.05);
+      font-weight:900; letter-spacing:2px; line-height:1.2;
+    }
+    .watermark-text .channel-name {
+      font-size:clamp(1.8rem, 5vw, 3.8rem); font-family:'Times New Roman',serif;
+      text-transform:uppercase; display:block;
+    }
+    .watermark-text .channel-id {
+      font-size:clamp(0.9rem, 2vw, 1.8rem); font-weight:400; opacity:0.85;
+      font-family:'Segoe UI',sans-serif; display:block; margin-top:2px;
+    }
+    .default-placeholder {
+      width:100%; min-height:300px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+      color:#5f4e38; font-size:1.4rem; background:#e8ddcc; padding:50px 20px; text-align:center; gap:10px;
+      position:relative; z-index:5;
+    }
+    .default-placeholder span { font-size:4.5rem; opacity:0.4; }
+    .default-placeholder .drop-hint { font-size:0.95rem; opacity:0.7; background:rgba(0,0,0,0.04); padding:6px 18px; border-radius:30px; border:1px dashed #a48f74; }
+    .content {
+      position:relative; z-index:40; width:100%; text-align:center;
+      background:rgba(252,248,240,0.8); backdrop-filter:blur(2px); padding:14px 20px;
+      border-radius:50px; margin-bottom:16px; border:1px solid #d4c5a0; box-shadow:0 2px 10px rgba(0,0,0,0.05);
+    }
+    .content h1 { font-size:2.2rem; color:#2d241a; letter-spacing:1px; text-shadow:1px 1px 0 rgba(255,245,225,0.7); }
+    .content p { font-size:1.1rem; color:#3d3227; margin-top:6px; }
+    .upload-area {
+      position:relative; z-index:45; display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+      gap:14px; margin-top:8px; width:100%;
+    }
+    .upload-btn, .reset-btn, .download-btn {
+      border:none; border-radius:40px; font-weight:600; cursor:pointer;
+      display:flex; align-items:center; gap:8px; transition:0.06s linear;
+      padding:12px 28px; font-size:1.05rem;
+    }
+    .upload-btn { background:#3d3327; color:#f5ede1; box-shadow:0 5px 0 #1f1811; border:1px solid #b8a07c; }
+    .upload-btn:active { transform:translateY(5px); box-shadow:0 0 0 #1f1811; }
+    .reset-btn { background:#7a6852; color:white; box-shadow:0 4px 0 #4d3f31; border:1px solid #b8a07c; }
+    .reset-btn:active { transform:translateY(4px); box-shadow:0 0 0 #4d3f31; }
+    .download-btn { background:#2c6e49; color:white; box-shadow:0 4px 0 #1a3d2a; border:1px solid #4c8b6a; }
+    .download-btn:active { transform:translateY(4px); box-shadow:0 0 0 #1a3d2a; }
+    .download-btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; box-shadow:0 4px 0 #1a3d2a; }
+    #fileInput { display:none; }
+    .file-name {
+      font-size:0.95rem; color:#3d3227; background:#e8ddcc; padding:6px 22px;
+      border-radius:30px; border:1px dashed #a48f74; max-width:200px; overflow:hidden;
+      text-overflow:ellipsis; white-space:nowrap; display:flex; align-items:center; gap:6px;
+    }
+    .gallery-section { width:100%; margin-top:20px; border-top:1px solid #d4c5a0; padding-top:16px; display:none; }
+    .gallery-section.active { display:block; }
+    .gallery-title { font-size:0.9rem; color:#3d3227; font-weight:600; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+    .gallery-grid { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; }
+    .gallery-item { width:70px; height:70px; border-radius:8px; overflow:hidden; border:2px solid #b8a07c; cursor:pointer; transition:0.15s; box-shadow:0 2px 6px rgba(0,0,0,0.1); position:relative; }
+    .gallery-item:hover { transform:scale(1.05); border-color:#3d3327; }
+    .gallery-item img { width:100%; height:100%; object-fit:cover; display:block; }
+    .gallery-item .remove-btn { position:absolute; top:2px; left:2px; background:rgba(0,0,0,0.6); color:white; border:none; border-radius:50%; width:18px; height:18px; font-size:10px; display:flex; align-items:center; justify-content:center; cursor:pointer; opacity:0; transition:0.2s; }
+    .gallery-item:hover .remove-btn { opacity:1; }
+    .gallery-item .remove-btn:hover { background:#c0392b; }
+    @media (max-width:650px) {
+      .paper { padding:1.5rem 1rem; }
+      .content h1 { font-size:1.6rem; }
+      .upload-area { gap:10px; }
+      .upload-btn, .reset-btn, .download-btn { padding:10px 18px; font-size:0.95rem; }
+      .gallery-item { width:55px; height:55px; }
+    }
+  </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="navbar-container">
-            <div class="logo">لوحة الإدارة</div>
-            <div class="nav-links">
-                <button class="btn btn-primary" onclick="showSection('dashboard')">لوحة التحكم</button>
-                <button class="btn btn-primary" onclick="showSection('students')">إدارة الطلاب</button>
-                <button class="btn btn-primary" onclick="showSection('groups')">إدارة المجموعات</button>
-                <button class="btn btn-primary" onclick="showSection('subscriptions')">الاشتراكات</button>
-                <button class="btn btn-primary" onclick="showSection('notifications')">إرسال إشعار</button>
-                <button class="btn btn-danger" onclick="logout()">تسجيل خروج</button>
-            </div>
-        </div>
-    </nav>
-    
-    <div class="container">
-        <!-- Dashboard Section -->
-        <div id="dashboardSection" class="section active">
-            <div class="stats-grid" id="stats"></div>
-        </div>
-        
-        <!-- Students Management Section -->
-        <div id="studentsSection" class="section">
-            <div class="card">
-                <div class="search-bar">
-                    <input type="text" id="searchStudent" placeholder="بحث عن طالب..." onkeyup="searchStudents()">
-                </div>
-                <div id="studentsList"></div>
-            </div>
-        </div>
-        
-        <!-- Groups Management Section -->
-        <div id="groupsSection" class="section">
-            <div class="card">
-                <button class="btn btn-primary" onclick="showGroupModal()">إنشاء مجموعة جديدة</button>
-                <div id="groupsList" style="margin-top: 20px;"></div>
-            </div>
-        </div>
-        
-        <!-- Subscriptions Section -->
-        <div id="subscriptionsSection" class="section">
-            <div class="card">
-                <div id="subscriptionsList"></div>
-            </div>
-        </div>
-        
-        <!-- Notifications Section -->
-        <div id="notificationsSection" class="section">
-            <div class="card">
-                <h2>إرسال إشعار للطلاب</h2>
-                <form id="notificationForm">
-                    <div class="form-group">
-                        <label>عنوان الإشعار</label>
-                        <input type="text" id="notifTitle" required>
-                    </div>
-                    <div class="form-group">
-                        <label>محتوى الإشعار</label>
-                        <textarea id="notifContent" rows="4" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>إلى</label>
-                        <select id="notifTarget">
-                            <option value="all">جميع الطلاب</option>
-                            <option value="active">الطلاب النشطين فقط</option>
-                            <option value="pending">الاشتراكات المعلقة</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">إرسال الإشعار</button>
-                </form>
-            </div>
-        </div>
+<div class="paper">
+  <div class="exam-image-wrapper" id="examWrapper">
+    <div class="default-placeholder" id="defaultPlaceholder">
+      <span>📄</span>
+      <p>ارفع صورة الامتحان</p>
+      <div class="drop-hint"><i class="fas fa-arrow-down"></i> اسحب الصورة هنا أو استخدم الزر</div>
     </div>
-    
-    <!-- Group Modal -->
-    <div id="groupModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modalTitle">إنشاء مجموعة جديدة</h3>
-                <span class="close-modal" onclick="closeGroupModal()">&times;</span>
-            </div>
-            <form id="groupForm">
-                <input type="hidden" id="groupId">
-                <div class="form-group">
-                    <label>اسم المجموعة</label>
-                    <input type="text" id="groupName" required>
-                </div>
-                <div class="form-group">
-                    <label>اسم المدرس</label>
-                    <input type="text" id="teacherName" required>
-                </div>
-                <div class="form-group">
-                    <label>سعر الاشتراك (ج.م)</label>
-                    <input type="number" id="price" required>
-                </div>
-                <div class="form-group">
-                    <label>مدة الاشتراك (شهور)</label>
-                    <input type="number" id="duration" required>
-                </div>
-                <div class="form-group">
-                    <label>وصف المجموعة</label>
-                    <textarea id="description" rows="3"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">حفظ</button>
-            </form>
+    <img id="examImage" src="" alt="صورة الامتحان" style="display:none;">
+    <!-- العلامة المائية الثابتة (شعار + نص) -->
+    <div class="watermark-layer" id="watermarkLayer">
+      <div class="watermark-content" id="watermarkContent">
+        <!-- ⚠️ ضع مسار الشعار الخاص بك هنا ⚠️ -->
+        <img id="fixedLogo" src="logo.png" alt="شعار العلامة المائية">
+        <div class="watermark-text">
+          <span class="channel-name">𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗</span>
+          <span class="channel-id">@ElJokerDev</span>
         </div>
+      </div>
     </div>
+  </div>
+
+  <div class="content">
+    <h1>📝 ورقة الامتحان الرسمية</h1>
+    <p>علامة مائية ثابتة (شعار + نص) بجودة احترافية</p>
+  </div>
+
+  <div class="upload-area">
+    <button class="upload-btn" id="uploadBtn"><i class="fas fa-cloud-upload-alt"></i> رفع صورة</button>
+    <input type="file" id="fileInput" accept="image/*" multiple>
+    <span class="file-name" id="fileName"><i class="fas fa-image"></i> لا توجد صورة</span>
+    <button class="download-btn" id="downloadBtn" disabled><i class="fas fa-download"></i> تحميل</button>
+    <button class="reset-btn" id="resetBtn"><i class="fas fa-undo-alt"></i> إعادة</button>
+  </div>
+
+  <!-- معرض الصور -->
+  <div class="gallery-section" id="gallerySection">
+    <div class="gallery-title"><i class="fas fa-images"></i> الصور المحفوظة</div>
+    <div class="gallery-grid" id="galleryGrid"></div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    "use strict";
+    // العناصر الأساسية
+    const fileInput = document.getElementById('fileInput');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const examImage = document.getElementById('examImage');
+    const defaultPlaceholder = document.getElementById('defaultPlaceholder');
+    const fileNameSpan = document.getElementById('fileName');
+    const wrapper = document.getElementById('examWrapper');
+    const gallerySection = document.getElementById('gallerySection');
+    const galleryGrid = document.getElementById('galleryGrid');
     
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <script src="js/firebase-config.js"></script>
-    <script>
-        let currentUser = null;
-        
-        auth.onAuthStateChanged(async (user) => {
-            if (!user) {
-                window.location.href = 'index.html';
-                return;
+    // عناصر العلامة المائية الثابتة
+    const watermarkLayer = document.getElementById('watermarkLayer');
+    const fixedLogo = document.getElementById('fixedLogo');
+    const channelNameSpan = document.querySelector('.channel-name');
+    const channelIdSpan = document.querySelector('.channel-id');
+
+    // ⚠️ هنا يمكنك تعديل النصوص الثابتة للعلامة المائية ⚠️
+    const CHANNEL_NAME = '𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗';
+    const CHANNEL_ID = '@ElJokerDev';
+    // ⚠️ ضع مسار الشعار الخاص بك هنا ⚠️
+    const LOGO_URL = 'https://via.placeholder.com/400x200/1a0f07/ffffff?text=LOGO';
+
+    // تعيين القيم الثابتة
+    channelNameSpan.textContent = CHANNEL_NAME;
+    channelIdSpan.textContent = CHANNEL_ID;
+    fixedLogo.src = LOGO_URL;
+
+    // الحالة
+    let imageHistory = [];
+    let currentImageData = null;
+
+    // تحميل من localStorage
+    function loadHistory() {
+      try {
+        const stored = localStorage.getItem('examImageHistory');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            imageHistory = parsed.slice(0, 5);
+            renderGallery();
+            const last = imageHistory[imageHistory.length - 1];
+            if (last) {
+              currentImageData = last;
+              examImage.src = last;
+              examImage.style.display = 'block';
+              defaultPlaceholder.style.display = 'none';
+              fileNameSpan.innerHTML = `<i class="fas fa-image"></i> صورة محفوظة`;
+              downloadBtn.disabled = false;
             }
-            
-            const userDoc = await db.collection('users').doc(user.uid).get();
-            if (userDoc.data().role !== 'admin') {
-                window.location.href = 'student-dashboard.html';
-                return;
+          } else resetToDefault();
+        } else resetToDefault();
+      } catch(_) { resetToDefault(); }
+    }
+    function saveHistory() {
+      try { localStorage.setItem('examImageHistory', JSON.stringify(imageHistory)); } catch(_) {}
+    }
+    function resetToDefault() {
+      examImage.style.display = 'none';
+      defaultPlaceholder.style.display = 'flex';
+      fileNameSpan.innerHTML = `<i class="fas fa-image"></i> لا توجد صورة`;
+      currentImageData = null;
+      downloadBtn.disabled = true;
+    }
+    function renderGallery() {
+      galleryGrid.innerHTML = '';
+      if (imageHistory.length === 0) { gallerySection.classList.remove('active'); return; }
+      gallerySection.classList.add('active');
+      [...imageHistory].reverse().forEach(url => {
+        const div = document.createElement('div'); div.className = 'gallery-item';
+        const img = document.createElement('img'); img.src = url; img.alt = 'صورة مصغرة'; img.loading = 'lazy';
+        div.appendChild(img);
+        const removeBtn = document.createElement('button'); removeBtn.className = 'remove-btn';
+        removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+        removeBtn.addEventListener('click', e => {
+          e.stopPropagation();
+          const idx = imageHistory.indexOf(url);
+          if (idx !== -1) {
+            imageHistory.splice(idx, 1);
+            saveHistory(); renderGallery();
+            if (currentImageData === url) {
+              if (imageHistory.length > 0) {
+                const last = imageHistory[imageHistory.length - 1];
+                currentImageData = last; examImage.src = last; examImage.style.display = 'block';
+                defaultPlaceholder.style.display = 'none'; fileNameSpan.innerHTML = `<i class="fas fa-image"></i> صورة محفوظة`;
+                downloadBtn.disabled = false;
+              } else { resetToDefault(); examImage.src = ''; }
             }
-            
-            currentUser = user;
-            loadDashboard();
-            loadStudents();
-            loadGroups();
-            loadSubscriptions();
+          }
         });
-        
-        function showSection(section) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById(`${section}Section`).classList.add('active');
-            
-            if (section === 'dashboard') loadDashboard();
-            if (section === 'students') loadStudents();
-            if (section === 'groups') loadGroups();
-            if (section === 'subscriptions') loadSubscriptions();
-        }
-        
-        async function loadDashboard() {
-            const students = await db.collection('users').where('role', '==', 'student').get();
-            const subscriptions = await db.collection('subscriptions').get();
-            const groups = await db.collection('groups').get();
-            
-            const pendingSubs = subscriptions.docs.filter(s => s.data().status === 'pending').length;
-            const activeSubs = subscriptions.docs.filter(s => s.data().status === 'active').length;
-            
-            document.getElementById('stats').innerHTML = `
-                <div class="stat-card">
-                    <h3>عدد الطلاب</h3>
-                    <div class="stat-number">${students.size}</div>
-                </div>
-                <div class="stat-card">
-                    <h3>المشتركين النشطين</h3>
-                    <div class="stat-number">${activeSubs}</div>
-                </div>
-                <div class="stat-card">
-                    <h3>الاشتراكات المعلقة</h3>
-                    <div class="stat-number">${pendingSubs}</div>
-                </div>
-                <div class="stat-card">
-                    <h3>عدد المجموعات</h3>
-                    <div class="stat-number">${groups.size}</div>
-                </div>
-            `;
-        }
-        
-        async function loadStudents() {
-            const students = await db.collection('users').where('role', '==', 'student').get();
-            displayStudents(students.docs);
-        }
-        
-        function displayStudents(students) {
-            let html = '<div class="table-container"><table><thead><tr><th>كود الطالب</th><th>الاسم</th><th>البريد الإلكتروني</th><th>الهاتف</th><th>المدرسة</th><th>الصف</th><th>حالة الاشتراك</th><th>إجراءات</th></tr></thead><tbody>';
-            
-            students.forEach(doc => {
-                const student = doc.data();
-                const statusClass = student.subscriptionStatus === 'active' ? 'status-active' : 
-                                   student.subscriptionStatus === 'pending' ? 'status-pending' : 'status-expired';
-                const statusText = student.subscriptionStatus === 'active' ? 'مفعل' : 
-                                  student.subscriptionStatus === 'pending' ? 'قيد المراجعة' : 'منتهي';
-                
-                html += `
-                    <tr id="student-${doc.id}">
-                        <td>${student.studentCode}</td>
-                        <td>${student.fullName}</td>
-                        <td>${student.email}</td>
-                        <td>${student.phone}</td>
-                        <td>${student.school}</td>
-                        <td>${student.grade}</td>
-                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-                        <td>
-                            <button class="btn btn-success" onclick="toggleSubscription('${doc.id}', '${student.subscriptionStatus}')">
-                                ${student.subscriptionStatus === 'active' ? 'إيقاف' : 'تفعيل'}
-                            </button>
-                            <button class="btn btn-danger" onclick="deleteStudent('${doc.id}')">حذف</button>
-                        </td>
-                    </tr>
-                `;
-            });
-            
-            html += '</tbody></table></div>';
-            document.getElementById('studentsList').innerHTML = html;
-        }
-        
-        function searchStudents() {
-            const searchTerm = document.getElementById('searchStudent').value.toLowerCase();
-            const rows = document.querySelectorAll('#studentsList tbody tr');
-            
-            rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                row.style.display = text.includes(searchTerm) ? '' : 'none';
-            });
-        }
-        
-        async function toggleSubscription(studentId, currentStatus) {
-            const newStatus = currentStatus === 'active' ? 'pending' : 'active';
-            await db.collection('users').doc(studentId).update({
-                subscriptionStatus: newStatus
-            });
-            loadStudents();
-        }
-        
-        async function deleteStudent(studentId) {
-            if (confirm('هل أنت متأكد من حذف هذا الطالب؟')) {
-                await db.collection('users').doc(studentId).delete();
-                loadStudents();
-            }
-        }
-        
-        async function loadGroups() {
-            const groups = await db.collection('groups').get();
-            let html = '<div class="table-container"><table><thead><tr><th>اسم المجموعة</th><th>المدرس</th><th>السعر</th><th>المدة</th><th>الوصف</th><th>إجراءات</th></tr></thead><tbody>';
-            
-            groups.forEach(doc => {
-                const group = doc.data();
-                html += `
-                    <tr>
-                        <td>${group.name}</td>
-                        <td>${group.teacher}</td>
-                        <td>${group.price} ج.م</td>
-                        <td>${group.duration} شهر</td>
-                        <td>${group.description || '-'}</td>
-                        <td>
-                            <button class="btn btn-warning" onclick="editGroup('${doc.id}')">تعديل</button>
-                            <button class="btn btn-danger" onclick="deleteGroup('${doc.id}')">حذف</button>
-                        </td>
-                    </tr>
-                `;
-            });
-            
-            html += '</tbody></table></div>';
-            document.getElementById('groupsList').innerHTML = html;
-        }
-        
-        function showGroupModal(groupId = null) {
-            const modal = document.getElementById('groupModal');
-            modal.style.display = 'flex';
-            
-            if (groupId) {
-                document.getElementById('modalTitle').textContent = 'تعديل مجموعة';
-                // Load group data
-                db.collection('groups').doc(groupId).get().then(doc => {
-                    const group = doc.data();
-                    document.getElementById('groupId').value = groupId;
-                    document.getElementById('groupName').value = group.name;
-                    document.getElementById('teacherName').value = group.teacher;
-                    document.getElementById('price').value = group.price;
-                    document.getElementById('duration').value = group.duration;
-                    document.getElementById('description').value = group.description || '';
-                });
-            } else {
-                document.getElementById('modalTitle').textContent = 'إنشاء مجموعة جديدة';
-                document.getElementById('groupForm').reset();
-                document.getElementById('groupId').value = '';
-            }
-        }
-        
-        function closeGroupModal() {
-            document.getElementById('groupModal').style.display = 'none';
-        }
-        
-        document.getElementById('groupForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const groupId = document.getElementById('groupId').value;
-            const groupData = {
-                name: document.getElementById('groupName').value,
-                teacher: document.getElementById('teacherName').value,
-                price: parseInt(document.getElementById('price').value),
-                duration: parseInt(document.getElementById('duration').value),
-                description: document.getElementById('description').value,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
-            
-            if (groupId) {
-                await db.collection('groups').doc(groupId).update(groupData);
-            } else {
-                await db.collection('groups').add(groupData);
-            }
-            
-            closeGroupModal();
-            loadGroups();
+        div.appendChild(removeBtn);
+        div.addEventListener('click', function() {
+          currentImageData = url; examImage.src = url; examImage.style.display = 'block';
+          defaultPlaceholder.style.display = 'none'; fileNameSpan.innerHTML = `<i class="fas fa-image"></i> صورة محفوظة`;
+          downloadBtn.disabled = false;
         });
-        
-        async function editGroup(groupId) {
-            showGroupModal(groupId);
+        galleryGrid.appendChild(div);
+      });
+    }
+    function addToHistory(url) {
+      imageHistory = imageHistory.filter(item => item !== url);
+      imageHistory.push(url);
+      if (imageHistory.length > 5) imageHistory = imageHistory.slice(-5);
+      saveHistory(); renderGallery();
+    }
+
+    // معالجة ملف الصورة الأساسية
+    function handleFile(file) {
+      if (!file || !file.type.startsWith('image/')) { alert('الرجاء اختيار ملف صورة صالح'); return; }
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const result = e.target.result;
+        if (typeof result === 'string') {
+          currentImageData = result;
+          examImage.src = result;
+          examImage.style.display = 'block';
+          defaultPlaceholder.style.display = 'none';
+          fileNameSpan.innerHTML = `<i class="fas fa-image"></i> ${file.name.length > 18 ? file.name.slice(0,15)+'…' : file.name}`;
+          downloadBtn.disabled = false;
+          addToHistory(result);
         }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function handleFiles(files) {
+      if (!files || files.length === 0) return;
+      const valid = [...files].filter(f => f.type.startsWith('image/'));
+      if (valid.length === 0) { alert('الرجاء اختيار ملفات صور صالحة.'); return; }
+      handleFile(valid[0]);
+      for (let i = 1; i < valid.length && i < 5; i++) {
+        const r = new FileReader();
+        r.onload = e => { if (typeof e.target.result === 'string') addToHistory(e.target.result); };
+        r.readAsDataURL(valid[i]);
+      }
+    }
+
+    // تحميل الصورة مع العلامة المائية (دمج)
+    function downloadImageWithWatermark() {
+      if (!currentImageData) { alert('لا توجد صورة للتحميل.'); return; }
+      downloadBtn.disabled = true;
+      downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحضير...';
+
+      const img = new Image();
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const w = img.naturalWidth || img.width;
+        const h = img.naturalHeight || img.height;
+        canvas.width = w; canvas.height = h;
+        ctx.drawImage(img, 0, 0, w, h);
+
+        // رسم العلامة المائية (شعار + نص) بنفس خصائص المعاينة
+        const sizeRatio = 0.70; // 70% من عرض الصورة
+        const baseSize = Math.min(w, h) * sizeRatio;
+        const logoSize = baseSize * 0.7;
+        const textSize = baseSize * 0.25;
+
+        // تحميل الشعار من المسار الثابت
+        const logoImg = new Image();
+        logoImg.crossOrigin = 'anonymous';
+        logoImg.onload = function() {
+          const logoW = logoImg.naturalWidth || logoImg.width;
+          const logoH = logoImg.naturalHeight || logoImg.height;
+          const aspect = logoW / logoH;
+          let drawW, drawH;
+          if (aspect > 1) { drawW = logoSize; drawH = logoSize / aspect; }
+          else { drawH = logoSize; drawW = logoSize * aspect; }
+          const x = (w - drawW) / 2;
+          const y = (h - drawH) / 2 - textSize * 0.6;
+          ctx.globalAlpha = 0.85;
+          ctx.drawImage(logoImg, x, y, drawW, drawH);
+          // رسم النص
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'bottom';
+          ctx.font = `900 ${textSize * 1.4}px 'Times New Roman', serif`;
+          ctx.shadowColor = 'rgba(255,255,255,0.6)';
+          ctx.shadowBlur = 12;
+          ctx.fillStyle = '#1a0f07';
+          ctx.fillText(CHANNEL_NAME, w/2, y + drawH + textSize * 0.2);
+          ctx.font = `400 ${textSize * 0.7}px 'Segoe UI', sans-serif`;
+          ctx.shadowBlur = 8;
+          ctx.fillStyle = '#1a0f07';
+          ctx.fillText(CHANNEL_ID, w/2, y + drawH + textSize * 0.9);
+          ctx.globalAlpha = 1.0;
+          finishDownload(canvas);
+        };
+        logoImg.onerror = function() {
+          // إذا فشل تحميل الشعار، نرسم النص فقط
+          ctx.globalAlpha = 0.85;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.font = `900 ${textSize * 2.2}px 'Times New Roman', serif`;
+          ctx.shadowColor = 'rgba(255,255,255,0.6)';
+          ctx.shadowBlur = 16;
+          ctx.fillStyle = '#1a0f07';
+          ctx.fillText(CHANNEL_NAME, w/2, h/2 - textSize * 0.5);
+          ctx.font = `400 ${textSize * 1.1}px 'Segoe UI', sans-serif`;
+          ctx.fillText(CHANNEL_ID, w/2, h/2 + textSize * 0.8);
+          ctx.globalAlpha = 1.0;
+          finishDownload(canvas);
+        };
+        logoImg.src = fixedLogo.src;
         
-        async function deleteGroup(groupId) {
-            if (confirm('هل أنت متأكد من حذف هذه المجموعة؟')) {
-                await db.collection('groups').doc(groupId).delete();
-                loadGroups();
-            }
+        function finishDownload(canvas) {
+          const link = document.createElement('a');
+          link.download = `exam_watermarked_${Date.now()}.png`;
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+          downloadBtn.disabled = false;
+          downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل';
         }
-        
-        async function loadSubscriptions() {
-            const subscriptions = await db.collection('subscriptions').get();
-            let html = '<div class="table-container"><table><thead><tr><th>الطالب</th><th>المجموعة</th><th>السعر</th><th>الحالة</th><th>تاريخ الطلب</th><th>إجراءات</th></tr></thead><tbody>';
-            
-            for (const sub of subscriptions.docs) {
-                const subData = sub.data();
-                const studentDoc = await db.collection('users').doc(subData.studentId).get();
-                const groupDoc = await db.collection('groups').doc(subData.groupId).get();
-                
-                const studentData = studentDoc.data();
-                const groupData = groupDoc.data();
-                const statusClass = subData.status === 'active' ? 'status-active' : 
-                                   subData.status === 'pending' ? 'status-pending' : 'status-expired';
-                const statusText = subData.status === 'active' ? 'مفعل' : 
-                                  subData.status === 'pending' ? 'قيد المراجعة' : 'منتهي';
-                
-                html += `
-                    <tr>
-                        <td>${studentData?.fullName || 'غير معروف'}</td>
-                        <td>${groupData?.name || 'غير معروف'}</td>
-                        <td>${subData.price} ج.م</td>
-                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-                        <td>${subData.requestDate ? new Date(subData.requestDate.toDate()).toLocaleDateString('ar-EG') : '-'}</td>
-                        <td>
-                            ${subData.status === 'pending' ? `
-                                <button class="btn btn-success" onclick="approveSubscription('${sub.id}')">قبول</button>
-                                <button class="btn btn-danger" onclick="rejectSubscription('${sub.id}')">رفض</button>
-                            ` : ''}
-                            ${subData.status === 'active' ? `
-                                <button class="btn btn-warning" onclick="extendSubscription('${sub.id}')">تمديد</button>
-                            ` : ''}
-                        </td>
-                    </tr>
-                `;
-            }
-            
-            html += '</tbody></table></div>';
-            document.getElementById('subscriptionsList').innerHTML = html;
-        }
-        
-        async function approveSubscription(subId) {
-            const subscriptionRef = db.collection('subscriptions').doc(subId);
-            const sub = await subscriptionRef.get();
-            const subData = sub.data();
-            const groupDoc = await db.collection('groups').doc(subData.groupId).get();
-            const groupData = groupDoc.data();
-            
-            const startDate = new Date();
-            const endDate = new Date();
-            endDate.setMonth(endDate.getMonth() + groupData.duration);
-            
-            await subscriptionRef.update({
-                status: 'active',
-                startDate: startDate,
-                endDate: endDate
-            });
-            
-            // تحديث حالة الاشتراك للطالب
-            await db.collection('users').doc(subData.studentId).update({
-                subscriptionStatus: 'active'
-            });
-            
-            loadSubscriptions();
-        }
-        
-        async function rejectSubscription(subId) {
-            await db.collection('subscriptions').doc(subId).update({
-                status: 'expired'
-            });
-            loadSubscriptions();
-        }
-        
-        async function extendSubscription(subId) {
-            const months = prompt('كم شهراً تريد تمديد الاشتراك؟', '1');
-            if (months) {
-                const subscriptionRef = db.collection('subscriptions').doc(subId);
-                const sub = await subscriptionRef.get();
-                const subData = sub.data();
-                const newEndDate = new Date(subData.endDate);
-                newEndDate.setMonth(newEndDate.getMonth() + parseInt(months));
-                
-                await subscriptionRef.update({
-                    endDate: newEndDate
-                });
-                loadSubscriptions();
-            }
-        }
-        
-        document.getElementById('notificationForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const title = document.getElementById('notifTitle').value;
-            const content = document.getElementById('notifContent').value;
-            const target = document.getElementById('notifTarget').value;
-            
-            let query = db.collection('users').where('role', '==', 'student');
-            
-            if (target === 'active') {
-                query = query.where('subscriptionStatus', '==', 'active');
-            } else if (target === 'pending') {
-                query = query.where('subscriptionStatus', '==', 'pending');
-            }
-            
-            const students = await query.get();
-            
-            const batch = db.batch();
-            students.forEach(doc => {
-                const notifRef = db.collection('notifications').doc();
-                batch.set(notifRef, {
-                    studentId: doc.id,
-                    title: title,
-                    content: content,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    read: false
-                });
-            });
-            
-            await batch.commit();
-            alert(`تم إرسال الإشعار إلى ${students.size} طالب`);
-            
-            document.getElementById('notificationForm').reset();
-        });
-        
-        function logout() {
-            auth.signOut();
-            window.location.href = 'index.html';
-        }
-        
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('groupModal');
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
-        }
-    </script>
-    
-    <style>
-        .section {
-            display: none;
-        }
-        
-        .section.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-    </style>
+      };
+      img.onerror = function() {
+        alert('خطأ في تحميل الصورة');
+        downloadBtn.disabled = false;
+        downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل';
+      };
+      img.src = currentImageData;
+    }
+
+    // --- الأحداث ---
+    uploadBtn.addEventListener('click', e => { e.preventDefault(); fileInput.click(); });
+    fileInput.addEventListener('change', function(e) {
+      if (this.files && this.files.length > 0) { handleFiles(this.files); }
+      this.value = '';
+    });
+    resetBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      examImage.style.display = 'none';
+      defaultPlaceholder.style.display = 'flex';
+      fileNameSpan.innerHTML = `<i class="fas fa-image"></i> لا توجد صورة`;
+      currentImageData = null; downloadBtn.disabled = true; examImage.src = '';
+    });
+    downloadBtn.addEventListener('click', e => { e.preventDefault(); downloadImageWithWatermark(); });
+
+    // سحب وإفلات
+    wrapper.addEventListener('dragover', e => { e.preventDefault(); wrapper.classList.add('drag-over'); });
+    wrapper.addEventListener('dragleave', e => { e.preventDefault(); wrapper.classList.remove('drag-over'); });
+    wrapper.addEventListener('drop', function(e) {
+      e.preventDefault(); wrapper.classList.remove('drag-over');
+      const files = e.dataTransfer.files;
+      if (files && files.length > 0) handleFiles(files);
+    });
+
+    // تحميل البيانات
+    loadHistory();
+    if (imageHistory.length > 0 && examImage.style.display === 'none') {
+      const last = imageHistory[imageHistory.length - 1];
+      if (last) { currentImageData = last; examImage.src = last; examImage.style.display = 'block'; defaultPlaceholder.style.display = 'none'; fileNameSpan.innerHTML = `<i class="fas fa-image"></i> صورة محفوظة`; downloadBtn.disabled = false; }
+    }
+    // مزدوج على reset لمسح المعرض
+    resetBtn.addEventListener('dblclick', function() {
+      if (confirm('حذف جميع الصور المحفوظة؟')) {
+        imageHistory = []; saveHistory(); renderGallery(); resetToDefault(); examImage.src = ''; currentImageData = null; downloadBtn.disabled = true;
+      }
+    });
+
+  })();
+</script>
 </body>
 </html>
