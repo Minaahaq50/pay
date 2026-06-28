@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ورقة امتحان - علامة مائية متكاملة + تحميل</title>
+  <title>ورقة امتحان - علامة مائية متكاملة + تحميل عالي الجودة</title>
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
@@ -443,14 +443,14 @@
 
   <div class="content">
     <h1>📝 ورقة الامتحان الرسمية</h1>
-    <p>العلامة المائية تتكيف مع حجم الصورة المرفوعة</p>
+    <p>العلامة المائية تتكيف مع حجم الصورة المرفوعة - جودة عالية</p>
   </div>
 
   <div class="upload-area">
     <button class="upload-btn" id="uploadBtn"><i class="fas fa-cloud-upload-alt"></i> رفع صورة</button>
     <input type="file" id="fileInput" accept="image/*" multiple>
     <span class="file-name" id="fileName"><i class="fas fa-image"></i> لا توجد صورة</span>
-    <button class="download-btn" id="downloadBtn" disabled><i class="fas fa-download"></i> تحميل</button>
+    <button class="download-btn" id="downloadBtn" disabled><i class="fas fa-download"></i> تحميل عالي الجودة</button>
     <button class="reset-btn" id="resetBtn"><i class="fas fa-undo-alt"></i> إعادة</button>
   </div>
 
@@ -686,73 +686,101 @@
       }
     }
 
-    // --- زر التحميل: دمج الصورة مع العلامة المائية ---
+    // --- دالة التحميل بجودة عالية جداً ---
     function downloadImageWithWatermark() {
       if (!currentImageData) {
         alert('لا توجد صورة للتحميل.');
         return;
       }
 
-      // نعرض رسالة تحميل
       downloadBtn.disabled = true;
       downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحضير...';
 
-      // نستخدم canvas لدمج الصورة مع العلامة المائية
       const img = new Image();
       img.onload = function() {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
+        try {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d', {
+            alpha: true,
+            willReadFrequently: false
+          });
 
-        // نضبط أبعاد canvas بحجم الصورة الأصلية
-        const width = img.naturalWidth || img.width;
-        const height = img.naturalHeight || img.height;
-        canvas.width = width;
-        canvas.height = height;
+          // استخدام الأبعاد الأصلية للصورة للحصول على أعلى جودة
+          const width = img.naturalWidth || img.width;
+          const height = img.naturalHeight || img.height;
+          canvas.width = width;
+          canvas.height = height;
 
-        // رسم الصورة
-        ctx.drawImage(img, 0, 0, width, height);
+          // تعيين جودة الرسم لأعلى إعداد
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
 
-        // رسم العلامة المائية
-        const watermarkText = '◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆';
-        const fontSize = Math.min(width, height) * 0.12; // 12% من الحجم الأصغر
-        ctx.font = `900 ${fontSize}px 'Times New Roman', serif`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
+          // رسم الصورة بدقة كاملة
+          ctx.drawImage(img, 0, 0, width, height);
 
-        // تدوير النص
-        ctx.save();
-        ctx.translate(width / 2, height / 2);
-        ctx.rotate(-12 * Math.PI / 180);
-        ctx.scale(1.1, 1.1);
+          // --- رسم العلامة المائية بجودة عالية ---
+          const watermarkText = '◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆';
+          
+          // حجم الخط بناءً على حجم الصورة
+          const baseSize = Math.min(width, height);
+          let fontSize = baseSize * 0.12;
+          // تحديد حجم مناسب للعلامة
+          fontSize = Math.max(fontSize, 40);
+          fontSize = Math.min(fontSize, 300);
+          
+          ctx.save();
+          ctx.translate(width / 2, height / 2);
+          ctx.rotate(-12 * Math.PI / 180);
+          ctx.scale(1.1, 1.1);
 
-        // إضافة الشفافية والتأثيرات
-        ctx.shadowColor = 'rgba(255,255,255,0.4)';
-        ctx.shadowBlur = fontSize * 0.15;
-        ctx.fillStyle = 'rgba(26, 15, 7, 0.2)';
-        ctx.fillText(watermarkText, 0, 0);
+          // استخدام خط واضح مع جودة عالية
+          ctx.font = `900 ${fontSize}px 'Times New Roman', 'Georgia', serif`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          
+          // ظل خفيف للوضوح
+          ctx.shadowColor = 'rgba(255, 255, 255, 0.3)';
+          ctx.shadowBlur = fontSize * 0.08;
+          
+          // رسم العلامة مرتين للحصول على وضوح أفضل
+          ctx.fillStyle = 'rgba(26, 15, 7, 0.18)';
+          ctx.fillText(watermarkText, 0, 0);
+          
+          // إزالة الظل للطبقة الثانية
+          ctx.shadowColor = 'transparent';
+          ctx.fillStyle = 'rgba(26, 15, 7, 0.18)';
+          ctx.fillText(watermarkText, 0, 0);
+          
+          ctx.restore();
 
-        // نعيد الرسم بدون تأثير الظل للحصول على وضوح أفضل
-        ctx.shadowColor = 'transparent';
-        ctx.fillStyle = 'rgba(26, 15, 7, 0.2)';
-        ctx.fillText(watermarkText, 0, 0);
+          // تصدير الصورة بجودة عالية (بدون ضغط PNG)
+          // استخدام PNG للحصول على جودة غير مفقودة
+          const dataURL = canvas.toDataURL('image/png');
 
-        ctx.restore();
+          const link = document.createElement('a');
+          link.download = `exam_watermarked_high_quality_${Date.now()}.png`;
+          link.href = dataURL;
+          link.click();
 
-        // تحويل canvas إلى صورة
-        const link = document.createElement('a');
-        link.download = `exam_watermarked_${Date.now()}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-
-        // إعادة زر التحميل
-        downloadBtn.disabled = false;
-        downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل';
+          downloadBtn.disabled = false;
+          downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل عالي الجودة';
+          
+          // تنظيف
+          canvas.width = 0;
+          canvas.height = 0;
+          
+        } catch (err) {
+          console.error('خطأ في التحميل:', err);
+          alert('حدث خطأ أثناء تحضير الصورة للتحميل. حاول مرة أخرى.');
+          downloadBtn.disabled = false;
+          downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل عالي الجودة';
+        }
       };
 
       img.onerror = function() {
         alert('حدث خطأ أثناء تحميل الصورة. حاول مرة أخرى.');
         downloadBtn.disabled = false;
-        downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل';
+        downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل عالي الجودة';
       };
 
       img.src = currentImageData;
