@@ -1,873 +1,722 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ورقة امتحان - علامة مائية متكاملة + تحميل عالي الجودة</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>𝑴𝒊𝒏𝒂 𝑨𝒔𝒉𝒂𝒒 | Full Stack Web Developer</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;500;700;900&display=swap" rel="stylesheet" />
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      font-family: 'Cairo', sans-serif;
     }
 
     body {
+      background: #0d1117;
+      color: #e6edf3;
+      scroll-behavior: smooth;
+    }
+
+    /* Custom Scroll */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0d1117;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #00d9ff;
+      border-radius: 12px;
+    }
+
+    /* HEADER - HERO with particle-like glow */
+    header {
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: #2b2b2b;
-      font-family: 'Segoe UI', Tahoma, sans-serif;
+      text-align: center;
       padding: 20px;
-    }
-
-    .paper {
+      background: radial-gradient(circle at 20% 30%, #161b22 0%, #0d1117 90%);
       position: relative;
-      width: 820px;
-      max-width: 100%;
-      padding: 2.5rem 2.5rem 2rem;
-      background: #fcf8f0;
-      background-image: 
-        repeating-linear-gradient(90deg, 
-          rgba(180, 160, 130, 0.08) 0px, 
-          rgba(180, 160, 130, 0.08) 1px, 
-          transparent 1px, 
-          transparent 14px
-        ),
-        repeating-linear-gradient(180deg, 
-          rgba(180, 160, 130, 0.06) 0px, 
-          rgba(180, 160, 130, 0.06) 1px, 
-          transparent 1px, 
-          transparent 20px
-        );
-      box-shadow: 0 12px 40px rgba(0,0,0,0.6), 0 0 0 1px #d4c5a0 inset;
-      border-radius: 12px 12px 20px 20px;
-      min-height: 500px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    /* حاوية الصورة */
-    .exam-image-wrapper {
-      position: relative;
-      z-index: 10;
-      width: 100%;
-      border-radius: 10px;
       overflow: hidden;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-      border: 3px solid #b8a07c;
-      background: #e5dccc;
-      display: inline-block;
-      margin-bottom: 20px;
-      line-height: 0;
-      transition: all 0.2s ease;
     }
 
-    .exam-image-wrapper.drag-over {
-      border-color: #f5b342;
-      box-shadow: 0 0 0 4px #f5b34288;
-    }
-
-    .exam-image-wrapper img {
-      width: 100%;
-      height: auto;
-      display: block;
-      background: #fcf8f0;
-      position: relative;
-      z-index: 5;
-    }
-
-    /* العلامة المائية */
-    .watermark-on-image {
+    header::before {
+      content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 30;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0.2;
-      font-size: clamp(2.5rem, 12vw, 7rem);
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(0, 217, 255, 0.04) 0%, transparent 70%);
+      border-radius: 50%;
+      top: -300px;
+      left: -300px;
+      animation: floatBg 25s infinite alternate;
+    }
+    header::after {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0, 217, 255, 0.03) 0%, transparent 70%);
+      border-radius: 50%;
+      bottom: -200px;
+      right: -200px;
+      animation: floatBg 30s infinite alternate-reverse;
+    }
+
+    @keyframes floatBg {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(100px, 60px) scale(1.5); }
+    }
+
+    .hero {
+      position: relative;
+      z-index: 2;
+      max-width: 1000px;
+    }
+
+    .hero h1 {
+      font-size: clamp(3rem, 10vw, 5.5rem);
       font-weight: 900;
-      color: #1a0f07;
-      letter-spacing: clamp(6px, 2vw, 16px);
-      text-transform: uppercase;
-      font-family: 'Times New Roman', serif;
-      transform: rotate(-12deg) scale(1.1);
-      text-shadow: 
-        3px 3px 10px rgba(255, 255, 255, 0.4),
-        0 0 30px rgba(0,0,0,0.08);
-      white-space: nowrap;
-      user-select: none;
+      background: linear-gradient(135deg, #00d9ff, #7b61ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: none;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
     }
 
-    /* placeholder */
-    .default-placeholder {
-      width: 100%;
-      min-height: 300px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: #5f4e38;
-      font-size: 1.4rem;
-      background: #e8ddcc;
-      padding: 50px 20px;
-      text-align: center;
-      gap: 10px;
-      position: relative;
-      z-index: 5;
+    .hero .subtitle {
+      font-size: clamp(1.3rem, 3vw, 2.2rem);
+      color: #f0f6fc;
+      margin: 10px 0 20px;
+      font-weight: 500;
     }
 
-    .default-placeholder span {
-      font-size: 4.5rem;
-      opacity: 0.4;
+    #typing {
+      font-weight: 700;
+      background: linear-gradient(135deg, #00d9ff, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
-    .default-placeholder .drop-hint {
-      font-size: 0.95rem;
-      opacity: 0.7;
-      background: rgba(0,0,0,0.04);
-      padding: 6px 18px;
-      border-radius: 30px;
-      border: 1px dashed #a48f74;
-    }
-
-    .content {
-      position: relative;
-      z-index: 40;
-      width: 100%;
-      text-align: center;
-      background: rgba(252, 248, 240, 0.8);
-      backdrop-filter: blur(2px);
-      padding: 14px 20px;
-      border-radius: 50px;
-      margin-bottom: 16px;
-      border: 1px solid #d4c5a0;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
-
-    .content h1 {
-      font-size: 2.2rem;
-      color: #2d241a;
-      letter-spacing: 1px;
-      text-shadow: 1px 1px 0 rgba(255, 245, 225, 0.7);
-    }
-
-    .content p {
-      font-size: 1.1rem;
-      color: #3d3227;
-      margin-top: 6px;
-    }
-
-    /* أدوات الرفع والتحميل */
-    .upload-area {
-      position: relative;
-      z-index: 45;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-      margin-top: 8px;
-      width: 100%;
-    }
-
-    .upload-btn {
-      background: #3d3327;
-      color: #f5ede1;
-      border: none;
-      padding: 14px 34px;
-      border-radius: 40px;
-      font-size: 1.15rem;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 5px 0 #1f1811;
-      transition: 0.06s linear;
-      border: 1px solid #b8a07c;
-      letter-spacing: 0.5px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .upload-btn i {
+    .hero p {
+      max-width: 750px;
+      margin: 20px auto;
+      line-height: 2;
+      color: #b1bac4;
       font-size: 1.2rem;
     }
 
-    .upload-btn:active {
-      transform: translateY(5px);
-      box-shadow: 0 0 0 #1f1811;
-    }
-
-    #fileInput {
-      display: none;
-    }
-
-    .reset-btn {
-      background: #7a6852;
-      color: white;
-      border: none;
-      padding: 12px 26px;
-      border-radius: 40px;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 4px 0 #4d3f31;
-      transition: 0.06s linear;
-      border: 1px solid #b8a07c;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .reset-btn:active {
-      transform: translateY(4px);
-      box-shadow: 0 0 0 #4d3f31;
-    }
-
-    .download-btn {
-      background: #2c6e49;
-      color: white;
-      border: none;
-      padding: 12px 28px;
-      border-radius: 40px;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 4px 0 #1a3d2a;
-      transition: 0.06s linear;
-      border: 1px solid #4c8b6a;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .download-btn:active {
-      transform: translateY(4px);
-      box-shadow: 0 0 0 #1a3d2a;
-    }
-
-    .download-btn i {
-      font-size: 1.1rem;
-    }
-
-    .download-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: 0 4px 0 #1a3d2a;
-    }
-
-    .file-name {
-      font-size: 0.95rem;
-      color: #3d3227;
-      background: #e8ddcc;
-      padding: 6px 22px;
-      border-radius: 30px;
-      border: 1px dashed #a48f74;
-      max-width: 220px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .file-name i {
-      color: #5f4e38;
-    }
-
-    /* شريط التقدم */
-    .progress-container {
-      width: 100%;
-      margin-top: 16px;
-      display: none;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .progress-container.active {
-      display: flex;
-    }
-
-    .progress-bar {
-      width: 100%;
-      height: 8px;
-      background: #d4c5a0;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
-    }
-
-    .progress-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #3d3327, #b8a07c);
-      border-radius: 10px;
-      transition: width 0.1s ease;
-    }
-
-    .progress-text {
-      font-size: 0.8rem;
-      color: #3d3227;
-      text-align: center;
-      opacity: 0.8;
-    }
-
-    /* معرض الصور */
-    .gallery-section {
-      width: 100%;
-      margin-top: 20px;
-      border-top: 1px solid #d4c5a0;
-      padding-top: 16px;
-      display: none;
-    }
-
-    .gallery-section.active {
-      display: block;
-    }
-
-    .gallery-title {
-      font-size: 0.9rem;
-      color: #3d3227;
-      font-weight: 600;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .gallery-grid {
+    .btn-group {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
       justify-content: center;
+      gap: 18px;
+      margin-top: 35px;
     }
 
-    .gallery-item {
-      width: 70px;
-      height: 70px;
-      border-radius: 8px;
-      overflow: hidden;
-      border: 2px solid #b8a07c;
-      cursor: pointer;
-      transition: 0.15s;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    .btn {
+      display: inline-block;
+      padding: 16px 45px;
+      background: linear-gradient(135deg, #00d9ff, #7b61ff);
+      color: #0d1117;
+      font-weight: 700;
+      font-size: 1.1rem;
+      border-radius: 60px;
+      text-decoration: none;
+      transition: all 0.4s ease;
+      box-shadow: 0 0 30px rgba(0, 217, 255, 0.2);
+      border: none;
+      letter-spacing: 0.5px;
+    }
+
+    .btn:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 20px 50px rgba(0, 217, 255, 0.3);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: #00d9ff;
+      border: 1.5px solid #00d9ff;
+      box-shadow: none;
+    }
+
+    .btn-outline:hover {
+      background: #00d9ff;
+      color: #0d1117;
+      box-shadow: 0 0 40px rgba(0, 217, 255, 0.2);
+    }
+
+    /* Sections */
+    section {
+      padding: 80px 5%;
       position: relative;
     }
 
-    .gallery-item:hover {
-      transform: scale(1.05);
-      border-color: #3d3327;
+    .title {
+      text-align: center;
+      font-size: 2.6rem;
+      font-weight: 700;
+      margin-bottom: 50px;
+      color: #00d9ff;
+      position: relative;
+      display: inline-block;
+      left: 50%;
+      transform: translateX(-50%);
     }
 
-    .gallery-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .gallery-item .remove-btn {
+    .title::after {
+      content: '';
       position: absolute;
-      top: 2px;
-      left: 2px;
-      background: rgba(0,0,0,0.6);
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 18px;
-      height: 18px;
-      font-size: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      opacity: 0;
-      transition: 0.2s;
+      bottom: -12px;
+      left: 0;
+      width: 70%;
+      height: 4px;
+      background: linear-gradient(90deg, #00d9ff, #7b61ff, transparent);
+      border-radius: 10px;
     }
 
-    .gallery-item:hover .remove-btn {
+    /* Services Cards */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      margin-top: 20px;
+    }
+
+    .card {
+      background: #161b22;
+      padding: 35px 25px;
+      border-radius: 28px;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 1px solid rgba(255, 255, 255, 0.02);
+      box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.6);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #00d9ff, #7b61ff);
+      opacity: 0;
+      transition: 0.3s;
+    }
+
+    .card:hover::before {
       opacity: 1;
     }
 
-    .gallery-item .remove-btn:hover {
-      background: #c0392b;
+    .card:hover {
+      transform: translateY(-12px);
+      border-color: #00d9ff40;
+      box-shadow: 0 30px 50px -15px rgba(0, 217, 255, 0.15);
+      background: #1c2330;
     }
 
-    @media (max-width: 650px) {
-      .paper {
-        padding: 1.5rem 1rem 1.5rem;
+    .card i {
+      font-size: 3rem;
+      background: linear-gradient(135deg, #00d9ff, #7b61ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 20px;
+    }
+
+    .card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+      color: #f0f6fc;
+    }
+
+    .card p {
+      color: #b1bac4;
+      line-height: 1.7;
+    }
+
+    /* ========== PORTFOLIO / PROJECTS ========== */
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      margin-top: 20px;
+    }
+
+    .project-card {
+      background: #161b22;
+      border-radius: 28px;
+      overflow: hidden;
+      border: 1px solid #21262d;
+      transition: all 0.4s ease;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .project-card:hover {
+      transform: translateY(-10px);
+      border-color: #00d9ff60;
+      box-shadow: 0 25px 50px rgba(0, 217, 255, 0.1);
+    }
+
+    .project-img {
+      width: 100%;
+      height: 200px;
+      background: #1c2330;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: #00d9ff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: 0.5s;
+    }
+
+    .project-card:hover .project-img img {
+      transform: scale(1.05);
+    }
+
+    .project-img .placeholder-icon {
+      font-size: 4rem;
+      opacity: 0.3;
+      color: #00d9ff;
+    }
+
+    .project-info {
+      padding: 25px 20px 30px;
+    }
+
+    .project-info h3 {
+      font-size: 1.4rem;
+      color: #f0f6fc;
+      margin-bottom: 8px;
+    }
+
+    .project-info p {
+      color: #b1bac4;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .project-tags span {
+      background: #0d1117;
+      padding: 4px 16px;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      color: #00d9ff;
+      border: 1px solid #00d9ff30;
+    }
+
+    /* ========== CLIENTS / BRANDS ========== */
+    .clients-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 40px 60px;
+      margin-top: 30px;
+      padding: 20px 0;
+    }
+
+    .client-logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #8b949e;
+      opacity: 0.6;
+      transition: 0.4s;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .client-logo i {
+      font-size: 2.5rem;
+      color: #00d9ff;
+      opacity: 0.5;
+    }
+
+    .client-logo:hover {
+      opacity: 1;
+      color: #f0f6fc;
+      transform: scale(1.05);
+    }
+
+    .client-logo:hover i {
+      opacity: 1;
+    }
+
+    /* Skills */
+    .skills-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 18px;
+      max-width: 850px;
+      margin: 0 auto;
+    }
+
+    .skill {
+      background: #161b22;
+      padding: 14px 30px;
+      border-radius: 60px;
+      color: #e6edf3;
+      font-weight: 700;
+      font-size: 1.05rem;
+      border: 1px solid #00d9ff25;
+      transition: 0.35s;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .skill:hover {
+      background: linear-gradient(135deg, #00d9ff, #7b61ff);
+      color: #0d1117;
+      transform: scale(1.06);
+      border-color: transparent;
+      box-shadow: 0 0 40px #00d9ff30;
+    }
+
+    /* Contact */
+    #contact {
+      background: linear-gradient(180deg, #0d1117, #0f141a);
+      padding-bottom: 60px;
+    }
+
+    .contact-box {
+      max-width: 750px;
+      margin: 0 auto;
+      background: #161b22;
+      padding: 50px 40px;
+      border-radius: 40px;
+      border: 1px solid #21262d;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      font-size: 1.2rem;
+      padding: 14px 0;
+      border-bottom: 1px solid #21262d;
+      color: #c9d1d9;
+      transition: 0.2s;
+    }
+
+    .contact-item:last-child {
+      border-bottom: none;
+    }
+
+    .contact-item i {
+      color: #00d9ff;
+      width: 32px;
+      font-size: 1.7rem;
+    }
+
+    .contact-item a {
+      color: #00d9ff;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+
+    .contact-item a:hover {
+      color: #fff;
+      text-shadow: 0 0 15px #00d9ff80;
+    }
+
+    /* Footer */
+    footer {
+      padding: 40px 20px;
+      text-align: center;
+      background: #0d1117;
+      border-top: 1px solid #21262d;
+      color: #8b949e;
+      font-size: 1rem;
+      letter-spacing: 1px;
+    }
+
+    footer span {
+      background: linear-gradient(135deg, #00d9ff, #7b61ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.8rem;
       }
-      .content h1 {
-        font-size: 1.6rem;
+      .title {
+        font-size: 2rem;
       }
-      .upload-area {
-        gap: 10px;
+      .contact-item {
+        font-size: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
       }
-      .upload-btn, .reset-btn, .download-btn {
+      .card {
+        padding: 25px 15px;
+      }
+      .project-img {
+        height: 160px;
+      }
+      .clients-grid {
+        gap: 25px 35px;
+      }
+      .client-logo {
+        font-size: 1.3rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero p {
+        font-size: 1rem;
+      }
+      .skill {
         padding: 10px 18px;
-        font-size: 0.95rem;
+        font-size: 0.9rem;
       }
-      .gallery-item {
-        width: 55px;
-        height: 55px;
+      .contact-box {
+        padding: 30px 18px;
+      }
+      .portfolio-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
+
 <body>
 
-<div class="paper">
-
-  <div class="exam-image-wrapper" id="examWrapper">
-    <!-- placeholder -->
-    <div class="default-placeholder" id="defaultPlaceholder">
-      <span>📄</span>
-      <p>ارفع صورة الامتحان</p>
-      <div class="drop-hint"><i class="fas fa-arrow-down"></i> اسحب الصورة هنا أو استخدم الزر</div>
+  <!-- ========== HERO ========== -->
+  <header>
+    <div class="hero">
+      <h1>𝑴𝒊𝒏𝒂 𝑨𝒔𝒉𝒂𝒒</h1>
+      <div class="subtitle">
+        <span id="typing"></span>
+      </div>
+      <p>
+        أقوم بتطوير مواقع الويب والأنظمة الإدارية الاحترافية
+        بأحدث التقنيات مع تصميم عصري وأداء عالي.
+      </p>
+      <div class="btn-group">
+        <a class="btn" href="#contact"><i class="fas fa-paper-plane" style="margin-left:10px;"></i> ابدأ مشروعك</a>
+        <a class="btn btn-outline" href="#portfolio"><i class="fas fa-folder-open" style="margin-left:10px;"></i> أعمالي</a>
+      </div>
     </div>
+  </header>
 
-    <!-- الصورة -->
-    <img id="examImage" src="" alt="صورة الامتحان" style="display: none;">
-
-    <!-- العلامة المائية -->
-    <div class="watermark-on-image">◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆</div>
-  </div>
-
-  <div class="content">
-    <h1>📝 ورقة الامتحان الرسمية</h1>
-    <p>العلامة المائية تتكيف مع حجم الصورة المرفوعة - جودة عالية</p>
-  </div>
-
-  <div class="upload-area">
-    <button class="upload-btn" id="uploadBtn"><i class="fas fa-cloud-upload-alt"></i> رفع صورة</button>
-    <input type="file" id="fileInput" accept="image/*" multiple>
-    <span class="file-name" id="fileName"><i class="fas fa-image"></i> لا توجد صورة</span>
-    <button class="download-btn" id="downloadBtn" disabled><i class="fas fa-download"></i> تحميل عالي الجودة</button>
-    <button class="reset-btn" id="resetBtn"><i class="fas fa-undo-alt"></i> إعادة</button>
-  </div>
-
-  <!-- شريط التقدم -->
-  <div class="progress-container" id="progressContainer">
-    <div class="progress-bar">
-      <div class="progress-fill" id="progressFill"></div>
+  <!-- ========== SERVICES ========== -->
+  <section id="services">
+    <h2 class="title">الخدمات</h2>
+    <div class="cards">
+      <div class="card">
+        <i class="fas fa-globe-asia"></i>
+        <h3>🌐 مواقع ويب</h3>
+        <p>تصميم وبرمجة مواقع احترافية لجميع الأنشطة التجارية والخدمية.</p>
+      </div>
+      <div class="card">
+        <i class="fas fa-shopping-cart"></i>
+        <h3>🛒 متاجر إلكترونية</h3>
+        <p>متاجر متكاملة مع الدفع الإلكتروني وإدارة المخزون.</p>
+      </div>
+      <div class="card">
+        <i class="fas fa-chart-line"></i>
+        <h3>📊 أنظمة مبيعات</h3>
+        <p>POS - CRM - ERP - إدارة الطلبات والمخازن بدقة احترافية.</p>
+      </div>
+      <div class="card">
+        <i class="fas fa-rocket"></i>
+        <h3>⚡ تطوير خاص</h3>
+        <p>أي فكرة أو نظام يتم تنفيذه حسب الطلب بجودة عالية.</p>
+      </div>
     </div>
-    <div class="progress-text" id="progressText">0%</div>
-  </div>
+  </section>
 
-  <!-- معرض الصور -->
-  <div class="gallery-section" id="gallerySection">
-    <div class="gallery-title"><i class="fas fa-images"></i> الصور المحفوظة</div>
-    <div class="gallery-grid" id="galleryGrid"></div>
-  </div>
+  <!-- ========== PORTFOLIO (أعمالي) ========== -->
+  <section id="portfolio" style="background:#0f141a;">
+    <h2 class="title">أعمالي</h2>
+    <div class="portfolio-grid">
 
-</div>
+      <!-- مشروع 1 -->
+      <div class="project-card">
+        <div class="project-img">
+          <img src="https://placehold.co/600x400/161b22/00d9ff?text=Store+POS" alt="نظام مبيعات" />
+        </div>
+        <div class="project-info">
+          <h3>نظام مبيعات متكامل</h3>
+          <p>نظام POS و CRM مع تقارير متقدمة وإدارة المخزون.</p>
+          <div class="project-tags">
+            <span>Laravel</span>
+            <span>MySQL</span>
+            <span>Livewire</span>
+          </div>
+        </div>
+      </div>
 
-<script>
-  (function() {
-    "use strict";
+      <!-- مشروع 2 -->
+      <div class="project-card">
+        <div class="project-img">
+          <img src="https://placehold.co/600x400/161b22/7b61ff?text=E-commerce" alt="متجر إلكتروني" />
+        </div>
+        <div class="project-info">
+          <h3>متجر إلكتروني عصري</h3>
+          <p>متجر متكامل مع بوابة دفع، عربة شراء، ولوحة تحكم.</p>
+          <div class="project-tags">
+            <span>PHP</span>
+            <span>JavaScript</span>
+            <span>Stripe</span>
+          </div>
+        </div>
+      </div>
 
-    // العناصر
-    const fileInput = document.getElementById('fileInput');
-    const uploadBtn = document.getElementById('uploadBtn');
-    const resetBtn = document.getElementById('resetBtn');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const examImage = document.getElementById('examImage');
-    const defaultPlaceholder = document.getElementById('defaultPlaceholder');
-    const fileNameSpan = document.getElementById('fileName');
-    const wrapper = document.getElementById('examWrapper');
-    const progressContainer = document.getElementById('progressContainer');
-    const progressFill = document.getElementById('progressFill');
-    const progressText = document.getElementById('progressText');
-    const gallerySection = document.getElementById('gallerySection');
-    const galleryGrid = document.getElementById('galleryGrid');
+      <!-- مشروع 3 -->
+      <div class="project-card">
+        <div class="project-img">
+          <img src="https://placehold.co/600x400/161b22/a78bfa?text=Dashboard" alt="لوحة تحكم" />
+        </div>
+        <div class="project-info">
+          <h3>لوحة تحكم إدارية</h3>
+          <p>نظام إدارة متكامل مع رسوم بيانية وتحليلات لحظية.</p>
+          <div class="project-tags">
+            <span>React</span>
+            <span>Node.js</span>
+            <span>MongoDB</span>
+          </div>
+        </div>
+      </div>
 
-    // تخزين الصور
-    let imageHistory = [];
-    let currentImageData = null; // data URL للصورة المعروضة حالياً
+    </div>
+  </section>
 
-    // تحميل من localStorage
-    function loadHistory() {
-      try {
-        const stored = localStorage.getItem('examImageHistory');
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            imageHistory = parsed.slice(0, 5);
-            renderGallery();
-            const last = imageHistory[imageHistory.length - 1];
-            if (last) {
-              currentImageData = last;
-              examImage.src = last;
-              examImage.style.display = 'block';
-              defaultPlaceholder.style.display = 'none';
-              fileNameSpan.innerHTML = `<i class="fas fa-image"></i> صورة محفوظة`;
-              downloadBtn.disabled = false;
-            }
-          } else {
-            resetToDefault();
-          }
-        } else {
-          resetToDefault();
+  <!-- ========== CLIENTS / BRANDS ========== -->
+  <section>
+    <h2 class="title">ثقة العملاء</h2>
+    <div class="clients-grid">
+      <div class="client-logo"><i class="fas fa-building"></i> شركة النور</div>
+      <div class="client-logo"><i class="fas fa-store"></i> متجر الأمل</div>
+      <div class="client-logo"><i class="fas fa-chart-pie"></i> أكاديمية مهارات</div>
+      <div class="client-logo"><i class="fas fa-truck"></i> نقل سريع</div>
+      <div class="client-logo"><i class="fas fa-hospital"></i> عيادات صحية</div>
+    </div>
+  </section>
+
+  <!-- ========== SKILLS ========== -->
+  <section style="background:#0f141a;">
+    <h2 class="title">المهارات</h2>
+    <div class="skills-wrapper">
+      <div class="skill">HTML5</div>
+      <div class="skill">CSS3</div>
+      <div class="skill">JavaScript</div>
+      <div class="skill">PHP</div>
+      <div class="skill">Laravel</div>
+      <div class="skill">MySQL</div>
+      <div class="skill">Flutter</div>
+      <div class="skill">Git</div>
+      <div class="skill">APIs</div>
+      <div class="skill">React</div>
+    </div>
+  </section>
+
+  <!-- ========== CONTACT ========== -->
+  <section id="contact">
+    <h2 class="title">تواصل معي</h2>
+    <div class="contact-box">
+      <div class="contact-item">
+        <i class="fas fa-phone-alt"></i>
+        <span>01223581720</span>
+      </div>
+      <div class="contact-item">
+        <i class="fas fa-envelope"></i>
+        <a href="mailto:ashqmyna85@gmail.com">ashqmyna85@gmail.com</a>
+      </div>
+      <div class="contact-item">
+        <i class="fas fa-briefcase"></i>
+        <span>Full Stack Web Developer</span>
+      </div>
+      <div class="contact-item" style="border-bottom: none; padding-top: 20px;">
+        <i class="fas fa-map-marker-alt"></i>
+        <span>مصر · متاح للعمل عن بُعد</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer>
+    &copy; 2026 <span>Mina Ashaq</span> — كل الحقوق محفوظة
+  </footer>
+
+  <!-- ========== TYPING SCRIPT ========== -->
+  <script>
+    const words = [
+      "Full Stack Web Developer",
+      "HTML • CSS • JavaScript",
+      "Laravel • Flutter • React",
+      "Web Applications",
+      "Sales Systems",
+      "CRM & POS Systems"
+    ];
+
+    let i = 0,
+      j = 0,
+      current = "";
+    let isDeleting = false;
+    const el = document.getElementById("typing");
+
+    function type() {
+      current = words[i];
+
+      if (!isDeleting) {
+        el.innerHTML = current.substring(0, j++);
+        if (j > current.length) {
+          isDeleting = true;
+          setTimeout(type, 1600);
+          return;
         }
-      } catch (_) {
-        resetToDefault();
-      }
-    }
-
-    function saveHistory() {
-      try {
-        localStorage.setItem('examImageHistory', JSON.stringify(imageHistory));
-      } catch (_) {}
-    }
-
-    function resetToDefault() {
-      examImage.style.display = 'none';
-      defaultPlaceholder.style.display = 'flex';
-      fileNameSpan.innerHTML = `<i class="fas fa-image"></i> لا توجد صورة`;
-      currentImageData = null;
-      downloadBtn.disabled = true;
-    }
-
-    function renderGallery() {
-      galleryGrid.innerHTML = '';
-      if (imageHistory.length === 0) {
-        gallerySection.classList.remove('active');
-        return;
-      }
-      gallerySection.classList.add('active');
-      const items = [...imageHistory].reverse();
-      items.forEach((url, index) => {
-        const div = document.createElement('div');
-        div.className = 'gallery-item';
-        const img = document.createElement('img');
-        img.src = url;
-        img.alt = 'صورة مصغرة';
-        img.loading = 'lazy';
-        div.appendChild(img);
-
-        const removeBtn = document.createElement('button');
-        removeBtn.className = 'remove-btn';
-        removeBtn.innerHTML = '<i class="fas fa-times"></i>';
-        removeBtn.title = 'حذف الصورة';
-        removeBtn.addEventListener('click', function(e) {
-          e.stopPropagation();
-          const idx = imageHistory.indexOf(url);
-          if (idx !== -1) {
-            imageHistory.splice(idx, 1);
-            saveHistory();
-            renderGallery();
-            if (currentImageData === url) {
-              if (imageHistory.length > 0) {
-                const last = imageHistory[imageHistory.length - 1];
-                currentImageData = last;
-                examImage.src = last;
-                examImage.style.display = 'block';
-                defaultPlaceholder.style.display = 'none';
-                fileNameSpan.innerHTML = `<i class="fas fa-image"></i> صورة محفوظة`;
-                downloadBtn.disabled = false;
-              } else {
-                resetToDefault();
-                examImage.src = '';
-              }
-            }
-          }
-        });
-        div.appendChild(removeBtn);
-
-        div.addEventListener('click', function() {
-          currentImageData = url;
-          examImage.src = url;
-          examImage.style.display = 'block';
-          defaultPlaceholder.style.display = 'none';
-          fileNameSpan.innerHTML = `<i class="fas fa-image"></i> صورة محفوظة`;
-          downloadBtn.disabled = false;
-        });
-
-        galleryGrid.appendChild(div);
-      });
-    }
-
-    function addToHistory(url) {
-      imageHistory = imageHistory.filter(item => item !== url);
-      imageHistory.push(url);
-      if (imageHistory.length > 5) {
-        imageHistory = imageHistory.slice(-5);
-      }
-      saveHistory();
-      renderGallery();
-    }
-
-    // معالجة الملف
-    function handleFile(file) {
-      if (!file) return;
-      if (!file.type.startsWith('image/')) {
-        alert('الرجاء اختيار ملف صورة صالح');
-        return;
-      }
-
-      progressContainer.classList.add('active');
-      progressFill.style.width = '0%';
-      progressText.textContent = '0%';
-
-      const reader = new FileReader();
-      let progress = 0;
-      const interval = setInterval(() => {
-        progress += Math.floor(Math.random() * 15) + 5;
-        if (progress >= 100) {
-          progress = 100;
-          clearInterval(interval);
-        }
-        progressFill.style.width = progress + '%';
-        progressText.textContent = progress + '%';
-      }, 100);
-
-      reader.onload = function(e) {
-        clearInterval(interval);
-        progressFill.style.width = '100%';
-        progressText.textContent = '100%';
-
-        const result = e.target.result;
-        if (typeof result === 'string') {
-          currentImageData = result;
-          examImage.src = result;
-          examImage.style.display = 'block';
-          defaultPlaceholder.style.display = 'none';
-          fileNameSpan.innerHTML = `<i class="fas fa-image"></i> ${file.name.length > 18 ? file.name.slice(0, 15) + '…' : file.name}`;
-          downloadBtn.disabled = false;
-
-          addToHistory(result);
-
-          setTimeout(() => {
-            progressContainer.classList.remove('active');
-          }, 600);
-        }
-      };
-
-      reader.onerror = function() {
-        clearInterval(interval);
-        progressContainer.classList.remove('active');
-        alert('حدث خطأ أثناء قراءة الملف.');
-      };
-
-      reader.readAsDataURL(file);
-    }
-
-    function handleFiles(files) {
-      if (!files || files.length === 0) return;
-      const validFiles = [];
-      for (let f of files) {
-        if (f.type.startsWith('image/')) {
-          validFiles.push(f);
+      } else {
+        el.innerHTML = current.substring(0, j--);
+        if (j === 0) {
+          isDeleting = false;
+          i = (i + 1) % words.length;
         }
       }
-      if (validFiles.length === 0) {
-        alert('الرجاء اختيار ملفات صور صالحة.');
-        return;
-      }
-
-      handleFile(validFiles[0]);
-
-      for (let i = 1; i < validFiles.length && i < 5; i++) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          if (typeof e.target.result === 'string') {
-            addToHistory(e.target.result);
-          }
-        };
-        reader.readAsDataURL(validFiles[i]);
-      }
+      setTimeout(type, isDeleting ? 40 : 100);
     }
 
-    // --- دالة التحميل بجودة عالية جداً ---
-    function downloadImageWithWatermark() {
-      if (!currentImageData) {
-        alert('لا توجد صورة للتحميل.');
-        return;
-      }
-
-      downloadBtn.disabled = true;
-      downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحضير...';
-
-      const img = new Image();
-      img.onload = function() {
-        try {
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d', {
-            alpha: true,
-            willReadFrequently: false
-          });
-
-          // استخدام الأبعاد الأصلية للصورة للحصول على أعلى جودة
-          const width = img.naturalWidth || img.width;
-          const height = img.naturalHeight || img.height;
-          canvas.width = width;
-          canvas.height = height;
-
-          // تعيين جودة الرسم لأعلى إعداد
-          ctx.imageSmoothingEnabled = true;
-          ctx.imageSmoothingQuality = 'high';
-
-          // رسم الصورة بدقة كاملة
-          ctx.drawImage(img, 0, 0, width, height);
-
-          // --- رسم العلامة المائية بجودة عالية ---
-          const watermarkText = '◆ 𝑬𝒍 𝑱𝒐𝒌𝒆𝒓 𝑫𝒆𝒗 ◆';
-          
-          // حجم الخط بناءً على حجم الصورة
-          const baseSize = Math.min(width, height);
-          let fontSize = baseSize * 0.12;
-          // تحديد حجم مناسب للعلامة
-          fontSize = Math.max(fontSize, 40);
-          fontSize = Math.min(fontSize, 300);
-          
-          ctx.save();
-          ctx.translate(width / 2, height / 2);
-          ctx.rotate(-12 * Math.PI / 180);
-          ctx.scale(1.1, 1.1);
-
-          // استخدام خط واضح مع جودة عالية
-          ctx.font = `900 ${fontSize}px 'Times New Roman', 'Georgia', serif`;
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          
-          // ظل خفيف للوضوح
-          ctx.shadowColor = 'rgba(255, 255, 255, 0.3)';
-          ctx.shadowBlur = fontSize * 0.08;
-          
-          // رسم العلامة مرتين للحصول على وضوح أفضل
-          ctx.fillStyle = 'rgba(26, 15, 7, 0.18)';
-          ctx.fillText(watermarkText, 0, 0);
-          
-          // إزالة الظل للطبقة الثانية
-          ctx.shadowColor = 'transparent';
-          ctx.fillStyle = 'rgba(26, 15, 7, 0.18)';
-          ctx.fillText(watermarkText, 0, 0);
-          
-          ctx.restore();
-
-          // تصدير الصورة بجودة عالية (بدون ضغط PNG)
-          // استخدام PNG للحصول على جودة غير مفقودة
-          const dataURL = canvas.toDataURL('image/png');
-
-          const link = document.createElement('a');
-          link.download = `exam_watermarked_high_quality_${Date.now()}.png`;
-          link.href = dataURL;
-          link.click();
-
-          downloadBtn.disabled = false;
-          downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل عالي الجودة';
-          
-          // تنظيف
-          canvas.width = 0;
-          canvas.height = 0;
-          
-        } catch (err) {
-          console.error('خطأ في التحميل:', err);
-          alert('حدث خطأ أثناء تحضير الصورة للتحميل. حاول مرة أخرى.');
-          downloadBtn.disabled = false;
-          downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل عالي الجودة';
-        }
-      };
-
-      img.onerror = function() {
-        alert('حدث خطأ أثناء تحميل الصورة. حاول مرة أخرى.');
-        downloadBtn.disabled = false;
-        downloadBtn.innerHTML = '<i class="fas fa-download"></i> تحميل عالي الجودة';
-      };
-
-      img.src = currentImageData;
-    }
-
-    // --- الأحداث ---
-    uploadBtn.addEventListener('click', function(e) {
-      e.preventDefault();
-      fileInput.click();
-    });
-
-    fileInput.addEventListener('change', function(e) {
-      if (this.files && this.files.length > 0) {
-        handleFiles(this.files);
-      }
-      this.value = '';
-    });
-
-    resetBtn.addEventListener('click', function(e) {
-      e.preventDefault();
-      examImage.style.display = 'none';
-      defaultPlaceholder.style.display = 'flex';
-      fileNameSpan.innerHTML = `<i class="fas fa-image"></i> لا توجد صورة`;
-      currentImageData = null;
-      downloadBtn.disabled = true;
-      examImage.src = '';
-      progressContainer.classList.remove('active');
-    });
-
-    // زر التحميل
-    downloadBtn.addEventListener('click', function(e) {
-      e.preventDefault();
-      downloadImageWithWatermark();
-    });
-
-    // سحب وإفلات
-    wrapper.addEventListener('dragover', function(e) {
-      e.preventDefault();
-      this.classList.add('drag-over');
-    });
-
-    wrapper.addEventListener('dragleave', function(e) {
-      e.preventDefault();
-      this.classList.remove('drag-over');
-    });
-
-    wrapper.addEventListener('drop', function(e) {
-      e.preventDefault();
-      this.classList.remove('drag-over');
-      const files = e.dataTransfer.files;
-      if (files && files.length > 0) {
-        handleFiles(files);
-      }
-    });
-
-    // تحميل البيانات
-    loadHistory();
-
-    // إذا كان هناك صورة في localStorage ولم تظهر
-    if (imageHistory.length > 0 && examImage.style.display === 'none') {
-      const last = imageHistory[imageHistory.length - 1];
-      if (last) {
-        currentImageData = last;
-        examImage.src = last;
-        examImage.style.display = 'block';
-        defaultPlaceholder.style.display = 'none';
-        fileNameSpan.innerHTML = `<i class="fas fa-image"></i> صورة محفوظة`;
-        downloadBtn.disabled = false;
-      }
-    }
-
-    // زر مزدوج على reset لمسح المعرض
-    resetBtn.addEventListener('dblclick', function() {
-      if (confirm('هل تريد حذف جميع الصور المحفوظة؟')) {
-        imageHistory = [];
-        saveHistory();
-        renderGallery();
-        resetToDefault();
-        examImage.src = '';
-        currentImageData = null;
-        downloadBtn.disabled = true;
-        progressContainer.classList.remove('active');
-      }
-    });
-
-  })();
-</script>
+    type();
+  </script>
 
 </body>
 </html>
