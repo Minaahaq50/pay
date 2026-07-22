@@ -941,105 +941,181 @@
       border-color: var(--accent);
     }
 
-    /* ============================================================
-       RESPONSIVE
-    ============================================================ */
-    @media (max-width: 992px) {
-      .contact-container {
-        grid-template-columns: 1fr;
-      }
-    }
+/* ============================================================
+   RESPONSIVE
+============================================================ */
 
-    @media (max-width: 768px) {
-      .nav-menu {
-        position: fixed;
-        top: 70px;
-        left: 0;
-        right: 0;
-        background: var(--bg-primary);
-        flex-direction: column;
-        padding: 30px 20px;
-        gap: 20px;
-        border-bottom: 1px solid var(--border-color);
-        transform: translateY(-150%);
-        transition: 0.4s ease;
-        backdrop-filter: blur(12px);
-      }
+@media (max-width: 992px) {
+  .contact-container {
+    grid-template-columns: 1fr;
+  }
+}
 
-      .nav-menu.active {
-        transform: translateY(0);
-      }
+@media (max-width: 768px) {
 
-      .nav-toggle {
-        display: block;
-      }
+  /* ===== Navbar ===== */
 
-      .hero h1 {
-        font-size: 2.8rem;
-      }
+  .nav-menu {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    right: 0;
+    background: var(--bg-primary);
+    flex-direction: column;
+    padding: 30px 20px;
+    gap: 20px;
+    border-bottom: 1px solid var(--border-color);
+    transform: translateY(-150%);
+    transition: .4s ease;
+    backdrop-filter: blur(12px);
+    z-index: 999;
+  }
 
-      .title {
-        font-size: 2rem;
-      }
+  .nav-menu.active {
+    transform: translateY(0);
+  }
 
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
+  .nav-toggle {
+    display: block;
+  }
 
-      .contact-item {
-        font-size: 1rem;
-        flex-wrap: wrap;
-      }
+  /* ===== Hero ===== */
 
-      .card {
-        padding: 25px 15px;
-      }
+  .hero {
+    padding: 100px 20px 60px;
+  }
 
-      .project-img {
-        height: 180px;
-      }
+  .hero-avatar {
+    width: 190px;
+    height: 190px;
+    margin: 0 auto 30px;
+    padding: 5px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    box-shadow:
+      0 0 30px rgba(0,217,255,.35),
+      0 20px 50px rgba(0,0,0,.35);
+  }
 
-      .clients-grid {
-        gap: 25px 35px;
-      }
+  .hero-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+  }
 
-      .client-logo {
-        font-size: 1.3rem;
-      }
+  .hero h1 {
+    font-size: 2.6rem;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
 
-      .hero-avatar {
-        width: 100px;
-        height: 100px;
-      }
-    }
+  .subtitle {
+    font-size: 1.1rem;
+  }
 
-    @media (max-width: 480px) {
-      .hero p {
-        font-size: 1rem;
-      }
+  .hero p {
+    font-size: 1rem;
+    line-height: 1.9;
+    padding: 0 8px;
+    max-width: 95%;
+    margin: auto;
+  }
 
-      .skill {
-        padding: 10px 18px;
-        font-size: 0.9rem;
-      }
+  .btn-group {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 25px;
+  }
 
-      .contact-box {
-        padding: 25px 18px;
-      }
+  .btn {
+    width: 100%;
+    max-width: 260px;
+  }
 
-      .portfolio-grid {
-        grid-template-columns: 1fr;
-      }
+  .social-hero {
+    margin-top: 25px;
+    gap: 18px;
+  }
 
-      .stats-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
-      }
+  .social-hero a {
+    font-size: 1.3rem;
+  }
 
-      .stat-number {
-        font-size: 2.2rem;
-      }
-    }
+  /* ===== Other Sections ===== */
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+
+  .card {
+    padding: 25px 15px;
+  }
+
+  .project-img {
+    height: 200px;
+  }
+
+  .contact-item {
+    font-size: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .clients-grid {
+    gap: 25px;
+  }
+
+  .client-logo {
+    font-size: 1.3rem;
+  }
+
+}
+
+@media (max-width: 480px) {
+
+  .hero-avatar {
+    width: 170px;
+    height: 170px;
+  }
+
+  .hero h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero p {
+    font-size: .95rem;
+  }
+
+  .skill {
+    padding: 10px 18px;
+    font-size: .9rem;
+  }
+
+  .contact-box {
+    padding: 25px 18px;
+  }
+
+  .portfolio-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  .stat-number {
+    font-size: 2.2rem;
+  }
+
+}
   </style>
 </head>
 
