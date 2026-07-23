@@ -1,0 +1,22 @@
+{
+  "name": "Mina Ashaq Portfolio",
+  "short_name": "Mina",
+  "description": "Full Stack Web Developer",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d1117",
+  "theme_color": "#0d1117",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/images/profile.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/profile.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
