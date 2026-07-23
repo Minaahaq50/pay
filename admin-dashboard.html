@@ -2,437 +2,1828 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Scanner Effect Exam</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>𝑴𝒊𝒏𝒂 𝑨𝒔𝒉𝒂𝒒 | Full Stack Web Developer</title>
+  
+  <!-- ===== SEO META TAGS ===== -->
+  <meta name="description" content="Mina Ashaq - Full Stack Web Developer, متخصص في تطوير المواقع والأنظمة الإدارية الاحترافية" />
+  <meta name="keywords" content="Full Stack, Web Developer, Laravel, Flutter, React, PHP, مواقع ويب" />
+  <meta property="og:title" content="Mina Ashaq | Full Stack Developer" />
+  <meta property="og:description" content="تطوير مواقع ويب وأنظمة مبيعات احترافية بأحدث التقنيات" />
+  <meta property="og:type" content="website" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0d1117" />
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;500;700;900&display=swap" rel="stylesheet" />
+  <!-- Font Awesome 6 (Free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <!-- AOS Animation -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  
   <style>
-    /* reset & base */
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
     * {
-      box-sizing: border-box;
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Cairo', sans-serif;
+    }
+
+    :root {
+      --bg-primary: #0d1117;
+      --bg-secondary: #161b22;
+      --bg-card: #1c2330;
+      --text-primary: #e6edf3;
+      --text-secondary: #b1bac4;
+      --text-muted: #8b949e;
+      --accent: #00d9ff;
+      --accent2: #7b61ff;
+      --border-color: #21262d;
+      --shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.6);
+      --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      --nav-height: 70px;
+      --radius: 28px;
+      --radius-sm: 16px;
     }
 
     body {
-      background: #2b2b2b;
-      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      scroll-behavior: smooth;
+      transition: background 0.4s, color 0.4s;
       min-height: 100vh;
-      margin: 20px;
+      overflow-x: hidden;
+      padding-top: var(--nav-height);
     }
 
-    /* الورقة الرئيسية */
-    .paper {
-      max-width: 860px;
-      width: 100%;
-      background: #f7f1e3;
-      padding: 24px 24px 30px;
-      border-radius: 20px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-      transition: box-shadow 0.2s;
+    body.light-mode {
+      --bg-primary: #f6f8fa;
+      --bg-secondary: #ffffff;
+      --bg-card: #f0f2f5;
+      --text-primary: #0d1117;
+      --text-secondary: #24292f;
+      --text-muted: #57606a;
+      --border-color: #d0d7de;
+      --shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.08);
     }
 
-    /* إطار الصورة مع تأثير الورق */
-    .exam-image-wrapper {
-      position: relative;
-      overflow: hidden;
-      border: 3px solid #b89b6b;
-      border-radius: 14px;
-      background: #e5dccd;
-      box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.08);
-    }
-
-    /* الصورة + تأثير الـ scan (يُطبق عبر JS أيضاً لكن نحتفظ بالكلاس) */
-    .scan-effect {
-      display: block;
-      width: 100%;
-      height: auto;
-      filter: contrast(1.18) brightness(1.06) saturate(0.88) sepia(0.04) blur(0.3px);
-      transform: rotate(-0.2deg) scale(1.005);
-      transition: filter 0.2s;
-    }
-
-    /* نسيج الورق (paper fibers) فوق الصورة */
-    .exam-image-wrapper::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image: url("https://www.transparenttextures.com/patterns/paper-fibers.png");
-      opacity: 0.13;
-      mix-blend-mode: multiply;
-      pointer-events: none;
+    /* ============================================================
+       SCROLLBAR
+    ============================================================ */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-primary); }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
       border-radius: 12px;
     }
 
-    /* منطقة التحكم */
-    .controls {
+    /* ============================================================
+       PROGRESS BAR
+    ============================================================ */
+    #progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      z-index: 10000;
+      transition: width 0.1s;
+    }
+
+    /* ============================================================
+       NAVBAR
+    ============================================================ */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--nav-height);
+      background: rgba(13, 17, 23, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 9999;
+      padding: 0 5%;
+      border-bottom: 1px solid var(--border-color);
+      transition: var(--transition);
       display: flex;
-      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    body.light-mode .navbar {
+      background: rgba(246, 248, 250, 0.92);
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .nav-logo {
+      font-size: 1.6rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .nav-menu {
+      display: flex;
+      list-style: none;
+      gap: 25px;
+      align-items: center;
+    }
+
+    .nav-menu a {
+      color: var(--text-primary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: 0.3s;
+      position: relative;
+      white-space: nowrap;
+    }
+
+    .nav-menu a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transition: 0.3s;
+    }
+
+    .nav-menu a:hover::after {
+      width: 100%;
+    }
+    .nav-menu a:hover {
+      color: var(--accent);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .theme-toggle {
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition: 0.3s;
+      padding: 8px;
+      border-radius: 50%;
+      display: flex;
       align-items: center;
       justify-content: center;
-      gap: 18px;
-      margin-top: 22px;
+      width: 42px;
+      height: 42px;
     }
 
-    /* زر الملف مخفي لكن نجعله شفاف مع تنسيق */
-    .file-label {
-      background: #3d3d3d;
-      color: #f0eadb;
-      padding: 12px 26px;
-      border-radius: 40px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      letter-spacing: 0.3px;
-      cursor: pointer;
-      transition: 0.2s;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      border: 1px solid #5a5a5a;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+    .theme-toggle:hover {
+      color: var(--accent);
+      background: rgba(0, 217, 255, 0.1);
+      transform: rotate(20deg);
     }
 
-    .file-label:hover {
-      background: #4f4f4f;
-      transform: scale(1.02);
-      border-color: #b89b6b;
-    }
-
-    .file-label:active {
-      transform: scale(0.96);
-    }
-
-    #file {
+    .nav-toggle {
       display: none;
+      font-size: 1.6rem;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: 0.3s;
+      padding: 8px;
+      background: transparent;
+      border: none;
     }
 
-    /* زر التحميل */
-    .download-btn {
-      background: #2c6e49;
-      color: white;
-      border: none;
-      padding: 12px 32px;
-      border-radius: 40px;
+    .nav-toggle:hover {
+      color: var(--accent);
+    }
+
+    /* ============================================================
+       HERO
+    ============================================================ */
+    header {
+      min-height: calc(100vh - var(--nav-height));
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 40px 20px 60px;
+      background: radial-gradient(circle at 20% 30%, var(--bg-secondary) 0%, var(--bg-primary) 90%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before,
+    header::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      animation: floatBg 25s infinite alternate;
+      pointer-events: none;
+    }
+
+    header::before {
+      width: min(800px, 80vw);
+      height: min(800px, 80vw);
+      background: radial-gradient(circle, rgba(0, 217, 255, 0.04) 0%, transparent 70%);
+      top: -20%;
+      left: -20%;
+    }
+
+    header::after {
+      width: min(600px, 60vw);
+      height: min(600px, 60vw);
+      background: radial-gradient(circle, rgba(123, 97, 255, 0.03) 0%, transparent 70%);
+      bottom: -20%;
+      right: -20%;
+      animation: floatBg 30s infinite alternate-reverse;
+    }
+
+    @keyframes floatBg {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(60px, 40px) scale(1.3); }
+    }
+
+    .hero {
+      position: relative;
+      z-index: 2;
+      max-width: 1000px;
+      width: 100%;
+    }
+
+    .hero-avatar {
+      width: clamp(150px, 18vw, 220px);
+      height: clamp(150px, 18vw, 220px);
+      border-radius: 50%;
+      margin: 0 auto 25px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      padding: 5px;
+      position: relative;
+      animation: pulse 3s ease-in-out infinite;
+      box-shadow: 0 15px 40px rgba(0, 217, 255, 0.25);
+      overflow: hidden;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(0, 217, 255, 0.3); }
+      50% { box-shadow: 0 0 0 25px rgba(0, 217, 255, 0); }
+    }
+
+    .hero-avatar img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .hero-avatar .status-dot {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      width: 20px;
+      height: 20px;
+      background: #2da44e;
+      border-radius: 50%;
+      border: 3px solid var(--bg-primary);
+      animation: blink 2s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+
+    .hero .subtitle {
+      font-size: clamp(1.1rem, 2.5vw, 2rem);
+      color: var(--text-primary);
+      margin: 8px 0 16px;
+      font-weight: 500;
+      min-height: 2.5rem;
+    }
+
+    #typing {
       font-weight: 700;
-      font-size: 1rem;
+      background: linear-gradient(135deg, var(--accent), #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      max-width: 750px;
+      margin: 16px auto;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      font-size: clamp(1rem, 1.2vw, 1.2rem);
+      padding: 0 15px;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 14px 32px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #0d1117;
+      font-weight: 700;
+      font-size: clamp(0.95rem, 1.1vw, 1.1rem);
+      border-radius: 60px;
+      text-decoration: none;
+      transition: var(--transition);
+      box-shadow: 0 0 30px rgba(0, 217, 255, 0.2);
+      border: none;
       cursor: pointer;
-      transition: 0.2s;
-      box-shadow: 0 4px 10px rgba(44, 110, 73, 0.4);
-      letter-spacing: 0.5px;
-      border: 1px solid #3d8b5a;
-      display: inline-flex;
+      text-align: center;
+      min-width: 140px;
+    }
+
+    .btn:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 20px 50px rgba(0, 217, 255, 0.3);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--accent);
+      border: 1.5px solid var(--accent);
+      box-shadow: none;
+    }
+
+    .btn-outline:hover {
+      background: var(--accent);
+      color: #0d1117;
+      box-shadow: 0 0 40px rgba(0, 217, 255, 0.2);
+    }
+
+    .social-hero {
+      margin-top: 35px;
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .social-hero a {
+      color: var(--text-muted);
+      font-size: 1.4rem;
+      transition: 0.3s;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      text-decoration: none;
+    }
+
+    .social-hero a:hover {
+      color: var(--accent);
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      box-shadow: 0 8px 25px rgba(0, 217, 255, 0.12);
+    }
+
+    /* ============================================================
+       SECTIONS
+    ============================================================ */
+    section {
+      padding: 60px 5%;
+      position: relative;
+    }
+
+    .section-dark {
+      background: var(--bg-secondary);
+    }
+
+    .title {
+      text-align: center;
+      font-size: clamp(2rem, 4vw, 2.6rem);
+      font-weight: 700;
+      margin-bottom: 40px;
+      color: var(--accent);
+      position: relative;
+      display: inline-block;
+      left: 50%;
+      transform: translateX(-50%);
+      width: auto;
+    }
+
+    .title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 70%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2), transparent);
+      border-radius: 10px;
+    }
+
+    /* ============================================================
+       STATS
+    ============================================================ */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 20px;
+      max-width: 900px;
+      margin: 0 auto 30px;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 25px 15px;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      transition: var(--transition);
+    }
+
+    .stat-item:hover {
+      transform: translateY(-6px);
+      border-color: var(--accent);
+      box-shadow: 0 15px 35px rgba(0, 217, 255, 0.08);
+    }
+
+    .stat-number {
+      font-size: clamp(2.2rem, 4vw, 3rem);
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: block;
+      line-height: 1.2;
+    }
+
+    .stat-label {
+      color: var(--text-secondary);
+      font-size: clamp(0.9rem, 1vw, 1.1rem);
+      margin-top: 6px;
+    }
+
+    /* ============================================================
+       SERVICES CARDS
+    ============================================================ */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 25px;
+      margin-top: 20px;
+    }
+
+    .card {
+      background: var(--bg-secondary);
+      padding: 30px 20px;
+      border-radius: var(--radius);
+      transition: var(--transition);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      opacity: 0;
+      transition: 0.3s;
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      border-color: var(--accent);
+      box-shadow: 0 25px 45px -15px rgba(0, 217, 255, 0.12);
+    }
+
+    .card i {
+      font-size: 2.8rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+    }
+
+    .card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      color: var(--text-primary);
+    }
+
+    .card p {
+      color: var(--text-secondary);
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    /* ============================================================
+       PORTFOLIO
+    ============================================================ */
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 25px;
+      margin-top: 20px;
+    }
+
+    .project-card {
+      background: var(--bg-secondary);
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      transition: var(--transition);
+      box-shadow: var(--shadow);
+    }
+
+    .project-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--accent);
+      box-shadow: 0 20px 40px rgba(0, 217, 255, 0.08);
+    }
+
+    .project-img {
+      width: 100%;
+      height: 200px;
+      background: var(--bg-card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .project-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: 0.5s;
+    }
+
+    .project-card:hover .project-img img {
+      transform: scale(1.04);
+    }
+
+    .project-img .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: 0.3s;
+    }
+
+    .project-card:hover .overlay {
+      opacity: 1;
+    }
+
+    .project-img .overlay a {
+      color: #fff;
+      font-size: 1.8rem;
+      padding: 12px 16px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+      transition: 0.3s;
+      text-decoration: none;
+    }
+
+    .project-img .overlay a:hover {
+      background: var(--accent);
+      color: #0d1117;
+      transform: scale(1.1);
+    }
+
+    .project-info {
+      padding: 20px 18px 24px;
+    }
+
+    .project-info h3 {
+      font-size: 1.2rem;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .project-info p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .project-tags span {
+      background: var(--bg-primary);
+      padding: 3px 14px;
+      border-radius: 50px;
+      font-size: 0.7rem;
+      color: var(--accent);
+      border: 1px solid rgba(0, 217, 255, 0.15);
+    }
+
+    /* ============================================================
+       TESTIMONIALS
+    ============================================================ */
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+      margin-top: 20px;
+    }
+
+    .testimonial-card {
+      background: var(--bg-secondary);
+      padding: 25px 20px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      transition: var(--transition);
+      text-align: center;
+    }
+
+    .testimonial-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--accent);
+    }
+
+    .testimonial-card .stars {
+      color: #fbbf24;
+      font-size: 1.1rem;
+      margin: 8px 0;
+    }
+
+    .testimonial-card blockquote {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      font-style: italic;
+    }
+
+    .testimonial-card .client-name {
+      color: var(--text-primary);
+      font-weight: 700;
+      margin-top: 12px;
+    }
+
+    .testimonial-card .client-title {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    /* ============================================================
+       CLIENTS
+    ============================================================ */
+    .clients-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 30px 50px;
+      margin-top: 25px;
+      padding: 15px 0;
+    }
+
+    .client-logo {
+      font-size: clamp(1.2rem, 2vw, 1.6rem);
+      font-weight: 700;
+      color: var(--text-muted);
+      opacity: 0.6;
+      transition: 0.4s;
+      display: flex;
       align-items: center;
       gap: 10px;
     }
 
-    .download-btn:hover {
-      background: #1f5a38;
-      transform: scale(1.02);
-      box-shadow: 0 6px 14px rgba(44, 110, 73, 0.6);
-    }
-
-    .download-btn:active {
-      transform: scale(0.95);
-    }
-
-    .download-btn:disabled {
+    .client-logo i {
+      font-size: clamp(1.8rem, 2.5vw, 2.2rem);
+      color: var(--accent);
       opacity: 0.5;
-      pointer-events: none;
-      filter: grayscale(0.6);
     }
 
-    /* رسالة ترحيب عند عدم وجود صورة */
-    .placeholder-msg {
+    .client-logo:hover {
+      opacity: 1;
+      color: var(--text-primary);
+      transform: scale(1.04);
+    }
+    .client-logo:hover i {
+      opacity: 1;
+    }
+
+    /* ============================================================
+       SKILLS
+    ============================================================ */
+    .skills-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .skill {
+      background: var(--bg-secondary);
+      padding: 12px 24px;
+      border-radius: 60px;
+      color: var(--text-primary);
+      font-weight: 700;
+      font-size: clamp(0.9rem, 1vw, 1rem);
+      border: 1px solid rgba(0, 217, 255, 0.12);
+      transition: 0.35s;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      cursor: default;
+    }
+
+    .skill:hover {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #0d1117;
+      transform: scale(1.05) translateY(-2px);
+      border-color: transparent;
+      box-shadow: 0 0 35px rgba(0, 217, 255, 0.15);
+    }
+
+    /* ============================================================
+       BACK TO TOP
+    ============================================================ */
+    .back-to-top {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #0d1117;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-size: 1.3rem;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s ease;
+      box-shadow: 0 4px 20px rgba(0, 217, 255, 0.25);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .back-to-top:hover {
+      transform: translateY(-6px) scale(1.04);
+      box-shadow: 0 12px 35px rgba(0, 217, 255, 0.35);
+    }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    footer {
+      padding: 35px 20px;
+      text-align: center;
+      background: var(--bg-primary);
+      border-top: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    footer span {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+    }
+
+    .footer-social {
       display: flex;
       justify-content: center;
-      align-items: center;
-      min-height: 180px;
-      background: #e8dfce;
-      color: #6a5e4b;
+      gap: 16px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .footer-social a {
+      color: var(--text-muted);
       font-size: 1.2rem;
-      font-weight: 400;
-      letter-spacing: 0.5px;
-      border-radius: 12px;
-      padding: 20px;
-      text-align: center;
-      border: 2px dashed #b89b6b;
-      opacity: 0.7;
+      transition: 0.3s;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      text-decoration: none;
     }
 
-    #img {
-      display: block;
-      width: 100%;
-      height: auto;
+    .footer-social a:hover {
+      color: var(--accent);
+      transform: translateY(-3px);
+      border-color: var(--accent);
     }
 
-    /* التكيف مع الشاشات الصغيرة */
-    @media (max-width: 600px) {
-      .paper {
-        padding: 16px;
+    /* ============================================================
+       RESPONSIVE - محسّن بالكامل
+    ============================================================ */
+
+    /* Tablets & small laptops */
+    @media (max-width: 1024px) {
+      section {
+        padding: 50px 4%;
       }
-      .controls {
-        gap: 12px;
+    }
+
+    /* Mobile devices */
+    @media (max-width: 768px) {
+      :root {
+        --nav-height: 62px;
+      }
+
+      .nav-menu {
+        position: fixed;
+        top: var(--nav-height);
+        left: 0;
+        right: 0;
+        background: var(--bg-primary);
         flex-direction: column;
+        padding: 25px 20px;
+        gap: 16px;
+        border-bottom: 1px solid var(--border-color);
+        transform: translateY(-200%);
+        transition: 0.35s ease;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         align-items: stretch;
+        text-align: center;
       }
-      .file-label,
-      .download-btn {
-        justify-content: center;
-        padding: 14px 16px;
+
+      .nav-menu.active {
+        transform: translateY(0);
       }
-      .placeholder-msg {
-        min-height: 120px;
+
+      .nav-menu a {
+        padding: 10px 0;
+        font-size: 1.05rem;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .nav-menu a:last-child {
+        border-bottom: none;
+      }
+
+      .nav-toggle {
+        display: block;
+      }
+
+      .hero h1 {
+        font-size: 2.4rem;
+      }
+
+      .title {
+        font-size: 1.8rem;
+        margin-bottom: 30px;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+      }
+
+      .stat-item {
+        padding: 18px 10px;
+      }
+
+      .cards {
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+
+      .portfolio-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .testimonials-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .project-img {
+        height: 170px;
+      }
+
+      .clients-grid {
+        gap: 20px 30px;
+      }
+
+      .client-logo {
+        font-size: 1.1rem;
+      }
+
+      .hero-avatar {
+        width: 150px;
+        height: 150px;
+      }
+
+      .hero-avatar .status-dot {
+        width: 16px;
+        height: 16px;
+        bottom: 6px;
+        right: 6px;
+      }
+
+      .btn {
+        padding: 12px 24px;
+        font-size: 0.95rem;
+        min-width: 120px;
+      }
+
+      .social-hero a {
+        width: 42px;
+        height: 42px;
+        font-size: 1.2rem;
+      }
+
+      section {
+        padding: 40px 4%;
+      }
+
+      header {
+        padding: 30px 15px 40px;
+        min-height: auto;
+      }
+
+      .hero p {
+        font-size: 0.95rem;
+        padding: 0 10px;
+      }
+
+      .skill {
+        padding: 10px 18px;
+        font-size: 0.85rem;
+      }
+
+      .back-to-top {
+        width: 44px;
+        height: 44px;
+        font-size: 1.1rem;
+        bottom: 15px;
+        right: 15px;
+      }
+    }
+
+    /* Small mobile phones */
+    @media (max-width: 480px) {
+      .cards {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .stat-number {
+        font-size: 1.8rem;
+      }
+
+      .stat-label {
+        font-size: 0.8rem;
+      }
+
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .hero .subtitle {
         font-size: 1rem;
+        min-height: 2rem;
+      }
+
+      .btn-group {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .btn {
+        width: 100%;
+        max-width: 280px;
+        padding: 12px 20px;
+        font-size: 0.9rem;
+      }
+
+      .project-img {
+        height: 150px;
+      }
+
+      .project-info h3 {
+        font-size: 1.1rem;
+      }
+
+      .project-info p {
+        font-size: 0.85rem;
+      }
+
+      .footer-social a {
+        width: 34px;
+        height: 34px;
+        font-size: 1rem;
+      }
+
+      footer {
+        font-size: 0.8rem;
+        padding: 25px 15px;
+      }
+
+      .client-logo {
+        font-size: 0.95rem;
+        gap: 6px;
+      }
+
+      .client-logo i {
+        font-size: 1.4rem;
+      }
+
+      .clients-grid {
+        gap: 15px 20px;
+      }
+
+      .testimonial-card blockquote {
+        font-size: 0.9rem;
+      }
+
+      .social-hero {
+        gap: 10px;
+      }
+
+      .social-hero a {
+        width: 38px;
+        height: 38px;
+        font-size: 1rem;
+      }
+
+      .hero-avatar {
+        width: 120px;
+        height: 120px;
+      }
+
+      .skill {
+        padding: 8px 14px;
+        font-size: 0.8rem;
+      }
+
+      .skills-wrapper {
+        gap: 10px;
+      }
+
+      .back-to-top {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+        bottom: 12px;
+        right: 12px;
+      }
+    }
+
+    /* Landscape phones */
+    @media (max-width: 768px) and (orientation: landscape) {
+      header {
+        min-height: auto;
+        padding: 30px 15px;
+      }
+
+      .hero-avatar {
+        width: 100px;
+        height: 100px;
+      }
+
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .hero .subtitle {
+        font-size: 1rem;
+      }
+
+      .hero p {
+        font-size: 0.9rem;
+        margin: 10px auto;
+      }
+
+      .btn {
+        padding: 10px 20px;
+        font-size: 0.85rem;
+        min-width: 100px;
+      }
+
+      .social-hero {
+        margin-top: 20px;
+      }
+
+      .social-hero a {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+      }
+    }
+
+    /* Very large screens */
+    @media (min-width: 1600px) {
+      section {
+        padding: 80px 10%;
+      }
+
+      .hero {
+        max-width: 1200px;
+      }
+
+      .stats-grid {
+        max-width: 1100px;
+      }
+    }
+
+    /* Reduce motion preference */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+
+      .hero-avatar {
+        animation: none;
+      }
+    }
+
+    /* Print styles */
+    @media print {
+      .navbar,
+      .back-to-top,
+      #progress-bar,
+      .social-hero,
+      .footer-social {
+        display: none !important;
+      }
+
+      body {
+        padding-top: 0 !important;
+        background: #fff !important;
+        color: #000 !important;
+      }
+
+      section {
+        padding: 20px !important;
+        page-break-inside: avoid;
+      }
+
+      .card,
+      .project-card,
+      .testimonial-card {
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
       }
     }
   </style>
 </head>
+
 <body>
 
-  <div class="paper">
-    <!-- حاوية الصورة مع تأثير الورق -->
-    <div class="exam-image-wrapper" id="imageWrapper">
-      <img id="img" src="" alt="الصورة المرفوعة" style="display: none;" />
-      <div class="placeholder-msg" id="placeholder">
-        📄 اختر صورة لتفعيل تأثير الماسح الضوئي
+  <!-- ===== PROGRESS BAR ===== -->
+  <div id="progress-bar" role="progressbar" aria-label="Page progress"></div>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-container">
+      <a href="#home" class="nav-logo" aria-label="Mina Ashaq Home">𝑴𝒊𝒏𝒂</a>
+      <ul class="nav-menu" id="navMenu" role="menubar">
+        <li role="none"><a href="#services" role="menuitem">الخدمات</a></li>
+        <li role="none"><a href="#portfolio" role="menuitem">أعمالي</a></li>
+        <li role="none"><a href="#testimonials" role="menuitem">آراء العملاء</a></li>
+        <li role="none"><a href="#skills" role="menuitem">المهارات</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark/light theme">
+          <i class="fas fa-moon" aria-hidden="true"></i>
+        </button>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu">
+          <i class="fas fa-bars" aria-hidden="true"></i>
+        </button>
       </div>
     </div>
+  </nav>
 
-    <!-- عناصر التحكم -->
-    <div class="controls">
-      <label for="file" class="file-label">
-        <span>📂</span> اختيار صورة
-      </label>
-      <input type="file" id="file" accept="image/*" />
-
-      <button class="download-btn" id="downloadBtn" disabled>
-        ⬇️ تحميل مع Scan
-      </button>
+  <!-- ===== HERO ===== -->
+  <header id="home">
+    <div class="hero">
+      <div class="hero-avatar" data-aos="zoom-in" data-aos-duration="1000">
+        <img src="https://b.top4top.io/p_3855znzpv1.jpg" alt="Mina Ashaq - Full Stack Developer" loading="lazy" />
+        <div class="status-dot" aria-hidden="true"></div>
+      </div>
+      <h1 data-aos="fade-up" data-aos-delay="200">𝑴𝒊𝒏𝒂 𝑨𝒔𝒉𝒂𝒒</h1>
+      <div class="subtitle" data-aos="fade-up" data-aos-delay="300">
+        <span id="typing" aria-live="polite"></span>
+      </div>
+      <p data-aos="fade-up" data-aos-delay="400">
+        أقوم بتطوير مواقع الويب والأنظمة الإدارية الاحترافية
+        بأحدث التقنيات مع تصميم عصري وأداء عالي.
+      </p>
+      <div class="btn-group" data-aos="fade-up" data-aos-delay="500">
+        <a class="btn" href="#portfolio">
+          <i class="fas fa-folder-open" style="margin-left:10px;" aria-hidden="true"></i> استكشف أعمالي
+        </a>
+        <a class="btn btn-outline" href="#services">
+          <i class="fas fa-cogs" style="margin-left:10px;" aria-hidden="true"></i> خدماتي
+        </a>
+      </div>
+      <div class="social-hero" data-aos="fade-up" data-aos-delay="600">
+        <a href="#" aria-label="GitHub"><i class="fab fa-github" aria-hidden="true"></i></a>
+        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in" aria-hidden="true"></i></a>
+        <a href="#" aria-label="Twitter"><i class="fab fa-x-twitter" aria-hidden="true"></i></a>
+        <a href="#" aria-label="YouTube"><i class="fab fa-youtube" aria-hidden="true"></i></a>
+        <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
+      </div>
     </div>
-  </div>
+  </header>
 
+  <!-- ===== STATS ===== -->
+  <section style="padding-top: 30px; padding-bottom: 15px;" aria-label="Statistics">
+    <div class="stats-grid" data-aos="fade-up">
+      <div class="stat-item">
+        <span class="stat-number" data-target="50">0</span>
+        <div class="stat-label">مشروع مكتمل</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number" data-target="35">0</span>
+        <div class="stat-label">عميل سعيد</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number" data-target="5">0</span>
+        <div class="stat-label">سنوات خبرة</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number" data-target="100">0</span>
+        <div class="stat-label">% رضا العملاء</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SERVICES ===== -->
+  <section id="services" class="section-dark" aria-label="Services">
+    <h2 class="title" data-aos="fade-up">الخدمات</h2>
+    <div class="cards">
+      <div class="card" data-aos="fade-up" data-aos-delay="100">
+        <i class="fas fa-globe-asia" aria-hidden="true"></i>
+        <h3>🌐 مواقع ويب</h3>
+        <p>تصميم وبرمجة مواقع احترافية لجميع الأنشطة التجارية والخدمية.</p>
+      </div>
+      <div class="card" data-aos="fade-up" data-aos-delay="200">
+        <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+        <h3>🛒 متاجر إلكترونية</h3>
+        <p>متاجر متكاملة مع الدفع الإلكتروني وإدارة المخزون.</p>
+      </div>
+      <div class="card" data-aos="fade-up" data-aos-delay="300">
+        <i class="fas fa-chart-line" aria-hidden="true"></i>
+        <h3>📊 أنظمة مبيعات</h3>
+        <p>POS - CRM - ERP - إدارة الطلبات والمخازن بدقة احترافية.</p>
+      </div>
+      <div class="card" data-aos="fade-up" data-aos-delay="400">
+        <i class="fas fa-rocket" aria-hidden="true"></i>
+        <h3>⚡ تطوير خاص</h3>
+        <p>أي فكرة أو نظام يتم تنفيذه حسب الطلب بجودة عالية.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PORTFOLIO ===== -->
+  <section id="portfolio" aria-label="Portfolio">
+    <h2 class="title" data-aos="fade-up">أعمالي</h2>
+    <div class="portfolio-grid">
+
+      <!-- Project 1 -->
+      <div class="project-card" data-aos="fade-up" data-aos-delay="100">
+        <div class="project-img">
+          <img src="https://f.top4top.io/p_38554xkmy1.png" alt="نظام مبيعات متكامل" loading="lazy" />
+          <div class="overlay">
+            <a href="#" aria-label="View project"><i class="fas fa-eye" aria-hidden="true"></i></a>
+          </div>
+        </div>
+        <div class="project-info">
+          <h3>نظام مبيعات متكامل</h3>
+          <p>نظام POS و CRM مع تقارير متقدمة وإدارة المخزون.</p>
+          <div class="project-tags">
+            <span>Laravel</span><span>MySQL</span><span>Livewire</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 2 -->
+      <div class="project-card" data-aos="fade-up" data-aos-delay="200">
+        <div class="project-img">
+          <img src="https://i.top4top.io/p_38557bqwz1.png" alt="متجر إلكتروني عصري" loading="lazy" />
+          <div class="overlay">
+            <a href="#" aria-label="View project"><i class="fas fa-eye" aria-hidden="true"></i></a>
+          </div>
+        </div>
+        <div class="project-info">
+          <h3>متجر إلكتروني عصري</h3>
+          <p>متجر متكامل مع بوابة دفع، عربة شراء، ولوحة تحكم.</p>
+          <div class="project-tags">
+            <span>PHP</span><span>JavaScript</span><span>Stripe</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 3 -->
+      <div class="project-card" data-aos="fade-up" data-aos-delay="300">
+        <div class="project-img">
+          <img src="https://b.top4top.io/p_3855c68ip1.png" alt="لوحة تحكم إدارية" loading="lazy" />
+          <div class="overlay">
+            <a href="#" aria-label="View project"><i class="fas fa-eye" aria-hidden="true"></i></a>
+          </div>
+        </div>
+        <div class="project-info">
+          <h3>لوحة تحكم إدارية</h3>
+          <p>نظام إدارة متكامل مع رسوم بيانية وتحليلات لحظية.</p>
+          <div class="project-tags">
+            <span>React</span><span>Node.js</span><span>MongoDB</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 4 -->
+      <div class="project-card" data-aos="fade-up" data-aos-delay="400">
+        <div class="project-img">
+          <img src="https://g.top4top.io/p_38556wdry1.png" alt="منصة تعليمية" loading="lazy" />
+          <div class="overlay">
+            <a href="#" aria-label="View project"><i class="fas fa-eye" aria-hidden="true"></i></a>
+          </div>
+        </div>
+        <div class="project-info">
+          <h3>منصة تعليمية</h3>
+          <p>منصة لإدارة الطلاب والدورات والاختبارات والاشتراكات.</p>
+          <div class="project-tags">
+            <span>Laravel</span><span>Firebase</span><span>MySQL</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 5 -->
+      <div class="project-card" data-aos="fade-up" data-aos-delay="500">
+        <div class="project-img">
+          <img src="https://e.top4top.io/p_3855eq1ry1.png" alt="نظام حجز المواعيد" loading="lazy" />
+          <div class="overlay">
+            <a href="#" aria-label="View project"><i class="fas fa-eye" aria-hidden="true"></i></a>
+          </div>
+        </div>
+        <div class="project-info">
+          <h3>نظام حجز المواعيد</h3>
+          <p>إدارة المواعيد والحجوزات مع إشعارات البريد الإلكتروني.</p>
+          <div class="project-tags">
+            <span>PHP</span><span>AJAX</span><span>MySQL</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 6 -->
+      <div class="project-card" data-aos="fade-up" data-aos-delay="600">
+        <div class="project-img">
+          <img src="https://l.top4top.io/p_38556u1py1.png" alt="نظام إدارة المطاعم" loading="lazy" />
+          <div class="overlay">
+            <a href="#" aria-label="View project"><i class="fas fa-eye" aria-hidden="true"></i></a>
+          </div>
+        </div>
+        <div class="project-info">
+          <h3>نظام إدارة المطاعم</h3>
+          <p>إدارة الطلبات والطاولات والمطبخ والفواتير بسهولة.</p>
+          <div class="project-tags">
+            <span>Laravel</span><span>Bootstrap</span><span>MySQL</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 7 -->
+      <div class="project-card" data-aos="fade-up" data-aos-delay="700">
+        <div class="project-img">
+          <img src="https://i.top4top.io/p_38557nh931.png" alt="نظام إدارة العيادات" loading="lazy" />
+          <div class="overlay">
+            <a href="#" aria-label="View project"><i class="fas fa-eye" aria-hidden="true"></i></a>
+          </div>
+        </div>
+        <div class="project-info">
+          <h3>نظام إدارة العيادات</h3>
+          <p>ملفات المرضى والحجوزات والوصفات الطبية والتقارير.</p>
+          <div class="project-tags">
+            <span>Laravel</span><span>Livewire</span><span>MySQL</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 8 -->
+      <div class="project-card" data-aos="fade-up" data-aos-delay="800">
+        <div class="project-img">
+          <img src="https://f.top4top.io/p_3855igesk1.png" alt="تطبيق توصيل الطلبات" loading="lazy" />
+          <div class="overlay">
+            <a href="#" aria-label="View project"><i class="fas fa-eye" aria-hidden="true"></i></a>
+          </div>
+        </div>
+        <div class="project-info">
+          <h3>تطبيق توصيل الطلبات</h3>
+          <p>إدارة الطلبات والسائقين وتتبع حالة الشحن في الوقت الحقيقي.</p>
+          <div class="project-tags">
+            <span>Flutter</span><span>Firebase</span><span>REST API</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 9 -->
+      <div class="project-card" data-aos="fade-up" data-aos-delay="900">
+        <div class="project-img">
+          <img src="https://d.top4top.io/p_38553fr0b1.png" alt="لوحة تحليلات الأعمال" loading="lazy" />
+          <div class="overlay">
+            <a href="#" aria-label="View project"><i class="fas fa-eye" aria-hidden="true"></i></a>
+          </div>
+        </div>
+        <div class="project-info">
+          <h3>لوحة تحليلات الأعمال</h3>
+          <p>لوحة احترافية لعرض الإحصائيات والمؤشرات والرسوم البيانية.</p>
+          <div class="project-tags">
+            <span>React</span><span>Chart.js</span><span>Node.js</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== TESTIMONIALS ===== -->
+  <section id="testimonials" class="section-dark" aria-label="Testimonials">
+    <h2 class="title" data-aos="fade-up">آراء العملاء</h2>
+    <div class="testimonials-grid">
+      <div class="testimonial-card" data-aos="fade-up" data-aos-delay="100">
+        <div class="stars" aria-hidden="true">★★★★★</div>
+        <blockquote>"عمل احترافي ودقة عالية في التنفيذ، أنصح بالتعامل معه لأي مشروع تقني."</blockquote>
+        <div class="client-name">أحمد محمد</div>
+        <div class="client-title">CEO - شركة النور</div>
+      </div>
+      <div class="testimonial-card" data-aos="fade-up" data-aos-delay="200">
+        <div class="stars" aria-hidden="true">★★★★★</div>
+        <blockquote>"طور لنا نظام مبيعات متكامل سهل علينا إدارة أعمالنا بشكل كبير."</blockquote>
+        <div class="client-name">سارة خالد</div>
+        <div class="client-title">مديرة - متجر الأمل</div>
+      </div>
+      <div class="testimonial-card" data-aos="fade-up" data-aos-delay="300">
+        <div class="stars" aria-hidden="true">★★★★★</div>
+        <blockquote>"إبداع في التصميم وسرعة في التنفيذ، تعامل راقي ومهني."</blockquote>
+        <div class="client-name">محمد علي</div>
+        <div class="client-title">مؤسس - أكاديمية مهارات</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CLIENTS ===== -->
+  <section aria-label="Clients">
+    <h2 class="title" data-aos="fade-up">ثقة العملاء</h2>
+    <div class="clients-grid" data-aos="fade-up">
+      <div class="client-logo"><i class="fas fa-building" aria-hidden="true"></i> شركة النور</div>
+      <div class="client-logo"><i class="fas fa-store" aria-hidden="true"></i> متجر الأمل</div>
+      <div class="client-logo"><i class="fas fa-chart-pie" aria-hidden="true"></i> أكاديمية مهارات</div>
+      <div class="client-logo"><i class="fas fa-truck" aria-hidden="true"></i> نقل سريع</div>
+      <div class="client-logo"><i class="fas fa-hospital" aria-hidden="true"></i> عيادات صحية</div>
+    </div>
+  </section>
+
+  <!-- ===== SKILLS ===== -->
+  <section id="skills" class="section-dark" aria-label="Skills">
+    <h2 class="title" data-aos="fade-up">المهارات</h2>
+    <div class="skills-wrapper" data-aos="fade-up">
+      <span class="skill">HTML5</span>
+      <span class="skill">CSS3</span>
+      <span class="skill">JavaScript</span>
+      <span class="skill">PHP</span>
+      <span class="skill">Laravel</span>
+      <span class="skill">MySQL</span>
+      <span class="skill">Flutter</span>
+      <span class="skill">Git</span>
+      <span class="skill">APIs</span>
+      <span class="skill">React</span>
+      <span class="skill">Node.js</span>
+      <span class="skill">Docker</span>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="footer-social">
+      <a href="#" aria-label="GitHub"><i class="fab fa-github" aria-hidden="true"></i></a>
+      <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in" aria-hidden="true"></i></a>
+      <a href="#" aria-label="Twitter"><i class="fab fa-x-twitter" aria-hidden="true"></i></a>
+      <a href="#" aria-label="YouTube"><i class="fab fa-youtube" aria-hidden="true"></i></a>
+      <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
+    </div>
+    <p>&copy; 2026 <span>Mina Ashaq</span> — كل الحقوق محفوظة</p>
+  </footer>
+
+  <!-- ===== BACK TO TOP ===== -->
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">
+    <i class="fas fa-arrow-up" aria-hidden="true"></i>
+  </button>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script>
-    (function() {
-      // عناصر DOM
-      const fileInput = document.getElementById('file');
-      const imgElement = document.getElementById('img');
-      const placeholder = document.getElementById('placeholder');
-      const downloadBtn = document.getElementById('downloadBtn');
-      const imageWrapper = document.getElementById('imageWrapper');
+    // ============================================================
+    // AOS ANIMATIONS
+    // ============================================================
+    if (typeof AOS !== 'undefined') {
+      AOS.init({
+        duration: 700,
+        once: true,
+        offset: 60,
+        disable: 'mobile'
+      });
+    }
 
-      // تخزين الـ data URL للصورة الحالية
-      let currentImageDataURL = null;
-      // علم بوجود صورة
-      let imageLoaded = false;
+    // ============================================================
+    // TYPING EFFECT
+    // ============================================================
+    const words = [
+      "Full Stack Web Developer",
+      "HTML • CSS • JavaScript",
+      "Laravel • Flutter • React",
+      "Web Applications",
+      "Sales Systems",
+      "CRM & POS Systems"
+    ];
 
-      // إظهار الصورة وتطبيق تأثير الـ scan (مع إخفاء placeholder)
-      function displayImage(dataUrl) {
-        currentImageDataURL = dataUrl;
-        imgElement.src = dataUrl;
-        imgElement.style.display = 'block';
-        imgElement.classList.add('scan-effect');
+    let i = 0,
+      j = 0,
+      current = "";
+    let isDeleting = false;
+    const el = document.getElementById("typing");
 
-        // إخفاء النص المؤقت
-        if (placeholder) {
-          placeholder.style.display = 'none';
-        }
+    function type() {
+      if (!el) return;
+      current = words[i];
 
-        imageLoaded = true;
-        downloadBtn.disabled = false;
-      }
-
-      // معالجة رفع الملف
-      fileInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        // التحقق من أنه صورة
-        if (!file.type.startsWith('image/')) {
-          alert('الرجاء اختيار ملف صورة صحيح');
-          fileInput.value = '';
+      if (!isDeleting) {
+        el.innerHTML = current.substring(0, j++);
+        if (j > current.length) {
+          isDeleting = true;
+          setTimeout(type, 1400);
           return;
         }
+      } else {
+        el.innerHTML = current.substring(0, j--);
+        if (j === 0) {
+          isDeleting = false;
+          i = (i + 1) % words.length;
+        }
+      }
+      setTimeout(type, isDeleting ? 35 : 90);
+    }
 
-        const reader = new FileReader();
-        reader.onload = function(ev) {
-          const result = ev.target.result;
-          displayImage(result);
-        };
+    if (document.readyState === 'complete') {
+      type();
+    } else {
+      window.addEventListener('load', type);
+    }
 
-        reader.onerror = function() {
-          alert('حدث خطأ أثناء قراءة الملف');
-          fileInput.value = '';
-        };
+    // ============================================================
+    // NAVBAR TOGGLE (Mobile)
+    // ============================================================
+    const navToggle = document.getElementById('navToggle');
+    const navMenu = document.getElementById('navMenu');
 
-        reader.readAsDataURL(file);
+    if (navToggle && navMenu) {
+      navToggle.addEventListener('click', () => {
+        const isActive = navMenu.classList.toggle('active');
+        const icon = navToggle.querySelector('i');
+        if (icon) {
+          icon.className = isActive ? 'fas fa-times' : 'fas fa-bars';
+        }
+        navToggle.setAttribute('aria-expanded', isActive);
       });
 
-      // --- دالة التحميل مع تأثير "سكان" كامل (باستخدام Canvas) ---
-      function downloadScannedImage() {
-        if (!currentImageDataURL) {
-          alert('لا توجد صورة للتحميل');
-          return;
-        }
-
-        // نستخدم Image لتحميل الصورة إلى Canvas
-        const img = new Image();
-        img.crossOrigin = 'anonymous'; // غير مطلوب لكن للأمان
-
-        img.onload = function() {
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-
-          // أبعاد الصورة الأصلية
-          const w = img.naturalWidth || img.width;
-          const h = img.naturalHeight || img.height;
-          canvas.width = w;
-          canvas.height = h;
-
-          // 1. تطبيق الفلاتر الأساسية (تباين، سطوع، تشبع، صبغة)
-          ctx.filter = 'contrast(1.2) brightness(1.08) saturate(0.9) sepia(0.03)';
-          ctx.drawImage(img, 0, 0, w, h);
-
-          // 2. إضافة نسيج ورق (paper texture) عبر blend-mode و opacity
-          //    نرسم فوقها texture شفاف باستخدام pattern (نفس الصورة الورقية)
-          const textureImg = new Image();
-          textureImg.crossOrigin = 'anonymous';
-          textureImg.src = 'https://www.transparenttextures.com/patterns/paper-fibers.png';
-
-          // لكن قد لا يتحمّل في الوقت المناسب، لذا نستخدم طريقة مباشرة:
-          // نعدّل البيكسلات بإضافة noise خفيف (محاكاة خشونة الورق)
-          // ثم نضيف تأثير الـ grain
-
-          // (أ) نأخذ بيانات البيكسل ونضيف noise خفيف
-          const imageData = ctx.getImageData(0, 0, w, h);
-          const data = imageData.data;
-
-          // نطبق noise خفيف جداً (يظهر كحبيبات ورق)
-          for (let i = 0; i < data.length; i += 4) {
-            // نطبق noise على قنوات RGB فقط (نترك alpha)
-            const noise = (Math.random() - 0.5) * 7; // بين -3.5 و +3.5
-            data[i] = Math.min(255, Math.max(0, data[i] + noise));
-            data[i + 1] = Math.min(255, Math.max(0, data[i + 1] + noise));
-            data[i + 2] = Math.min(255, Math.max(0, data[i + 2] + noise));
+      document.querySelectorAll('.nav-menu a').forEach(link => {
+        link.addEventListener('click', () => {
+          navMenu.classList.remove('active');
+          const icon = navToggle.querySelector('i');
+          if (icon) {
+            icon.className = 'fas fa-bars';
           }
+          navToggle.setAttribute('aria-expanded', 'false');
+        });
+      });
+    }
 
-          // نعيد البيانات المعدلة
-          ctx.putImageData(imageData, 0, 0);
+    // ============================================================
+    // THEME TOGGLE (Dark/Light)
+    // ============================================================
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
 
-          // (ب) نضيف طبقة نسيج ورق (paper fibers) عبر pattern
-          //    لكن لضمان عدم تأخر التحميل، نستخدم texture جاهزة ونرسمها
-          //    بطريقة متزامنة: نخلق pattern من texture بعد تحميلها
-          const textureCanvas = document.createElement('canvas');
-          textureCanvas.width = w;
-          textureCanvas.height = h;
-          const tCtx = textureCanvas.getContext('2d');
+    try {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'light') {
+        body.classList.add('light-mode');
+        if (themeToggle) {
+          themeToggle.innerHTML = '<i class="fas fa-sun" aria-hidden="true"></i>';
+        }
+      }
+    } catch (e) {}
 
-          // نرسم الـ pattern من الصورة الورقية
-          const paperPatternImg = new Image();
-          paperPatternImg.crossOrigin = 'anonymous';
-          paperPatternImg.src = 'https://www.transparenttextures.com/patterns/paper-fibers.png';
+    if (themeToggle) {
+      themeToggle.addEventListener('click', () => {
+        body.classList.toggle('light-mode');
+        const isLight = body.classList.contains('light-mode');
+        themeToggle.innerHTML = isLight ?
+          '<i class="fas fa-sun" aria-hidden="true"></i>' :
+          '<i class="fas fa-moon" aria-hidden="true"></i>';
+        try {
+          localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        } catch (e) {}
+      });
+    }
 
-          // ولكن قد لا يكون جاهزاً في onload، لذا نستخدم الأسلوب التالي:
-          // نرسم الصورة الأصلية مرة أخرى مع مزج pattern يدوياً (باستخدام drawImage مع opacity)
-          // لكن للتبسيط: نضيف تأثير الورق عبر إعادة رسم الصورة مع opacity من texture بعد تحميلها.
-          // الحل: نستخدم onload للـ pattern ونرسم فوق Canvas الأساسي
-          // لكن لضمان عمل دالة التحميل، سنستخدم طريقة متسلسلة:
+    // ============================================================
+    // BACK TO TOP
+    // ============================================================
+    const backToTop = document.getElementById('backToTop');
 
-          // في حال لم يتحمل pattern، نستخدم Noise فقط مع تعديل طفيف (كافٍ)
-          // لكننا نضيف أيضاً تأثير "ورق" عبر رسم الصورة مرتين بطريقة blend
+    if (backToTop) {
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 400) {
+          backToTop.classList.add('visible');
+        } else {
+          backToTop.classList.remove('visible');
+        }
+      });
 
-          // الطريقة الأكثر استقراراً: نرسم الصورة مرة أخرى مع pattern
-          // نضيف الـ texture كطبقة شفافة فوق الصورة باستخدام pattern
-          const patternCanvas = document.createElement('canvas');
-          patternCanvas.width = w;
-          patternCanvas.height = h;
-          const pCtx = patternCanvas.getContext('2d');
+      backToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
 
-          // نرسم الصورة الأصلية (بدون filter) كخلفية
-          pCtx.drawImage(img, 0, 0, w, h);
+    // ============================================================
+    // PROGRESS BAR
+    // ============================================================
+    const progressBar = document.getElementById('progress-bar');
 
-          // نضيف فوقها الـ pattern (نسيج الورق) مع opacity
-          const pat = new Image();
-          pat.crossOrigin = 'anonymous';
-          pat.src = 'https://www.transparenttextures.com/patterns/paper-fibers.png';
+    if (progressBar) {
+      window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        progressBar.style.width = Math.min(progress, 100) + '%';
+      });
+    }
 
-          // نستعمل onload للتأكد من وجود texture
-          pat.onload = function() {
-            // نرسم pattern مكرر (repeat) فوق الصورة
-            const pattern = pCtx.createPattern(pat, 'repeat');
-            pCtx.globalAlpha = 0.16;
-            pCtx.fillStyle = pattern;
-            pCtx.fillRect(0, 0, w, h);
+    // ============================================================
+    // STATS COUNTER
+    // ============================================================
+    const statNumbers = document.querySelectorAll('.stat-number');
 
-            // الآن ندمج مع canvas الأساسي: نرسم patternCanvas فوق canvas الأساسي مع blend-mode
-            ctx.globalAlpha = 1.0;
-            ctx.drawImage(patternCanvas, 0, 0);
+    if (statNumbers.length > 0) {
+      const animateStats = () => {
+        statNumbers.forEach(stat => {
+          const target = parseInt(stat.getAttribute('data-target')) || 0;
+          const step = Math.max(1, Math.floor(target / 50));
+          let current = 0;
 
-            // إضافة تأثير خفيف جداً (blur أو حدة) لكن نكتفي بهذا
-
-            // تحميل الصورة النهائية
-            const link = document.createElement('a');
-            link.download = 'scan_exam.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-          };
-
-          // في حال فشل تحميل pattern (مهلة) نستخدم البديل: فقط noise + بعض التعديل
-          pat.onerror = function() {
-            // نستخدم ما لدينا: noise مطبق + نضيف بعض التعديلات البسيطة
-            // نعيد رسم الصورة مع إضافة شفافية بسيطة
-            ctx.globalAlpha = 0.96;
-            ctx.drawImage(img, 0, 0, w, h);
-            ctx.globalAlpha = 1.0;
-
-            // نضيف noise إضافي خفيف
-            const imgData2 = ctx.getImageData(0, 0, w, h);
-            const d2 = imgData2.data;
-            for (let i = 0; i < d2.length; i += 4) {
-              const n = (Math.random() - 0.5) * 5;
-              d2[i] = Math.min(255, Math.max(0, d2[i] + n));
-              d2[i + 1] = Math.min(255, Math.max(0, d2[i + 1] + n));
-              d2[i + 2] = Math.min(255, Math.max(0, d2[i + 2] + n));
+          const updateCounter = () => {
+            current += step;
+            if (current >= target) {
+              stat.textContent = target + (target > 50 ? '+' : '');
+              return;
             }
-            ctx.putImageData(imgData2, 0, 0);
-
-            const link = document.createElement('a');
-            link.download = 'scan_exam.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
+            stat.textContent = current;
+            requestAnimationFrame(updateCounter);
           };
 
-          // نبدأ تحميل الـ pattern
-          pat.src = 'https://www.transparenttextures.com/patterns/paper-fibers.png';
-        };
+          updateCounter();
+        });
+      };
 
-        img.onerror = function() {
-          alert('تعذر تحميل الصورة، يرجى المحاولة مرة أخرى');
-        };
+      let statsAnimated = false;
+      const statsSection = document.querySelector('.stats-grid');
 
-        img.src = currentImageDataURL;
+      if (statsSection && 'IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting && !statsAnimated) {
+              statsAnimated = true;
+              animateStats();
+            }
+          });
+        }, { threshold: 0.3 });
+        observer.observe(statsSection);
+      } else {
+        setTimeout(animateStats, 1000);
       }
+    }
 
-      // ربط زر التحميل
-      downloadBtn.addEventListener('click', downloadScannedImage);
+    // ============================================================
+    // SMOOTH SCROLL FOR NAV LINKS
+    // ============================================================
+    document.querySelectorAll('a[href^="#"]:not([href="#"])').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (!href || href === '#') return;
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          const navHeight = document.querySelector('.navbar')?.offsetHeight || 70;
+          const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navHeight;
+          window.scrollTo({ top: Math.max(0, targetPosition), behavior: 'smooth' });
+        }
+      });
+    });
 
-      // إعادة تعيين إذا تم اختيار ملف جديد بعد تحميل سابق
-      // (لن نحتاج لأن displayImage تعيد ضبط كل شيء)
+    // ============================================================
+    // NAVBAR SCROLL EFFECT
+    // ============================================================
+    const navbar = document.getElementById('navbar');
 
-      // عند تحميل الصفحة، التأكد من أن placeholder ظاهر
-      // ويمكن إضافة صورة افتراضية للعرض (اختياري)
-      // نضيف مثال: عرض صورة تجريبية صغيرة (لتوضيح التأثير)
-      // لكن الأفضل تركها فارغة مع رسالة.
+    if (navbar) {
+      window.addEventListener('scroll', () => {
+        const scrollY = window.scrollY;
+        if (scrollY > 60) {
+          navbar.style.boxShadow = '0 2px 30px rgba(0,0,0,0.25)';
+        } else {
+          navbar.style.boxShadow = 'none';
+        }
+      });
+    }
 
-      // دالة مساعدة لإعادة تعيين الحالة (اختياري)
-      function resetState() {
-        // لا نستخدمها حالياً
-      }
-
-      // (اختياري) إذا أراد المستخدم معاينة الصورة بدون رفع ملف
-      // نضيف صورة تجريبية بشكل تلقائي؟ لكن الأفضل تركها للمستخدم.
-
-      console.log('Scanner Effect Exam جاهز');
-    })();
+    console.log('🚀 Mina Ashaq Portfolio - All systems ready!');
   </script>
+
 </body>
 </html>
