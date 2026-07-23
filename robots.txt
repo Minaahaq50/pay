@@ -1,0 +1,5 @@
+User-agent: *
+
+Allow: /
+
+Sitemap: https://pay-gilt-five.vercel.app/sitemap.xml
